@@ -109,6 +109,8 @@ solarwatch/
 ├── simulator/                   # Reserved
 ├── docs/
 │   ├── DEVELOPMENT_PLAN.md
+│   ├── requirements/
+│   │   └── MVP.md               # Requirements under review; features not implemented yet
 │   ├── architecture/            # Reserved
 │   └── screenshots/             # Reserved; no screenshots yet
 ├── .editorconfig
@@ -192,16 +194,16 @@ The image serves HTTP on container port 8080; the sample endpoint is available a
 
 ## Development roadmap
 
-SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) for completion criteria, current limitations, and the next delivery.
+SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) and [residential MVP requirements](docs/requirements/MVP.md) for completion criteria, scope, current limitations, and proposed operating defaults. The MVP uses one simulated installation with panels, a battery, and an inverter; its functional requirements are not implemented yet.
 
 0. **Foundation (complete):** backend/frontend scaffolds, layer references, repository conventions, and CI.
-1. **Product definition (next):** agree on the MVP, measurement semantics, and acceptance criteria.
-2. **Domain and first use case:** implement measurement rules with meaningful unit tests.
-3. **Persistence:** introduce EF Core, PostgreSQL, migrations, and database integration tests.
-4. **Telemetry ingestion:** add API ingestion, queries, and a simulator with integration coverage.
-5. **Dashboard:** connect React to the API; add UI components, charts, and a Playwright test of the core journey.
-6. **Live monitoring:** introduce SignalR updates and reconnect/stale-data handling.
-7. **First release:** verify Docker/Compose and fresh-clone setup; publish actual demo evidence and release notes.
+1. **Product definition (in review):** residential MVP scope, measurement semantics, acceptance criteria, and first full stack slice.
+2. **Persisted latest reading (next feature):** save a simulated reading in PostgreSQL, query it through the .NET API, and show it in React with units, timestamp, and data states.
+3. **Simulated ingestion:** introduce reproducible seeding and a simulator, validation, and duplicate/out-of-order handling.
+4. **History and charts:** query and graph the latest 24 hours with correct power/charge units and missing-data behavior.
+5. **Local MVP release:** verify Docker/Compose and fresh-clone setup; complete acceptance checks and publish actual demo evidence and release notes.
+
+SignalR, authentication, real hardware, and other advanced features remain later enhancements outside this MVP. Domain rules, persistence, API behavior, and UI are developed together as each slice needs them.
 
 Tests and relevant documentation accompany each behavior change throughout these phases.
 
