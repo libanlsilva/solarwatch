@@ -20,7 +20,7 @@ fix(api): reject invalid measurement timestamps
 ci: validate frontend production builds
 ```
 
-These are examples of message format, not existing functionality. Each commit should describe one coherent change, including the tests needed to verify it. There is no target number of commits. Preserve published history and use follow-up commits for corrections.
+These illustrate message format; check the README for implemented functionality. Each commit should describe one coherent change, including the tests needed to verify it. There is no target number of commits. Preserve published history and use follow-up commits for corrections.
 
 ## Validation
 
@@ -41,7 +41,7 @@ npm run lint
 npm run build
 ```
 
-Add meaningful tests when introducing behavior, including failure cases. Frontend automated tests are not configured yet. Existing backend template tests are not evidence of business coverage.
+Add meaningful tests when introducing behavior, including failure cases. Run `npm run test:unit` for frontend logic and `npm run test:e2e` for the complete browser journey. Backend integration tests require `SOLARWATCH_TEST_CONNECTION` targeting a dedicated `_tests` PostgreSQL database; browser tests require `SOLARWATCH_E2E_CONNECTION` targeting `_e2e`. Both suites fail rather than skip missing infrastructure. See the README for setup and the Release API build required before E2E tests.
 
 For documentation-only changes, check links, consistency, and the diff. The configured CI still runs on pull requests to `main`. Test Docker or database setup changes with the affected tooling once those services are configured.
 

@@ -1,6 +1,6 @@
 # Residential MVP requirements
 
-**Status:** requirements and operating defaults approved by the owner on 2026-10-28. Phase 1 is complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) into `main`. No application behavior described here has been implemented yet.
+**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3). The owner has approved the first persisted-latest-reading implementation under [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4); integration of [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) completes Phase 2. The complete MVP remains unfinished.
 
 **Tracking:** [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2). See the [development plan](../DEVELOPMENT_PLAN.md) for delivery order.
 
@@ -38,7 +38,7 @@ The owner approved these operating defaults alongside the MVP requirements. In p
 
 ## Measurement glossary and logical contract
 
-Each reading is a snapshot of the installation at one instant, with all three metrics measured together. The following logical fields define meaning and units; HTTP route names and the database schema will be selected in the first implementation PR.
+Each reading is a snapshot of the installation at one instant, with all three metrics measured together. The following logical fields define meaning and units; the first slice's concrete HTTP route and database layout are documented in [latest-reading.md](../architecture/latest-reading.md).
 
 | Field | Meaning | Validation |
 | --- | --- | --- |
@@ -104,6 +104,6 @@ Keep one API, one PostgreSQL database, one React client, and a small development
 
 ## Review and implementation handoff
 
-Owner review is complete. Squash integration of PR #3 completes Phase 1 documentation. All functional acceptance criteria above remain unimplemented until their corresponding feature deliveries provide evidence.
+Requirements review and Phase 1 integration are complete. The first feature implements the latest-reading path and AC-01 through AC-05, with its contract and verification described in [latest-reading.md](../architecture/latest-reading.md). Owner review of that feature is complete, and integration of PR #5 completes Phase 2. History, continuous ingestion, and the remaining MVP behavior are later deliveries.
 
-After integration, prepare a focused implementation issue from the first-slice checklist before starting the first feature. Track later work as it becomes actionable. Preserve the established branch/PR/CI workflow and integrate one squash commit per reviewed delivery.
+The first slice is tracked by Issue #4. Track later work as it becomes actionable. Preserve the established branch/PR/CI workflow and integrate one squash commit per reviewed delivery.
