@@ -1,152 +1,141 @@
 # SolarWatch
 
-An open-source solar energy monitoring and analytics platform built with ASP.NET Core and React.
+An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** This repository currently contains the .NET 10 backend scaffold, a React and TypeScript frontend scaffold powered by Vite, test projects, API Docker build configuration, and backend/frontend CI workflows. Solar monitoring features are not implemented yet.
+**Status: Early Development.** The first Full Stack feature connects PostgreSQL, the .NET API, and React to display one simulated installation's latest reading. This feature is prepared for review; the full MVP is not complete.
 
 ## Goals and motivation
 
-SolarWatch aims to make household and small-scale solar energy systems easier to understand by bringing solar generation, battery levels, energy consumption, historical analytics, and device telemetry into one place. The project is also a practical environment for developing a full stack application with clear backend boundaries, automated testing, and reproducible local tooling.
+SolarWatch makes solar generation, household energy consumption, and battery charge easier to understand. It is developed incrementally as a Full Stack portfolio project, with small reviewed deliveries, explicit requirements, meaningful tests, and reproducible local setup.
 
-## Current implementation
+## Implemented in this delivery
 
-- Six .NET 10 projects in a single solution, with references establishing the intended backend layers.
-- An ASP.NET Core controller-based API retaining the generated `/weatherforecast` sample endpoint and development-only OpenAPI document at `/openapi/v1.json`.
-- Domain, application, and infrastructure libraries containing their original template classes.
-- Two xUnit test projects, each containing one empty template test. These do not validate application behavior yet.
-- A multi-stage API Dockerfile and a backend GitHub Actions workflow for restore, build, and test.
-- A React and TypeScript application with Vite, strict TypeScript configuration, Oxlint, and a minimal project status page.
-- A frontend CI workflow for dependency installation, linting, and production builds.
-- Reserved directories for future frontend modules, simulator, and documentation.
+- One residential demo installation with panels, a battery, and an inverter, using simulated readings.
+- EF Core migration and PostgreSQL persistence for reading snapshots.
+- A latest-reading API returning generation (W), consumption (W), battery state of charge (%), measurement time, and server reference time (`asOf`).
+- A responsive React view with manual refresh, loading, empty, error/retry, retained-data warnings, and stale-data states.
+- Freshness based on `asOf`, with readings older than five minutes labeled stale at the last successful check.
+- Development-only migration, current-time or controlled-time seed, and explicitly confirmed demo-clear commands.
+- Meaningful backend unit tests, real PostgreSQL integration tests, frontend unit tests, and Playwright browser tests, executed in CI.
 
-There is no database integration, telemetry ingestion, authentication, dashboard, real-time hub, or simulator implementation. `docker-compose.yml` is currently an empty reserved file; it does not start any services.
+The generated weather endpoint and empty template classes/tests have been removed. The simulator directory is reserved; the development seed is not a continuous simulator.
 
-## Planned features
+![Latest reading for the simulated residential installation](docs/screenshots/latest-reading.png)
 
-- Monitor solar generation, battery state of charge, and energy consumption.
-- Ingest and inspect device telemetry.
-- Explore historical energy trends and generation/consumption comparisons.
-- Display live updates and charts in a responsive dashboard.
-- Generate development telemetry with a device simulator.
-- Expand automated coverage with meaningful unit, integration, and browser tests.
+Captured from the local PostgreSQL/API/React demonstration; values and timestamps are simulated example data from that session.
 
-These features are roadmap items, not currently available functionality.
+## Planned functionality
+
+Later MVP deliveries add continuous simulated ingestion and 24-hour history charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment are outside this first slice.
+
+Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh/kWh**; 1 kWh = 1,000 Wh. This delivery does not calculate energy totals from power samples or convert battery charge percentage into stored energy.
 
 ## Technology stack
 
-| Area | Technology | Current state |
+| Area | Technology | State |
 | --- | --- | --- |
-| Backend | ASP.NET Core 10, C# | Scaffolded |
-| Persistence | EF Core, PostgreSQL | Planned |
-| Frontend | React, TypeScript, Vite | Scaffolded; minimal project status page only |
-| UI and charts | Tailwind CSS, shadcn/ui, Recharts | Planned |
-| Real-time communication | SignalR | Planned |
-| Backend tests | xUnit | Template tests only |
-| Browser tests | Playwright | Planned |
-| Infrastructure | Docker, GitHub Actions | API Dockerfile and backend/frontend CI workflows configured; Compose services planned |
+| Backend | ASP.NET Core 10, C# | Latest-reading API and development commands |
+| Persistence | EF Core, Npgsql, PostgreSQL 17 | Migration and real persistence |
+| Frontend | React, TypeScript, Vite | Responsive latest-reading view |
+| UI/charts | Plain CSS for this slice; Tailwind CSS, shadcn/ui, Recharts planned | No dashboard component system or charts yet |
+| Testing | xUnit, Node.js test runner, Playwright | Unit, PostgreSQL integration, and Chromium E2E tests |
+| Infrastructure | Docker Compose, GitHub Actions | PostgreSQL service; backend, frontend, and Full Stack E2E workflows |
+| Real-time updates | SignalR | Later enhancement; current refresh is manual |
 
-## High-level architecture
-
-The backend establishes the following project dependencies:
+## Architecture and structure
 
 ```text
-SolarWatch.Api ------------> SolarWatch.Application --> SolarWatch.Domain
-       |                              ^                       ^
-       +--> SolarWatch.Infrastructure-+-----------------------+
+React → GET /api/readings/latest → Application query → PostgreSQL store → PostgreSQL
 
-SolarWatch.UnitTests ------> SolarWatch.Application, SolarWatch.Domain
-SolarWatch.IntegrationTests -> SolarWatch.Api
+Api → Application, Infrastructure
+Application → Domain
+Infrastructure → Application, Domain
+UnitTests → Domain, Application
+IntegrationTests → Api (including its real PostgreSQL infrastructure)
 ```
 
-- **Domain:** intended home for energy-system entities and business rules; no project dependencies.
-- **Application:** intended home for use cases and application contracts; depends on Domain.
-- **Infrastructure:** intended home for persistence and device integrations; depends on Application and Domain.
-- **Api:** HTTP entry point and composition root; references Application and Infrastructure.
-
-The React client is scaffolded but does not communicate with the API yet. The planned simulator will also communicate with the API. PostgreSQL persistence through EF Core and SignalR updates will be introduced in later milestones.
-
-## Repository structure
+The Domain owns reading validation. Application defines the query and a single purpose-built storage contract. Infrastructure supplies EF Core and its implementation; Api composes the services. There is no generic repository framework or messaging layer.
 
 ```text
 solarwatch/
-├── .github/
-│   ├── pull_request_template.md
-│   └── workflows/
-│       ├── backend-ci.yml
-│       └── frontend-ci.yml
+├── .github/workflows/           # Backend, frontend, and Full Stack E2E CI
 ├── backend/
 │   ├── src/
-│   │   ├── .dockerignore
 │   │   ├── SolarWatch.slnx
-│   │   ├── SolarWatch.Api/
-│   │   │   ├── Controllers/
-│   │   │   ├── Properties/
-│   │   │   ├── Dockerfile
-│   │   │   └── Program.cs
+│   │   ├── SolarWatch.Api/      # Endpoint, development commands, Dockerfile
 │   │   ├── SolarWatch.Application/
 │   │   ├── SolarWatch.Domain/
-│   │   └── SolarWatch.Infrastructure/
+│   │   └── SolarWatch.Infrastructure/ # DbContext, store, migrations
 │   └── tests/
 │       ├── SolarWatch.UnitTests/
 │       └── SolarWatch.IntegrationTests/
 ├── frontend/
-│   ├── .nvmrc
-│   ├── index.html
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── tsconfig.json            # References app and tooling TypeScript configs
-│   ├── vite.config.ts
 │   ├── src/
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   ├── index.css
-│   │   ├── components/
-│   │   ├── features/
-│   │   ├── hooks/
-│   │   ├── lib/
-│   │   └── routes/
-│   └── tests/
-├── simulator/                   # Reserved
+│   ├── tests/unit/
+│   ├── tests/e2e/
+│   └── playwright.config.ts
 ├── docs/
 │   ├── DEVELOPMENT_PLAN.md
-│   ├── requirements/
-│   │   └── MVP.md               # Approved requirements; features not implemented yet
-│   ├── architecture/            # Reserved
-│   └── screenshots/             # Reserved; no screenshots yet
-├── .editorconfig
-├── .gitattributes
-├── .gitignore
-├── docker-compose.yml           # Empty; services not configured yet
+│   ├── requirements/MVP.md
+│   ├── architecture/latest-reading.md
+│   └── screenshots/
+├── simulator/                   # Reserved for a later delivery
+├── docker-compose.yml
+├── dotnet-tools.json
+├── .env.example
 ├── CONTRIBUTING.md
-├── LICENSE
-└── README.md
+└── LICENSE
 ```
 
-The existing solution remains at `backend/src/SolarWatch.slnx`. Empty planned leaf directories are retained with `.gitkeep` files.
+See the [API contract and decisions](docs/architecture/latest-reading.md), [approved MVP](docs/requirements/MVP.md), and [development plan](docs/DEVELOPMENT_PLAN.md).
 
-## Local development
+## Local setup
 
-### Prerequisites
+Prerequisites: .NET 10 SDK, Node.js 24 with npm, Git, Docker with Linux containers, and access to NuGet/npm. Compose runs PostgreSQL only; the API and frontend run on the host.
 
-- .NET 10 SDK.
-- Node.js 24 or newer and npm for the frontend (CI uses Node.js 24).
-- Git.
-- Access to NuGet.org to restore the existing packages.
-- Optional: Docker with a running Linux container engine to build and run the API image.
+### 1. Start PostgreSQL and configure the API
 
-PostgreSQL is not required for the current scaffold. Frontend installation requires access to the npm registry; Node.js is not needed to run only the backend.
+Copy `.env.example` to `.env`, set a non-empty local `POSTGRES_PASSWORD`, and keep that populated file untracked. The default database port is 5434, bound to loopback. Compose preserves data in a named volume.
 
-### Restore, build, and test
+```sh
+docker compose up -d --wait postgres
+```
 
-From the repository root:
+Compose reads `.env`; ASP.NET Core does not automatically read it. In PowerShell, from the repository root, load the same local values into the current session:
+
+```powershell
+$localConfig = Get-Content .env | ConvertFrom-StringData
+$env:ConnectionStrings__SolarWatch = "Host=127.0.0.1;Port=$($localConfig.POSTGRES_PORT);Database=solarwatch;Username=solarwatch;Password=$($localConfig.POSTGRES_PASSWORD)"
+$env:ASPNETCORE_ENVIRONMENT = 'Development'
+```
+
+For Bash, set `ConnectionStrings__SolarWatch` to the equivalent local connection string and `ASPNETCORE_ENVIRONMENT=Development` using your local secret values. ASP.NET Core user secrets are also supported. Never commit populated connection strings or print credentials in logs.
+
+### 2. Build, migrate, seed, and run the API
 
 ```sh
 dotnet restore backend/src/SolarWatch.slnx
 dotnet build backend/src/SolarWatch.slnx --configuration Release --no-restore
-dotnet test backend/src/SolarWatch.slnx --configuration Release --no-build --no-restore
+dotnet run --project backend/src/SolarWatch.Api --configuration Release --no-build --no-launch-profile -- migrate
+dotnet run --project backend/src/SolarWatch.Api --configuration Release --no-build --no-launch-profile -- seed-demo
+dotnet run --project backend/src/SolarWatch.Api --configuration Release --no-build --launch-profile http
 ```
 
-### Run and validate the frontend
+The API runs at `http://localhost:5171`. Development OpenAPI JSON is at `/openapi/v1.json`; there is no Swagger UI. The app does not automatically migrate or seed during normal startup.
+
+`seed-demo` inserts 1,200 W generation, 800 W consumption, and 65% charge at the **current server UTC time**, allowing a fresh demo. To prepare a repeatable historical/stale example:
+
+```sh
+dotnet run --project backend/src/SolarWatch.Api --configuration Release --no-build --no-launch-profile -- seed-demo --measured-at 2026-10-01T12:00:00Z
+```
+
+Timestamps need an explicit UTC/offset designation and cannot be in the future. Repeating the same controlled timestamp does not duplicate it. An older seed does not supersede a newer measurement; use an empty development database for a controlled stale-only demonstration.
+
+To demonstrate an empty state, `clear-demo --confirm` deletes this installation's readings from the configured database. It requires explicit confirmation and the Development environment. Migration/seeding/clearing commands all refuse to run outside Development. Do not point these development commands at valuable data.
+
+### 3. Run React
+
+In a second terminal:
 
 ```sh
 cd frontend
@@ -154,65 +143,60 @@ npm ci
 npm run dev
 ```
 
-Open the local address printed by Vite, normally `http://localhost:5173`. The page displays the project name and early development status; there is no dashboard or API integration yet.
+Open the address printed by Vite, normally `http://localhost:5173`. Its `/api` proxy defaults to `http://127.0.0.1:5171`. Set `SOLARWATCH_API_URL` before starting Vite if the API uses another address. The same proxy works with `npm run preview` after a production build.
 
-From `frontend/`, validate the scaffold with:
+Readings refresh on load and on request. The freshness badge reports the state at the last successful server check, not a continuously updated or browser-clock-based status. Display times use the browser's identified local zone.
+
+## Validation
+
+### Backend unit and real PostgreSQL integration tests
+
+Integration tests require `SOLARWATCH_TEST_CONNECTION` and refuse a database name that does not end in `_tests`. They migrate and clear the dedicated test database; they never silently skip missing infrastructure. The configured PostgreSQL role must be able to create the dedicated database if it does not exist.
+
+In the PowerShell session configured above:
+
+```powershell
+$env:SOLARWATCH_TEST_CONNECTION = $env:ConnectionStrings__SolarWatch.Replace('Database=solarwatch;', 'Database=solarwatch_tests;')
+dotnet test backend/src/SolarWatch.slnx --configuration Release --no-build --no-restore
+```
+
+To run only unit tests without PostgreSQL, target `backend/tests/SolarWatch.UnitTests` explicitly. The solution command intentionally includes the database tests.
+
+### Frontend and browser tests
 
 ```sh
+cd frontend
+npm ci
 npm run lint
 npm run build
+npm run test:unit
+npx playwright install --no-shell chromium
 ```
 
-The build checks TypeScript and produces static assets in the ignored `frontend/dist/` directory. Use `npm run preview` to inspect the production build locally. Frontend automated tests and Playwright are not configured yet; `frontend/tests/` is reserved for future coverage.
+Before `npm run test:e2e`, set `SOLARWATCH_E2E_CONNECTION` to a dedicated database ending in `_e2e`. In PowerShell, using the earlier local API configuration:
 
-### Run the API
-
-For the local HTTPS profile, trust the development certificate where supported:
-
-```sh
-dotnet dev-certs https --trust
-dotnet run --project backend/src/SolarWatch.Api --launch-profile https
+```powershell
+$env:SOLARWATCH_E2E_CONNECTION = $env:ConnectionStrings__SolarWatch.Replace('Database=solarwatch;', 'Database=solarwatch_e2e;')
+npm run test:e2e
 ```
 
-The API uses `https://localhost:7265` and `http://localhost:5171`; the configured HTTPS redirection middleware redirects HTTP requests to HTTPS. In this development profile, try:
+Build the Release API first. Playwright launches its own API on port 5181 and Vite preview on port 4181; those ports must be free. It migrates the E2E database and clears its demo readings before each test. Success scenarios use the real API/database; network interruption/delay is injected only for failure/loading checks. Browser clocks are deliberately shifted in freshness tests.
 
-- Sample endpoint: `https://localhost:7265/weatherforecast`
-- OpenAPI JSON: `https://localhost:7265/openapi/v1.json`
-
-The sample returns generated weather data, not solar telemetry. No interactive Swagger UI is configured.
-
-### Build and run the API with Docker
-
-Use `backend/src` as the build context, matching the existing Dockerfile paths:
-
-```sh
-docker build -f backend/src/SolarWatch.Api/Dockerfile -t solarwatch-api:local backend/src
-docker run --rm -p 8080:8080 --name solarwatch-api solarwatch-api:local
-```
-
-The image serves HTTP on container port 8080; the sample endpoint is available at `http://localhost:8080/weatherforecast`. Container HTTPS is not configured by these commands. The image runs in Production by default, so the development OpenAPI endpoint is not exposed. A PostgreSQL container and Compose orchestration are not configured yet.
+GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit tests, and the full browser suite in a separate PostgreSQL-backed job. CI uses trust authentication only for disposable test services; local Compose requires a password. Browser failure traces are uploaded for diagnosis.
 
 ## Development roadmap
 
-SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) and [residential MVP requirements](docs/requirements/MVP.md) for completion criteria, approved scope and operating defaults, and current limitations. The MVP uses one simulated installation with panels, a battery, and an inverter; its functional requirements are not implemented yet.
+0. **Foundation complete:** initial structure and CI.
+1. **Product definition complete:** approved residential MVP integrated through PR #3.
+2. **Persisted latest reading prepared for review:** PostgreSQL → API → React, development commands, state handling, and tests.
+3. **Simulated ingestion planned:** continuous simulator, validation/duplicate handling at ingestion, and reproducible history seeding.
+4. **History and charts planned:** last 24 hours with correct units and gaps.
+5. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
-0. **Foundation (complete):** backend/frontend scaffolds, layer references, repository conventions, and CI.
-1. **Product definition (approved; complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3)):** residential MVP scope, measurement semantics, acceptance criteria, and first full stack slice.
-2. **Persisted latest reading (next feature):** save a simulated reading in PostgreSQL, query it through the .NET API, and show it in React with units, timestamp, and data states.
-3. **Simulated ingestion:** introduce reproducible seeding and a simulator, validation, and duplicate/out-of-order handling.
-4. **History and charts:** query and graph the latest 24 hours with correct power/charge units and missing-data behavior.
-5. **Local MVP release:** verify Docker/Compose and fresh-clone setup; complete acceptance checks and publish actual demo evidence and release notes.
+## Current limitations
 
-SignalR, authentication, real hardware, and other advanced features remain later enhancements outside this MVP. Domain rules, persistence, API behavior, and UI are developed together as each slice needs them.
+This is a local, unauthenticated demo. There is no ingestion endpoint, continuous simulator, 24-hour query/chart, energy integration, real hardware, or public deployment. Vite's proxy supports development/preview; production static hosting would require an appropriate API routing/deployment configuration. The existing API Dockerfile is retained, but this delivery validates the Compose database and host-run services, not complete app container orchestration.
 
-Tests and relevant documentation accompany each behavior change throughout these phases.
+## Contributing and license
 
-## Contributing
-
-Contributions are welcome as the foundation develops. Follow [CONTRIBUTING.md](CONTRIBUTING.md) for scope, branches, commit conventions, validation, and pull request review. Discuss substantial changes in an issue and keep deliveries aligned with the current phase.
-
-Keep credentials out of committed configuration. Use .NET user secrets for local API credentials or ignored local environment files, and provide only sanitized examples when configuration is documented.
-
-## License
-
-SolarWatch is licensed under the [MIT License](LICENSE).
+Follow [CONTRIBUTING.md](CONTRIBUTING.md) for issues, focused branches, validation, and PR review. Each approved PR is integrated with squash, producing one commit on `main`. SolarWatch is licensed under the [MIT License](LICENSE).
