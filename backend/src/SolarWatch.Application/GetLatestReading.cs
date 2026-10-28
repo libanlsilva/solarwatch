@@ -1,7 +1,14 @@
+using SolarWatch.Domain;
+
 namespace SolarWatch.Application;
 
 public sealed record ReadingSnapshot(string InstallationId, DateTimeOffset MeasuredAt,
-    double SolarPowerW, double ConsumptionPowerW, double BatteryStateOfChargePercent);
+    double SolarPowerW, double ConsumptionPowerW, double BatteryStateOfChargePercent)
+{
+    public static ReadingSnapshot From(InstallationReading reading) => new(
+        reading.InstallationId, reading.MeasuredAt, reading.SolarPowerW,
+        reading.ConsumptionPowerW, reading.BatteryStateOfChargePercent);
+}
 public sealed record LatestReadingResponse(DateTimeOffset AsOf, ReadingSnapshot? Reading);
 
 public sealed class GetLatestReading(IReadingStore store, TimeProvider clock)
@@ -10,8 +17,6 @@ public sealed class GetLatestReading(IReadingStore store, TimeProvider clock)
     {
         var reading = await store.GetLatestAsync(cancellationToken);
         var asOf = clock.GetUtcNow();
-        return new LatestReadingResponse(asOf, reading is null ? null : new ReadingSnapshot(
-            reading.InstallationId, reading.MeasuredAt, reading.SolarPowerW,
-            reading.ConsumptionPowerW, reading.BatteryStateOfChargePercent));
+        return new LatestReadingResponse(asOf, reading is null ? null : ReadingSnapshot.From(reading));
     }
 }

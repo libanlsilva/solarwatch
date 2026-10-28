@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using SolarWatch.Domain;
 using SolarWatch.Infrastructure;
@@ -20,9 +19,7 @@ public static class DevelopmentCommands
         if (command == "seed-demo" && args.Length == 3 && args[1] == "--measured-at")
         {
             var value = args[2];
-            var hasOffset = value.EndsWith('Z') ||
-                (value.Length >= 6 && value[^3] == ':' && value[^6] is '+' or '-');
-            if (!hasOffset || !DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out measuredAt))
+            if (!ReadingTimestamp.TryParse(value, out measuredAt))
             {
                 Console.Error.WriteLine("Use an ISO 8601 measurement timestamp with an explicit Z or UTC offset.");
                 return 1;
@@ -54,7 +51,7 @@ public static class DevelopmentCommands
         else
         {
             // PostgreSQL timestamps have microsecond precision; normalize for repeatable seeding.
-            measuredAt = new DateTimeOffset(measuredAt.UtcTicks - measuredAt.UtcTicks % 10, TimeSpan.Zero);
+            measuredAt = ReadingTimestamp.Normalize(measuredAt);
             if (!await db.Readings.AnyAsync(x => x.InstallationId == InstallationReading.DemoInstallationId && x.MeasuredAt == measuredAt))
             {
                 db.Readings.Add(InstallationReading.Create(measuredAt, 1200, 800, 65, now));

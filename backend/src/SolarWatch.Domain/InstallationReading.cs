@@ -23,7 +23,7 @@ public sealed class InstallationReading
             throw new ArgumentOutOfRangeException(nameof(batteryStateOfChargePercent));
         return new InstallationReading
         {
-            MeasuredAt = measuredAt.ToUniversalTime(),
+            MeasuredAt = ReadingTimestamp.Normalize(measuredAt),
             SolarPowerW = solarPowerW,
             ConsumptionPowerW = consumptionPowerW,
             BatteryStateOfChargePercent = batteryStateOfChargePercent
