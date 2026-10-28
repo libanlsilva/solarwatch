@@ -1,23 +1,42 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using SolarWatch.Api;
+using SolarWatch.Application;
+using SolarWatch.Infrastructure;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+var isCommand = args.FirstOrDefault() is "migrate" or "seed-demo" or "clear-demo";
+var builder = WebApplication.CreateBuilder(isCommand ? [] : args);
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddDbContext<SolarWatchDbContext>(options => options.UseNpgsql(
+    builder.Configuration.GetConnectionString("SolarWatch")
+        ?? throw new InvalidOperationException("Configure ConnectionStrings:SolarWatch using user secrets or an environment variable.")));
+builder.Services.AddScoped<IReadingStore, PostgresReadingStore>();
+builder.Services.AddScoped<GetLatestReading>();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (isCommand)
 {
-    app.MapOpenApi();
+    Environment.ExitCode = await DevelopmentCommands.RunAsync(app, args);
+    return;
 }
+app.UseExceptionHandler();
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
+else app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
+app.MapGet("/api/readings/latest", async (GetLatestReading query, HttpContext context, CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    try { return Results.Ok(await query.ExecuteAsync(cancellationToken)); }
+    catch (Exception exception) when (exception is DbException or InvalidOperationException { InnerException: DbException })
+    {
+        return Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable,
+            title: "Readings are temporarily unavailable.");
+    }
+}).WithName("GetLatestReading")
+    .Produces<LatestReadingResponse>()
+    .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
 app.Run();
+
+public partial class Program;
