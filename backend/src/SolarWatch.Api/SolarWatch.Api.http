@@ -1,0 +1,6 @@
+@SolarWatch.Api_HostAddress = http://localhost:5171
+
+GET {{SolarWatch.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

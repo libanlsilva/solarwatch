@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="../tests/SolarWatch.IntegrationTests/SolarWatch.IntegrationTests.csproj" Id="ddf62f96-394d-401b-84ca-f1639f2c033f" />
+  <Project Path="../tests/SolarWatch.UnitTests/SolarWatch.UnitTests.csproj" Id="82d3f089-a614-4066-b0b0-b6d975f3dca9" />
+  <Project Path="SolarWatch.Api/SolarWatch.Api.csproj" />
+  <Project Path="SolarWatch.Application/SolarWatch.Application.csproj" Id="13bad6da-5798-4344-8965-071b99c92e25" />
+  <Project Path="SolarWatch.Domain/SolarWatch.Domain.csproj" Id="343067c7-ec76-4dfd-8ff7-c10d8cc9dc00" />
+  <Project Path="SolarWatch.Infrastructure/SolarWatch.Infrastructure.csproj" Id="3fd75421-a158-4269-b808-22c40482a268" />
+</Solution>

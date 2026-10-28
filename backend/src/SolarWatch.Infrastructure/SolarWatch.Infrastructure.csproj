@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SolarWatch.Application\SolarWatch.Application.csproj" />
+    <ProjectReference Include="..\SolarWatch.Domain\SolarWatch.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
