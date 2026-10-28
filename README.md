@@ -110,7 +110,7 @@ solarwatch/
 ├── docs/
 │   ├── DEVELOPMENT_PLAN.md
 │   ├── requirements/
-│   │   └── MVP.md               # Requirements under review; features not implemented yet
+│   │   └── MVP.md               # Approved requirements; features not implemented yet
 │   ├── architecture/            # Reserved
 │   └── screenshots/             # Reserved; no screenshots yet
 ├── .editorconfig
@@ -194,10 +194,10 @@ The image serves HTTP on container port 8080; the sample endpoint is available a
 
 ## Development roadmap
 
-SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) and [residential MVP requirements](docs/requirements/MVP.md) for completion criteria, scope, current limitations, and proposed operating defaults. The MVP uses one simulated installation with panels, a battery, and an inverter; its functional requirements are not implemented yet.
+SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) and [residential MVP requirements](docs/requirements/MVP.md) for completion criteria, approved scope and operating defaults, and current limitations. The MVP uses one simulated installation with panels, a battery, and an inverter; its functional requirements are not implemented yet.
 
 0. **Foundation (complete):** backend/frontend scaffolds, layer references, repository conventions, and CI.
-1. **Product definition (in review):** residential MVP scope, measurement semantics, acceptance criteria, and first full stack slice.
+1. **Product definition (approved; complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3)):** residential MVP scope, measurement semantics, acceptance criteria, and first full stack slice.
 2. **Persisted latest reading (next feature):** save a simulated reading in PostgreSQL, query it through the .NET API, and show it in React with units, timestamp, and data states.
 3. **Simulated ingestion:** introduce reproducible seeding and a simulator, validation, and duplicate/out-of-order handling.
 4. **History and charts:** query and graph the latest 24 hours with correct power/charge units and missing-data behavior.

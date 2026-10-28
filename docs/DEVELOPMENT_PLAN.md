@@ -10,7 +10,7 @@ The backend currently retains the weather forecast sample and two empty template
 
 ## Residential MVP
 
-A user monitors one residential installation with solar panels, a battery, and an inverter using clearly identified simulated readings. The MVP displays current solar generation (W), household consumption (W), battery state of charge (%), the latest measurement timestamp, and charts for the last 24 hours. Power and accumulated energy retain distinct meanings and units. See the [MVP requirements](requirements/MVP.md) for acceptance criteria and proposed operating defaults.
+A user monitors one residential installation with solar panels, a battery, and an inverter using clearly identified simulated readings. The MVP displays current solar generation (W), household consumption (W), battery state of charge (%), the latest measurement timestamp, and charts for the last 24 hours. Power and accumulated energy retain distinct meanings and units. See the [MVP requirements](requirements/MVP.md) for approved acceptance criteria and operating defaults.
 
 Real hardware, authentication, multiple users/installations, billing, accumulated-energy totals, and advanced operations are outside this local MVP. Authentication and access requirements must be reconsidered before any public deployment.
 
@@ -21,7 +21,7 @@ Prioritize an early complete React/API/PostgreSQL feature. Add only the domain r
 | Phase | Outcome | Evidence required to finish | Status |
 | --- | --- | --- | --- |
 | 0. Foundation | Backend and frontend scaffolds with CI | Restore/build/test and frontend lint/build succeed locally and in GitHub Actions; limitations documented | Complete |
-| 1. Product definition | Residential MVP and first full stack use case | [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), requirements, acceptance criteria, and scope reviewed and integrated | In review |
+| 1. Product definition | Residential MVP and first full stack use case | [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), requirements, acceptance criteria, and scope reviewed and integrated | Approved; complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) |
 | 2. Persisted latest reading | Store a simulated reading in PostgreSQL, query it through .NET, and display it in React | Minimal EF Core migration and development seed; current metrics, timestamp, loading/empty/error/freshness states; real-database integration and browser verification | Planned next |
 | 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | Deterministic seeding and simulator; validation, duplicates, out-of-order arrivals, and focused unit/API/database tests | Planned |
 | 4. History and charts | Explore the last 24 hours of persisted readings in React | Correct time boundaries and units, ordered history, partial/empty data and gaps, accessible charts, and browser verification | Planned |
@@ -31,7 +31,7 @@ SignalR, automatic refresh, real-device integration, authentication, and other a
 
 Each phase can contain several small pull requests. Add tests with the behavior they verify throughout development. New findings may change the order or split a phase; record the reason before expanding the scope. Mark a phase complete only when its evidence exists.
 
-## Phase 1: requirements under review
+## Phase 1: approved requirements
 
 The [requirements document](requirements/MVP.md), tracked in [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), defines:
 
@@ -42,7 +42,7 @@ The [requirements document](requirements/MVP.md), tracked in [Issue #2](https://
 - The expected handling of missing, stale, duplicate, out-of-order, and invalid readings.
 - Local-development scope, access assumptions, and explicit non-goals.
 
-The phase remains in review until owner approval and squash integration. Functional requirements are not implemented by this documentation change. Sampling, freshness, refresh, and other operating defaults are explicit proposals for review.
+The owner approved the requirements and operating defaults on 2026-10-28. Phase 1 is complete upon squash integration of PR #3. This approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferred accumulated-energy calculations. Functional requirements are not implemented by this documentation change.
 
 After integration, open the first implementation issue for the persisted-latest-reading slice in the MVP document. Each issue should state the problem, acceptance criteria, intended validation, and relevant dependencies. Open later issues as the work becomes actionable.
 

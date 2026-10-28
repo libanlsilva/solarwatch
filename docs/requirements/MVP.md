@@ -1,6 +1,6 @@
 # Residential MVP requirements
 
-**Status:** proposed requirements, awaiting owner review through a pull request. No application behavior described here has been implemented yet.
+**Status:** requirements and operating defaults approved by the owner on 2026-10-28. Phase 1 is complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) into `main`. No application behavior described here has been implemented yet.
 
 **Tracking:** [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2). See the [development plan](../DEVELOPMENT_PLAN.md) for delivery order.
 
@@ -21,11 +21,11 @@ The installation consists of solar panels, a battery, and an inverter. The MVP d
 - Correct distinctions and labels for instantaneous power (W) and accumulated energy (Wh/kWh).
 - A first working React/API/PostgreSQL delivery early in development, rather than completing all backend layers before building the frontend.
 
-## Operating defaults proposed for review
+## Approved operating defaults
 
-These are small implementation defaults, not additional owner-confirmed product requirements. Changes agreed during review must be reflected in the acceptance criteria before implementation.
+The owner approved these operating defaults alongside the MVP requirements. In particular, the approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferral of accumulated-energy calculations. The scope and acceptance criteria remain unchanged.
 
-| Topic | Proposed default |
+| Topic | Approved default |
 | --- | --- |
 | Installation | One fixed development installation identified as `residential-demo`; no registration or selection screen |
 | Simulator cadence | One complete reading per minute; reproducible values for a fixed seed and time range |
@@ -104,6 +104,6 @@ Keep one API, one PostgreSQL database, one React client, and a small development
 
 ## Review and implementation handoff
 
-This PR completes Phase 1 documentation only after owner review and squash integration. All functional acceptance criteria above remain unimplemented until their corresponding feature deliveries provide evidence.
+Owner review is complete. Squash integration of PR #3 completes Phase 1 documentation. All functional acceptance criteria above remain unimplemented until their corresponding feature deliveries provide evidence.
 
-Before starting the first feature, confirm the proposed operating defaults and create a focused implementation issue from the first-slice checklist. Track later work as it becomes actionable. Preserve the established branch/PR/CI workflow and integrate one squash commit per reviewed delivery.
+After integration, prepare a focused implementation issue from the first-slice checklist before starting the first feature. Track later work as it becomes actionable. Preserve the established branch/PR/CI workflow and integrate one squash commit per reviewed delivery.
