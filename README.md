@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** The first Full Stack feature connects PostgreSQL, the .NET API, and React to display one simulated installation's latest reading. This feature is prepared for review; the full MVP is not complete.
+**Status: Early Development.** The first Full Stack feature connects PostgreSQL, the .NET API, and React to display one simulated installation's latest reading. The owner has approved this delivery; integration of [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) completes Phase 2. The full MVP is not complete.
 
 ## Goals and motivation
 
@@ -188,10 +188,12 @@ GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit t
 
 0. **Foundation complete:** initial structure and CI.
 1. **Product definition complete:** approved residential MVP integrated through PR #3.
-2. **Persisted latest reading prepared for review:** PostgreSQL → API → React, development commands, state handling, and tests.
-3. **Simulated ingestion planned:** continuous simulator, validation/duplicate handling at ingestion, and reproducible history seeding.
+2. **Persisted latest reading approved; complete upon PR #5 integration:** PostgreSQL → API → React, development commands, state handling, and tests.
+3. **Simulated ingestion next:** small deliveries for generated readings submitted through the API, ingestion validation/duplicate handling, then continuous simulation and reproducible history seeding.
 4. **History and charts planned:** last 24 hours with correct units and gaps.
 5. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
+
+Before the complete dashboard UI is developed, a separate design step will define a visual prototype and a small reusable design system. The intended direction is a modern energy-monitoring dashboard, preferably dark, with metric cards, charts, and navigation. Tailwind CSS and shadcn/ui will be considered when justified. The current functional view is retained for this delivery.
 
 ## Current limitations
 
