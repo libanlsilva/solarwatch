@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../../simulator/SolarWatch.Simulator/SolarWatch.Simulator.csproj" />
   <Project Path="../tests/SolarWatch.IntegrationTests/SolarWatch.IntegrationTests.csproj" Id="ddf62f96-394d-401b-84ca-f1639f2c033f" />
   <Project Path="../tests/SolarWatch.UnitTests/SolarWatch.UnitTests.csproj" Id="82d3f089-a614-4066-b0b0-b6d975f3dca9" />
   <Project Path="SolarWatch.Api/SolarWatch.Api.csproj" />
