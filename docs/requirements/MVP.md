@@ -1,6 +1,6 @@
 # Residential MVP requirements
 
-**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3). The owner has approved the first persisted-latest-reading implementation under [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4); integration of [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) completes Phase 2. The complete MVP remains unfinished.
+**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3). Phase 2 completed through integration of [PR #5](https://github.com/libanlsilva/solarwatch/pull/5). The first Phase 3 delivery under [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6) implements finite local simulated ingestion for PR review. Continuous simulation, complete history, and the complete MVP remain unfinished. The approved requirements below are unchanged.
 
 **Tracking:** [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2). See the [development plan](../DEVELOPMENT_PLAN.md) for delivery order.
 
@@ -104,6 +104,6 @@ Keep one API, one PostgreSQL database, one React client, and a small development
 
 ## Review and implementation handoff
 
-Requirements review and Phase 1 integration are complete. The first feature implements the latest-reading path and AC-01 through AC-05, with its contract and verification described in [latest-reading.md](../architecture/latest-reading.md). Owner review of that feature is complete, and integration of PR #5 completes Phase 2. History, continuous ingestion, and the remaining MVP behavior are later deliveries.
+Requirements review and Phase 1 integration are complete. PR #5 completed Phase 2 and implements the latest-reading path and AC-01 through AC-05, with its contract and verification described in [latest-reading.md](../architecture/latest-reading.md). Issue #6 adds finite local HTTP ingestion for review, covering validation/duplicates/out-of-order arrivals in AC-08 through AC-10; see [simulated-ingestion.md](../architecture/simulated-ingestion.md). History, continuous ingestion, and the remaining MVP behavior are later deliveries.
 
 The first slice is tracked by Issue #4. Track later work as it becomes actionable. Preserve the established branch/PR/CI workflow and integrate one squash commit per reviewed delivery.

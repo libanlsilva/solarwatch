@@ -6,7 +6,7 @@ SolarWatch is a portfolio project developed incrementally from its initial scaff
 
 Phase 0 established the .NET 10 backend layers, React/TypeScript/Vite scaffold, repository conventions, MIT license, and backend/frontend CI. The initial commit is `a19d148`.
 
-The first Full Stack delivery now persists simulated readings in PostgreSQL through an EF Core migration, exposes the latest snapshot through the API, and displays it in React with manual refresh and explicit data states. Meaningful unit, real PostgreSQL integration, and browser tests replace the empty templates. Compose runs the database; the API and frontend run on the host. The owner has approved the delivery; squash integration of PR #5 completes Phase 2. History/continuous ingestion remain unimplemented. Complete app container orchestration is still a later milestone.
+Phase 2 completed through squash integration of PR #5: an EF Core migration persists simulated readings in PostgreSQL, the API exposes the latest snapshot, and React displays it with manual refresh and explicit data states. Meaningful unit, real PostgreSQL integration, and browser tests replace the empty templates. Compose runs the database; the API and frontend run on the host. The owner approved starting [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), the first Phase 3 delivery: finite reproducible generation and local HTTP ingestion. This implementation is pending PR review; Phase 3 as a whole is not complete. History/continuous ingestion and complete app container orchestration remain later work.
 
 ## Residential MVP
 
@@ -22,8 +22,8 @@ Prioritize an early complete React/API/PostgreSQL feature. Add only the domain r
 | --- | --- | --- | --- |
 | 0. Foundation | Backend and frontend scaffolds with CI | Restore/build/test and frontend lint/build succeed locally and in GitHub Actions; limitations documented | Complete |
 | 1. Product definition | Residential MVP and first full stack use case | [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), approved requirements integrated through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) | Complete |
-| 2. Persisted latest reading | Store a simulated reading in PostgreSQL, query it through .NET, and display it in React | [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4): migration/seed, current metrics and states, PostgreSQL integration and browser verification | Approved; complete upon integration of [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) |
-| 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | Small deliveries for generation and HTTP ingestion, validation/duplicates/out-of-order arrivals, then continuous simulation/history seeding; focused unit/API/database tests | Next |
+| 2. Persisted latest reading | Store a simulated reading in PostgreSQL, query it through .NET, and display it in React | [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4): migration/seed, current metrics and states, PostgreSQL integration and browser verification through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) | Complete |
+| 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite generation/local HTTP ingestion, validation/duplicates/out-of-order arrivals, unit/PostgreSQL/browser tests; continuous simulation/history seeding in separate follow-ups | First delivery implemented for review; phase in progress |
 | 4. History and charts | Explore the last 24 hours of persisted readings in React | Correct time boundaries and units, ordered history, partial/empty data and gaps, accessible charts, and browser verification | Planned |
 | 5. Local MVP release | Reproduce and demonstrate the accepted MVP | Verified Docker/Compose and fresh-clone setup, all MVP acceptance evidence, actual screenshots/demo, known limitations, and release notes | Planned |
 
@@ -46,9 +46,9 @@ The [requirements document](requirements/MVP.md), tracked in [Issue #2](https://
 - The expected handling of missing, stale, duplicate, out-of-order, and invalid readings.
 - Local-development scope, access assumptions, and explicit non-goals.
 
-The owner approved the requirements and operating defaults on 2026-10-28, and Phase 1 completed through squash integration of PR #3. This approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferred accumulated-energy calculations. Current implementation progress is recorded under Phase 2 above.
+The owner approved the requirements and operating defaults on 2026-10-28, and Phase 1 completed through squash integration of PR #3. This approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferred accumulated-energy calculations. Current implementation progress is recorded in the phase table above.
 
-The first implementation is tracked in [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4), with its [API contract and decisions](architecture/latest-reading.md) documented. Owner review is complete; squash integration of PR #5 completes Phase 2. The next issue should cover a small generation-and-ingestion delivery under Phase 3 and remain pending review before implementation.
+The first implementation completed [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4) through PR #5, with its [API contract and decisions](architecture/latest-reading.md) documented. The owner subsequently approved [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6). Its [finite ingestion contract](architecture/simulated-ingestion.md) documents the local-only POST, database-enforced concurrency behavior, CLI options, and remaining limitations. This delivery preserves the React interface; review and squash integration remain separate from implementation.
 
 ## Delivery loop
 

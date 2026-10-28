@@ -1,6 +1,6 @@
 # Latest persisted reading
 
-This first feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. History, ingestion endpoints, and continuous simulation remain later work.
+This first feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. The next delivery adds [local finite simulated ingestion](simulated-ingestion.md) while preserving this GET contract. History and continuous simulation remain later work.
 
 ## API contract
 
@@ -33,7 +33,7 @@ An unsuccessful refresh retains the previous snapshot with a visible warning and
 - **HTTP development path:** Vite proxies `/api` to the local API, avoiding cross-origin configuration for this slice. Production HTTP/HTTPS and reverse-proxy configuration are outside this delivery.
 - **Small UI:** plain CSS and inline SVG are sufficient for this view; a dashboard component library is not introduced yet.
 
-The application has no ingestion endpoint in this slice. Database identity constraints do not imply that the future duplicate-ingestion HTTP contract is implemented.
+The local POST and duplicate-ingestion HTTP contract are documented separately in [simulated ingestion](simulated-ingestion.md). The existing migration and primary key support that delivery without a schema change.
 
 ## Verification
 
