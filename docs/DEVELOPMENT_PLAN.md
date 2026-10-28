@@ -8,30 +8,32 @@ Phase 0 established the .NET 10 backend layers, React/TypeScript/Vite scaffold, 
 
 The backend currently retains the weather forecast sample and two empty template tests. The frontend displays the project name and development status. Passing these tests demonstrates that the test runner works; it does not demonstrate application coverage. Database integration, solar telemetry, and dashboards are not implemented. Dockerfile paths have been checked; a successful image build and container run still need to be demonstrated. Compose is empty.
 
-## Proposed MVP
+## Residential MVP
 
-A user can run SolarWatch locally, generate clearly identified simulated device readings, and inspect current solar generation, battery level, consumption, and a historical view in the browser. This scope must be refined into acceptance criteria in Phase 1.
+A user monitors one residential installation with solar panels, a battery, and an inverter using clearly identified simulated readings. The MVP displays current solar generation (W), household consumption (W), battery state of charge (%), the latest measurement timestamp, and charts for the last 24 hours. Power and accumulated energy retain distinct meanings and units. See the [MVP requirements](requirements/MVP.md) for approved acceptance criteria and operating defaults.
 
-Real device protocols, billing, multi-tenant administration, and production operations are outside the proposed first release. Authentication and access requirements must be decided before any public deployment; the development environment is not a production security model.
+Real hardware, authentication, multiple users/installations, billing, accumulated-energy totals, and advanced operations are outside this local MVP. Authentication and access requirements must be reconsidered before any public deployment.
+
+Prioritize an early complete React/API/PostgreSQL feature. Add only the domain rules and supporting infrastructure needed for each delivery; do not complete the entire backend before connecting the browser.
 
 ## Phases and completion evidence
 
 | Phase | Outcome | Evidence required to finish | Status |
 | --- | --- | --- | --- |
 | 0. Foundation | Backend and frontend scaffolds with CI | Restore/build/test and frontend lint/build succeed locally and in GitHub Actions; limitations documented | Complete |
-| 1. Product definition | A bounded MVP and first use case | User scenarios, acceptance criteria, non-goals, data glossary, and a small issue backlog | Next |
-| 2. Domain and first use case | Validated measurement rules and an application operation | Tests cover agreed units, ranges, and invalid inputs; project dependencies remain acyclic | Planned |
-| 3. Persistence | Store and retrieve readings in PostgreSQL | EF Core migration, reproducible local database setup, and integration tests against a real database | Planned |
-| 4. Telemetry ingestion | Accept and query simulated device readings | Documented API contract, validation/error cases, deterministic simulator, and API integration tests | Planned |
-| 5. Dashboard | Display current readings and history from the API | React UI with loading/empty/error states, accessible interactions, and a Playwright test of the core journey | Planned |
-| 6. Live monitoring | Update the dashboard as readings arrive | SignalR delivery and reconnect behavior verified; stale/offline readings identified | Planned |
-| 7. First release | A reproducible, demonstrable MVP | Verified Docker/Compose setup, fresh-clone instructions, actual screenshots/demo, known limitations, and release notes | Planned |
+| 1. Product definition | Residential MVP and first full stack use case | [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), requirements, acceptance criteria, and scope reviewed and integrated | Approved; complete upon integration of [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) |
+| 2. Persisted latest reading | Store a simulated reading in PostgreSQL, query it through .NET, and display it in React | Minimal EF Core migration and development seed; current metrics, timestamp, loading/empty/error/freshness states; real-database integration and browser verification | Planned next |
+| 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | Deterministic seeding and simulator; validation, duplicates, out-of-order arrivals, and focused unit/API/database tests | Planned |
+| 4. History and charts | Explore the last 24 hours of persisted readings in React | Correct time boundaries and units, ordered history, partial/empty data and gaps, accessible charts, and browser verification | Planned |
+| 5. Local MVP release | Reproduce and demonstrate the accepted MVP | Verified Docker/Compose and fresh-clone setup, all MVP acceptance evidence, actual screenshots/demo, known limitations, and release notes | Planned |
+
+SignalR, automatic refresh, real-device integration, authentication, and other advanced features are later enhancements outside the current MVP. Their priority will be decided after the local MVP works.
 
 Each phase can contain several small pull requests. Add tests with the behavior they verify throughout development. New findings may change the order or split a phase; record the reason before expanding the scope. Mark a phase complete only when its evidence exists.
 
-## Phase 1: next delivery
+## Phase 1: approved requirements
 
-Create `docs/requirements/MVP.md` through a focused documentation pull request that defines:
+The [requirements document](requirements/MVP.md), tracked in [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), defines:
 
 - The intended user and the specific question the first screen should answer.
 - The first end-to-end scenario using simulated readings and its observable acceptance criteria.
@@ -40,7 +42,9 @@ Create `docs/requirements/MVP.md` through a focused documentation pull request t
 - The expected handling of missing, stale, duplicate, out-of-order, and invalid readings.
 - Local-development scope, access assumptions, and explicit non-goals.
 
-Open only the implementation issues needed for the next delivery. Each issue should state the problem, acceptance criteria, intended validation, and relevant dependencies. Detailed contracts and domain rules remain proposals until this phase resolves them.
+The owner approved the requirements and operating defaults on 2026-10-28. Phase 1 is complete upon squash integration of PR #3. This approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferred accumulated-energy calculations. Functional requirements are not implemented by this documentation change.
+
+After integration, open the first implementation issue for the persisted-latest-reading slice in the MVP document. Each issue should state the problem, acceptance criteria, intended validation, and relevant dependencies. Open later issues as the work becomes actionable.
 
 ## Delivery loop
 
