@@ -49,7 +49,9 @@ For documentation-only changes, check links, consistency, and the diff. The conf
 
 Use the pull request template to explain the problem, resulting behavior, and validation. Link the issue when one exists. Open a draft for work that is still being discussed; mark it ready when its acceptance criteria and relevant checks are satisfied.
 
-Review the complete diff and CI results before merging into `main`. For solo work, record real self-review and verification; external approval is not required by this guide. Keep meaningful commits when merging. Remove completed remote feature branches after merging, without rewriting published `main` history.
+Review the complete diff and CI results before merging into `main`. For solo work, record real self-review and verification; external approval is not required by this guide.
+
+Always use **Squash and merge**: each pull request contributes exactly one commit to `main`. Keep meaningful incremental commits on the working branch; they remain visible in the pull request. Use a Conventional Commit pull request title so the resulting squash commit clearly describes the delivery. After merging, start the next delivery on a new branch from updated `main`; do not reuse the old branch. Remove completed remote feature branches without rewriting published `main` history.
 
 Before committing, inspect staged files and exclude dependencies, build outputs, machine-specific configuration, credentials, and private keys. Use user secrets or ignored local configuration for credentials. Document sanitized examples only.
 

@@ -50,7 +50,7 @@ Open only the implementation issues needed for the next delivery. Each issue sho
 4. Review the diff for scope, correctness, generated files, and secrets; run the applicable checks in [CONTRIBUTING.md](../CONTRIBUTING.md).
 5. Create meaningful commits and push the branch. Open a pull request that explains the problem, resulting behavior, validation, and remaining limitations.
 6. Inspect the changes and CI results before merging. Self-review is valid for this solo project; describe it honestly.
-7. Merge the completed outcome, update progress when a milestone changes, and choose the next small delivery.
+7. Integrate the completed outcome using **Squash and merge**, producing one commit on `main` per pull request. Remove the completed remote branch, update progress when a milestone changes, and start the next delivery on a new branch from updated `main`.
 
 ## Portfolio evidence
 
