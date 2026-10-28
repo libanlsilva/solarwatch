@@ -70,6 +70,7 @@ The React client is scaffolded but does not communicate with the API yet. The pl
 ```text
 solarwatch/
 ├── .github/
+│   ├── pull_request_template.md
 │   └── workflows/
 │       ├── backend-ci.yml
 │       └── frontend-ci.yml
@@ -107,12 +108,14 @@ solarwatch/
 │   └── tests/
 ├── simulator/                   # Reserved
 ├── docs/
+│   ├── DEVELOPMENT_PLAN.md
 │   ├── architecture/            # Reserved
 │   └── screenshots/             # Reserved; no screenshots yet
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
 ├── docker-compose.yml           # Empty; services not configured yet
+├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
 ```
@@ -189,16 +192,22 @@ The image serves HTTP on container port 8080; the sample endpoint is available a
 
 ## Development roadmap
 
-1. **Repository foundation (current):** backend and frontend scaffolds, layer references, repository conventions, documentation, and CI configuration.
-2. **Energy domain and persistence:** define solar devices and measurements; introduce EF Core and PostgreSQL.
-3. **Telemetry pipeline:** add ingestion endpoints and a development simulator, with meaningful backend tests.
-4. **Dashboard:** connect the React client to the API; introduce Tailwind CSS, shadcn/ui, Recharts, and historical charts.
-5. **Live monitoring:** add SignalR updates and battery/consumption views.
-6. **Quality and local infrastructure:** expand integration and Playwright coverage, configure Compose services, and improve operational documentation.
+SolarWatch is developed in small, verifiable deliveries. See the [development plan](docs/DEVELOPMENT_PLAN.md) for completion criteria, current limitations, and the next delivery.
+
+0. **Foundation (complete):** backend/frontend scaffolds, layer references, repository conventions, and CI.
+1. **Product definition (next):** agree on the MVP, measurement semantics, and acceptance criteria.
+2. **Domain and first use case:** implement measurement rules with meaningful unit tests.
+3. **Persistence:** introduce EF Core, PostgreSQL, migrations, and database integration tests.
+4. **Telemetry ingestion:** add API ingestion, queries, and a simulator with integration coverage.
+5. **Dashboard:** connect React to the API; add UI components, charts, and a Playwright test of the core journey.
+6. **Live monitoring:** introduce SignalR updates and reconnect/stale-data handling.
+7. **First release:** verify Docker/Compose and fresh-clone setup; publish actual demo evidence and release notes.
+
+Tests and relevant documentation accompany each behavior change throughout these phases.
 
 ## Contributing
 
-Contributions are welcome as the foundation develops. Open an issue to discuss substantial changes, then submit a focused pull request describing the problem, approach, and validation. Follow `.editorconfig`, keep backend dependencies aligned with the architecture above, and run backend restore, build, and tests plus frontend lint and build before submitting. Add meaningful tests when introducing behavior.
+Contributions are welcome as the foundation develops. Follow [CONTRIBUTING.md](CONTRIBUTING.md) for scope, branches, commit conventions, validation, and pull request review. Discuss substantial changes in an issue and keep deliveries aligned with the current phase.
 
 Keep credentials out of committed configuration. Use .NET user secrets for local API credentials or ignored local environment files, and provide only sanitized examples when configuration is documented.
 
