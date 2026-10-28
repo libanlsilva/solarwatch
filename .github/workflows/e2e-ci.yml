@@ -1,0 +1,59 @@
+name: Full Stack E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  persisted-reading:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: solarwatch
+          POSTGRES_DB: solarwatch_e2e
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U solarwatch -d solarwatch_e2e"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      SOLARWATCH_E2E_CONNECTION: Host=127.0.0.1;Port=5432;Database=solarwatch_e2e;Username=solarwatch
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build API
+        run: dotnet build backend/src/SolarWatch.Api --configuration Release
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+      - name: Install Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps --no-shell chromium
+      - name: Run PostgreSQL / API / React browser tests
+        working-directory: frontend
+        run: npm run test:e2e
+      - name: Upload browser failure traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-failures
+          path: frontend/test-results/
+          retention-days: 7
