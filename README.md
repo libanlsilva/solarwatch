@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. Phase 3's finite and continuous simulation deliveries completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6) and [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8). Full reproducible 24-hour backfill is implemented under [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10), pending PR review. Phase 3 remains open until reviewed integration; the complete MVP remains unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). Phase 4 is next: define and personally approve the visual prototype and small reusable design system before dashboard implementation. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
 
 ## Goals and motivation
 
@@ -256,8 +256,8 @@ These are individual local validation measurements, not benchmarks or performanc
 0. **Foundation complete:** initial structure and CI.
 1. **Product definition complete:** approved residential MVP integrated through PR #3.
 2. **Persisted latest reading complete:** PR #5 integrated PostgreSQL → API → React, development commands, state handling, and tests.
-3. **Simulated ingestion in progress:** finite and continuous deliveries completed through PR #7 / Issue #6 and PR #9 / Issue #8. Full reproducible 24-hour backfill implemented for review under Issue #10; Phase 3 closes only after reviewed integration.
-4. **Dashboard visual design planned:** after the backfill delivery is integrated, define and approve a professional prototype and small reusable design system before implementing historical charts.
+3. **Simulated ingestion complete:** finite, continuous, and reproducible 24-hour preparation integrated through PR #7 / Issue #6, PR #9 / Issue #8, and PR #11 / Issue #10, with validation, safe conflicts, and automated verification.
+4. **Dashboard visual design next:** prepare its issue for owner review; prototype work starts only after scope approval. Define a professional prototype and small reusable design system, then obtain personal owner approval before implementing historical charts. No dashboard implementation or UI-library installation is part of the current delivery.
 5. **History and charts planned:** last 24 hours with correct units and gaps, following the approved visual design.
 6. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
