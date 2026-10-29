@@ -1,0 +1,100 @@
+/* Desktop v2: targeted refinements of the owner-approved visual direction. */
+
+/* Keep the original photograph, crop, palette and header. Lift the central roof
+   by reducing the horizontal tint and delaying the lower dark fade. */
+.veil {
+  background:
+    linear-gradient(180deg, #06110f 2%, #06110f80 12%, #06110f04 38%, #06110f06 61%, #06110fd9 82%, #06110f 94%),
+    linear-gradient(90deg, #010a074a, transparent 55%, #03100c24);
+}
+.card { box-shadow: 0 8px 20px #0002; }
+
+/* Extend the meaningful installation drawing into the former empty area.
+   The two bottom cards align without adding a metric or another content area. */
+.hero, .metric-pair { flex-shrink: 0; }
+.installation {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 22px;
+}
+.installation .muted { font-size: 12px; }
+.topology {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: 86px 76px;
+  gap: 20px 24px;
+  margin-top: 18px;
+}
+.topology::before, .topology::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: #728679;
+}
+.topology::before { top: 43px; left: 16.666%; right: 16.666%; height: 1px; }
+.topology::after { top: 43px; bottom: 38px; left: 50%; width: 1px; }
+.node {
+  min-width: 0;
+  padding: 12px 8px;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #385042;
+  border-radius: 14px;
+  background: #0c1a13;
+}
+.node svg { width: 27px; height: 27px; }
+.node-battery { grid-column: 2; }
+.footnote { font-size: 12px; line-height: 1.5; margin-top: 14px; }
+
+/* Secondary type has a 12px floor in this desktop revision. */
+.gauge .muted, .fresh, .zone, .checked, .range, .chart-subtitle,
+.legend, .y-axis, .x-axis, .chart-foot, .chart-unit, .review-note { font-size: 12px; }
+.date { font-size: 13px; }
+.gauge .muted { margin-top: 5px; }
+.battery, .latest { height: 248px; padding: 20px; }
+.fresh { margin-top: 12px; }
+.time { margin-top: 4px; }
+.checked { margin-top: 10px; padding-top: 9px; line-height: 1.55; }
+.chart { padding: 20px; }
+.chart-subtitle { margin-top: 4px; }
+.legend { gap: 20px; margin-top: 12px; }
+.legend i { width: 17px; }
+.legend .consumption {
+  background: repeating-linear-gradient(90deg, var(--teal) 0 5px, transparent 5px 8px);
+}
+.plot { grid-template-columns: 38px 1fr; gap: 12px; margin-top: 14px; }
+.y-axis { line-height: 1; }
+.x-axis { margin-left: 50px; margin-top: 10px; }
+.chart-foot { margin-top: 12px; padding-top: 10px; }
+.chart.battery-history { flex: 1; }
+.chart-unit { margin-left: 4px; }
+.review-note { line-height: 1.6; }
+
+/* Preview fallback only: deliberate mobile designs still await desktop approval. */
+@media (max-width: 1100px) {
+  .installation { padding: 20px; }
+  .topology { column-gap: 16px; }
+  .battery, .latest { height: 260px; padding: 16px; }
+  .chart .card-top { flex-wrap: wrap; }
+  .chart-foot { flex-wrap: wrap; }
+  .legend { flex-wrap: wrap; gap: 8px 14px; }
+}
+@media (max-width: 850px) {
+  .installation { flex: auto; }
+  .topology { column-gap: 12px; }
+  .node { font-size: 12px; padding-inline: 4px; }
+  .battery, .latest { height: 266px; padding: 14px; }
+  .zone { overflow-wrap: anywhere; }
+  .top-pair { gap: 12px; }
+  .battery .gauge { width: 125px; height: 125px; margin-top: 22px; }
+  .gauge strong { font-size: 35px; }
+  .gauge .muted { font-size: 12px; }
+  .range { padding-inline: 8px; }
+  .review-note { font-size: 12px; }
+}

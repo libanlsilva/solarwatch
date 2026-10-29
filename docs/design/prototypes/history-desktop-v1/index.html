@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SolarWatch — History Desktop v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="history-desktop-v1.css">
+</head>
+<body>
+<main class="shell">
+<img class="photo" src="solar-house-user.png" alt="Illustrative solar-panel roof at dusk, not a camera feed.">
+<div class="veil" aria-hidden="true"></div>
+<header>
+  <a class="brand" href="../desktop-v2/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 1.5v3m0 15v3M1.5 12h3m15 0h3M4.6 4.6l2.1 2.1m10.6 10.6 2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>SolarWatch</a>
+  <nav aria-label="Prototype navigation"><a href="../desktop-v2/index.html">Overview</a><a href="#history" aria-current="page">History</a><a href="../desktop-v2/index.html#installation">Installation</a></nav>
+  <div class="actions"><span class="simulated"><span class="dot"></span>Simulated data</span><button class="refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.7M20 7l-3-3"/></svg>Refresh</button></div>
+</header>
+<section class="page-heading" id="history" aria-labelledby="page-title"><div><p class="installation-label">Residential demo</p><h1 id="page-title">History</h1><p class="intro">A full day of readings. Every moment in context.</p></div><p class="view-note">24 hours<br><span>One-minute readings</span></p></section>
+<section class="window" aria-label="Displayed historical interval">
+  <div><p class="label">24-hour window · Local time</p><p class="date-range"><time datetime="2026-10-27T18:32:00Z">27 Oct 2026, 14:32:00</time><span class="to">to</span><time datetime="2026-10-28T18:32:00Z">28 Oct 2026, 14:32:00</time></p></div>
+  <div class="window-meta"><p class="zone">America/Havana <span>UTC−04:00</span></p><p class="checked">Last checked 28 Oct, 14:32:15 · Manual refresh</p></div>
+</section>
+<p class="preview-notice" id="preview-notice" role="status" hidden>Design preview only. No request has been made and the displayed snapshot has not changed.</p>
+<div class="workspace">
+<section class="card chart-card" aria-labelledby="chart-title">
+  <div class="card-top"><h2 id="chart-title">Readings over time</h2><span class="coverage-status" id="coverage-status">Partial history</span></div>
+  <div class="legend" aria-label="Chart legend"><span><i class="solar-key"></i>Solar generation</span><span><i class="home-key"></i>Home consumption</span><span><i class="battery-key"></i>Battery charge</span><span><i class="gap-key"></i>No readings</span></div>
+  <div class="plot-heading"><h3>Solar generation &amp; home consumption</h3><span>W</span></div>
+  <div class="plot power-plot"><div class="y-axis"><span>2,400</span><span>1,800</span><span>1,200</span><span>600</span><span>0</span></div><div class="plot-surface"><svg id="power-chart" viewBox="0 0 1000 210" preserveAspectRatio="none" tabindex="0" role="slider" aria-label="Inspect historical power readings by minute" aria-valuemin="0" aria-valuemax="1440" aria-valuenow="1060" aria-describedby="inspection-help"></svg><div class="empty-overlay" hidden><strong>No readings in this 24-hour window</strong><p>Measurements will appear here when available.</p></div></div></div>
+  <div class="plot-heading battery-heading"><h3>Battery state of charge</h3><span>%</span></div>
+  <div class="plot battery-plot"><div class="y-axis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div class="plot-surface"><svg id="battery-chart" viewBox="0 0 1000 116" preserveAspectRatio="none" tabindex="0" role="slider" aria-label="Inspect historical battery readings by minute" aria-valuemin="0" aria-valuemax="1440" aria-valuenow="1060" aria-describedby="inspection-help"></svg><div class="empty-overlay" hidden><strong>No battery readings</strong></div></div></div>
+  <div class="time-axis"><span>14:32<small>27 Oct</small></span><span>20:32<small>27 Oct</small></span><span>02:32<small>28 Oct</small></span><span>08:32<small>28 Oct</small></span><span>14:32<small>28 Oct</small></span></div>
+  <div class="availability"><span>Data</span><div id="availability-track" aria-label="History includes an initial period without readings and a 30-minute missing interval."></div></div>
+  <div class="chart-foot"><p>Shaded periods contain no readings. Lines stop at each gap.</p><p id="inspection-help">Point at either chart or focus it and use <kbd>←</kbd> <kbd>→</kbd> to inspect a minute.</p></div>
+</section>
+<aside class="inspection-column" aria-label="Historical reading details">
+  <section class="card inspector" aria-labelledby="selected-title">
+    <div class="card-top"><h2 id="selected-title">Selected reading</h2><span class="selection-dot" aria-hidden="true"></span></div>
+    <p class="reading-status" id="reading-status">Reading available</p>
+    <p class="selected-date" id="selected-date">28 Oct 2026</p><p class="selected-time" id="selected-time">08:12:00</p><p class="selected-zone">America/Havana · UTC−04:00</p>
+    <dl class="selected-values"><div><dt><i class="solar-key"></i>Solar generation</dt><dd><span id="selected-solar">1,360</span><small>W</small></dd></div><div><dt><i class="home-key"></i>Home consumption</dt><dd><span id="selected-home">740</span><small>W</small></dd></div><div><dt><i class="battery-key"></i>Battery charge</dt><dd><span id="selected-battery">58</span><small>%</small></dd></div></dl>
+    <p class="selection-note" id="selection-note">Values at the selected measurement time.</p>
+    <div class="minute-controls"><button type="button" id="previous-minute" aria-label="Inspect previous minute">←</button><span>Move by one minute</span><button type="button" id="next-minute" aria-label="Inspect next minute">→</button></div>
+    <p class="sr-only" id="selection-summary" aria-live="polite"></p>
+  </section>
+  <section class="card coverage-note"><div class="card-top"><h2>Reading coverage</h2><i class="gap-key" aria-hidden="true"></i></div><p id="coverage-explanation">Some minutes have no recorded measurement. These areas stay blank on both charts.</p><div class="adjacent-readings" id="adjacent-readings" hidden></div><div class="coverage-intervals" id="coverage-intervals"><p><span>Before the first reading</span><strong>27 Oct, 14:32–16:01</strong></p><p><span>Missing interval · 30 minutes</span><strong>28 Oct, 00:12–00:41</strong></p></div></section>
+</aside>
+</div>
+<div class="snapshot-note"><span>Illustrative simulated readings · No data is estimated in gaps.</span><span>Snapshot reference: 28 Oct 2026, 14:32:15</span></div>
+</main>
+<section class="review-tools" aria-label="Design review scenarios"><span>Prototype review</span><button type="button" data-scenario="reading" aria-pressed="true">Available reading</button><button type="button" data-scenario="gap" aria-pressed="false">Missing interval</button><button type="button" data-scenario="empty" aria-pressed="false">Empty 24-hour window</button><p>Scenario controls are for this design review only.</p></section>
+<footer>History Desktop v1 · Illustrative design, not connected to the API · Pending your approval</footer>
+<script src="history-prototype.js"></script>
+</body>
+</html>

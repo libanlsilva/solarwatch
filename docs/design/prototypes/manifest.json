@@ -1,0 +1,245 @@
+{
+  "purpose": "Immutable approved review exports; SHA-256 of the exact locally approved bytes. Historical review labels are superseded by ../README.md.",
+  "files": [
+    {
+      "path": "desktop-v2/index.html",
+      "sha256": "2cb37eb02fdf4d720b1b80378eb10a830dd804f3bcc4794b8d3017e68023789f"
+    },
+    {
+      "path": "desktop-v2/desktop-v2.css",
+      "sha256": "8f70e26d69edc4d4e40b190e7adc9bde6e2cfbb2873f311ed599162e1f6dd56e"
+    },
+    {
+      "path": "desktop-v2/solar-house-user.png",
+      "sha256": "b02b77574af92fcfe16b60fbacb3c1b50273c6b54eb5d3d48ee3e04ae1e1969c"
+    },
+    {
+      "path": "desktop-v2/solarwatch-desktop-02.png",
+      "sha256": "8ba9c2e9aeee98d5c3021691ac637a68ba2575713ad46f4cbe8c9837c692fc44"
+    },
+    {
+      "path": "mobile-v1/index.html",
+      "sha256": "63fc65d5d250afc853d91e4645e859fdc18c072cc59852e501fb2e5322b3a913"
+    },
+    {
+      "path": "mobile-v1/mobile-v1.css",
+      "sha256": "a0172afbfcbc1a2978a22c7daf4e5473cf841cd5b83f165b3312637d6e8c0c40"
+    },
+    {
+      "path": "mobile-v1/illustrative-fixtures.js",
+      "sha256": "d3bbaebd232bf0f8386bc3ecc85c0c3100f4cc828da5d0c0267788745ee6a645"
+    },
+    {
+      "path": "mobile-v1/solar-house-user.png",
+      "sha256": "b02b77574af92fcfe16b60fbacb3c1b50273c6b54eb5d3d48ee3e04ae1e1969c"
+    },
+    {
+      "path": "mobile-v1/solarwatch-mobile-01.png",
+      "sha256": "d884fe0eb074c7e8404d46167c076f04f0816eaa4b12d9b5e325c3c7f53bbcc6"
+    },
+    {
+      "path": "mobile-v1/solarwatch-mobile-01-full.png",
+      "sha256": "df7be0670bfba7444b8d53fec23abbe8fa01e1fc2a52c783d5968e4a45ec2d66"
+    },
+    {
+      "path": "history-desktop-v1/index.html",
+      "sha256": "dead2248b35b712ca011f0914a690d5aae0178e7f914b1ed27435a476c785f4d"
+    },
+    {
+      "path": "history-desktop-v1/history-desktop-v1.css",
+      "sha256": "093c3e396520a933f8608feaf40140666689b8ea71209c4276182ea8fe7b1e0f"
+    },
+    {
+      "path": "history-desktop-v1/history-prototype.js",
+      "sha256": "860721912a9b83197173381aaa49e2b2787a4bdbd1cd1ee7514fe69788647942"
+    },
+    {
+      "path": "history-desktop-v1/solar-house-user.png",
+      "sha256": "b02b77574af92fcfe16b60fbacb3c1b50273c6b54eb5d3d48ee3e04ae1e1969c"
+    },
+    {
+      "path": "history-desktop-v1/solarwatch-history-desktop-01.png",
+      "sha256": "3014a3c9c90df6f147949e19b986d6a56c515271d0c2192e034591909b3e1556"
+    },
+    {
+      "path": "history-desktop-v1/solarwatch-history-desktop-01-gap.png",
+      "sha256": "aa559495f6ea4482ae6d041e2cb4dd389be5f38b4c2bf1b292d3280ef0f9d66b"
+    },
+    {
+      "path": "history-desktop-v1/solarwatch-history-desktop-01-empty.png",
+      "sha256": "1adc84e4f89d8c288c10c9d8cf88f5b77e395c7605980f371d304d8cae0800a2"
+    },
+    {
+      "path": "history-mobile-v1/index.html",
+      "sha256": "9635d29f249a0e201817d803b296fe822d304dcf31734ae60dc7c25aac00e51a"
+    },
+    {
+      "path": "history-mobile-v1/history-mobile-v1.css",
+      "sha256": "d77e1dd68cc8154c8557fe3fcb3046611e019d70c5a99a8e9b9ee3746cfa74a3"
+    },
+    {
+      "path": "history-mobile-v1/history-mobile-prototype.js",
+      "sha256": "604b73fc48613999e75878c8ab9f8e98885a9bd476ff8b06a029a826e93c74ee"
+    },
+    {
+      "path": "history-mobile-v1/solar-house-user.png",
+      "sha256": "b02b77574af92fcfe16b60fbacb3c1b50273c6b54eb5d3d48ee3e04ae1e1969c"
+    },
+    {
+      "path": "history-mobile-v1/solarwatch-history-mobile-01.png",
+      "sha256": "f16b4cef4a642f181880c1c1a8b939b873c84258c14bb1359ee30a08cd00f42e"
+    },
+    {
+      "path": "history-mobile-v1/solarwatch-history-mobile-01-full.png",
+      "sha256": "a4fb756095026675300b849d6cbe8acd568babbd6915587e6e8f2aaecb0bb3a9"
+    },
+    {
+      "path": "history-mobile-v1/solarwatch-history-mobile-01-touch.png",
+      "sha256": "407d48b1147843bc2c7b9bc7e4863299409bb0234b7237a9446c3b6290e58994"
+    },
+    {
+      "path": "history-mobile-v1/solarwatch-history-mobile-01-gap-full.png",
+      "sha256": "ae5d953353ce9ff662e2a461302c526a1f17d8722b64b8bd511c9a306182b0b4"
+    },
+    {
+      "path": "history-mobile-v1/solarwatch-history-mobile-01-empty-full.png",
+      "sha256": "da30d70c62b5257c0f6a91e921ad643560dcb6aa005e18a74060dfa427f9e74a"
+    },
+    {
+      "path": "interface-states-v1/index.html",
+      "sha256": "014f662a596544f24fbbced64693807de15ba997f2464b83ca4826fa564e7231"
+    },
+    {
+      "path": "interface-states-v1/overview-desktop.html",
+      "sha256": "bc0bf0bfa050b37a309e251fe4ec3664fd0a9763271dca9f2b788ad422c72fee"
+    },
+    {
+      "path": "interface-states-v1/overview-mobile.html",
+      "sha256": "b419e3370ca713b9251915baaa28279babbc72c22cc8db277530dd2cc4f19c1f"
+    },
+    {
+      "path": "interface-states-v1/history-desktop.html",
+      "sha256": "96ea45d31b580b81befc3f6354de27c0296ca9d302318b12a3ed9bacdf854061"
+    },
+    {
+      "path": "interface-states-v1/history-mobile.html",
+      "sha256": "c8fe137da588fe956145745beea0737f58175082aadbf53b771d1abd94fc60d6"
+    },
+    {
+      "path": "interface-states-v1/state-layer.css",
+      "sha256": "5bbad2935d3f9fcaca8e489f2e58988ac7bfd60aa6b586f6c6af970b8421e1d3"
+    },
+    {
+      "path": "interface-states-v1/state-layer.js",
+      "sha256": "f7942975e4e2cf6369c955e75bf14b4d121bb1f0ceec217c38cdbc7eb3190b97"
+    },
+    {
+      "path": "interface-states-v1/gallery-preview.png",
+      "sha256": "cfaf950cdac26d1dc2a13724f564ef29eba2492a4a9643cbe51a3fa6abbf5faf"
+    },
+    {
+      "path": "interface-states-v1/REVIEW.md",
+      "sha256": "937e7bdb56d8febfbc8fa1e8f28970f2ba66b33a6cddf6ed0ccadf5362232356"
+    },
+    {
+      "path": "interface-states-v1/SHORT_PHONE_AUDIT.md",
+      "sha256": "4d9befd93f74d2f10798db5557888e1c003bd3e58b09c208c1e6672cf9024908"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-empty.png",
+      "sha256": "229fa48d079a4c1646bcbc66458c6f8ae5448833eb72e2254b1b0eea0a1dd57b"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-error.png",
+      "sha256": "04de87af4c34f57e3108e09bb65eca73f58da1e9515c7a4ad9b2bf7fa3175ac5"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-loading.png",
+      "sha256": "afd47ddcfcd864dc492af36fd9b096e9f8cf451affe335aa165c66f6a69fb8b9"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-partial.png",
+      "sha256": "2d769dc17f73d972143ea76014ee539c72e0df8d97468068ee037e8e1391a2c0"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-refreshing.png",
+      "sha256": "6d58873a1a5952603ccc59e5ef4623d729c17a987d449b2cadb9054f319f3fc9"
+    },
+    {
+      "path": "interface-states-v1/captures/history-desktop-retained.png",
+      "sha256": "48f613130eea12a51ed0c2c49f08acede09bc65a0fa5dcbf0d951bb38c66f0bf"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-empty.png",
+      "sha256": "d5f4091c092fe58b42e0aeb5243e083171bb72623c0a8e470fb99cfb98db1d6f"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-error.png",
+      "sha256": "5acb8a3e9cf403916511fd577866bac1c53e1509e291f57fbb52e9ec80bd5cfb"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-loading.png",
+      "sha256": "08fb7551d8d640dc220f38e3af0982aa026dda92c9732e5beb8769161203f059"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-partial.png",
+      "sha256": "3097e163c28287b5b72c9955e8ffd7244944308ebaa755262ade143e154e0509"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-refreshing.png",
+      "sha256": "fe985aad0ab7a7851c9f6d250df4c1f80d51d58fe821b18d8ca3d76c188620ca"
+    },
+    {
+      "path": "interface-states-v1/captures/history-mobile-retained.png",
+      "sha256": "07cba8323596832701905ebbb1115c3ba77368744c6053f7eace718e4adc1c4d"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-empty.png",
+      "sha256": "56524430ea66dac88390920d14b6dc879957726259472f99bb84969e73499b01"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-error.png",
+      "sha256": "5848415903c7ed14af255a5b0acb55b124b3704940ab00b6602a3ccf9cdd0aee"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-loading.png",
+      "sha256": "b4150c7d32e4204b8b56a06f980bdde22b9f382b88539b5cf67fa2d98e8a806f"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-refreshing.png",
+      "sha256": "11ad5b2d2cdb2be0a07d24a4c96b78ec1a1f8598836e2e3df885d20fd0544a36"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-retained.png",
+      "sha256": "c93986f61373e5d650d251d1a735b5b20e514f14c8a147dbb587fdb909192e67"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-desktop-stale.png",
+      "sha256": "665fcc17d3a7ef40314b7b6d351fea4950ab1b58bebd3a6549f90178db5cd585"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-empty.png",
+      "sha256": "b7133c287f52f608b37bdb547eabe19eed2271f0ad59579bfc606265e1a29114"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-error.png",
+      "sha256": "7e1fb284cff51a8572da42e08d51c910e0fdc5ac9d878192bb848fffabc4f7e3"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-loading.png",
+      "sha256": "550b1574a0d0972c718abc69f26277150d395d875805ad1332b6796ffc4de8b2"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-refreshing.png",
+      "sha256": "f5265b844bbbd4b24aba694f673eb123b9299645a776e04e811d4027d7281a43"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-retained.png",
+      "sha256": "4ff99ec265b68ac7125de344e0592b85ac48a21fc02f2bf5e2730a15fa302314"
+    },
+    {
+      "path": "interface-states-v1/captures/overview-mobile-stale.png",
+      "sha256": "495380d5fa1038d7a8886fbc286a44b4e65e7772954b75f9298740588688c1e4"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SolarWatch — Mobile v1 Overview proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile-v1.css">
+</head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1.5v3m0 15v3M1.5 12h3m15 0h3M4.6 4.6l2.1 2.1m10.6 10.6 2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></symbol>
+<symbol id="house" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h14V9M10 21v-7h4v7"/></symbol>
+<symbol id="battery" viewBox="0 0 24 24"><rect x="3" y="6" width="17" height="12" rx="3"/><path d="M23 10v4M7 10v4m4-4v4m4-4v4"/></symbol>
+<symbol id="panel" viewBox="0 0 24 24"><path d="M5 4h14l3 13H2L5 4Zm-1.5 7h17M9 4 8 17m7-13 1 13M12 17v4m-4 0h8"/></symbol>
+<symbol id="inverter" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 7h6M8 14c2-6 4 6 8 0"/></symbol>
+</defs></svg>
+<div class="mobile-shell">
+<img class="hero-photo" src="solar-house-user.png" alt="Illustrative modern home with rooftop solar panels at dusk, not a camera feed.">
+<div class="photo-veil" aria-hidden="true"></div>
+<header class="app-header">
+  <div class="brand-row"><a class="brand" href="#overview" aria-label="SolarWatch Overview"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><use href="#sun"/></svg>SolarWatch</a><button class="refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.7M20 7l-3-3"/></svg>Refresh</button></div>
+  <nav aria-label="Mobile prototype navigation"><a href="#overview" aria-current="location">Overview</a><a href="#history-preview">History</a><a href="#installation">Installation</a></nav>
+</header>
+<main>
+  <section class="hero" id="overview" aria-labelledby="overview-title">
+    <div class="context-row"><span>Residential demo</span><span class="simulated"><span class="dot"></span>Simulated data</span></div>
+    <h1 id="overview-title">Your home,<br>in full view.</h1>
+    <p>Solar, home and battery.<br>A clearer picture of your home.</p>
+  </section>
+  <div class="content">
+    <div class="power-pair" aria-label="Latest instantaneous power">
+      <section class="card power solar"><div class="card-top"><h2>Solar generation</h2><svg class="metric-icon" fill="none" stroke="var(--yellow)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><use href="#sun"/></svg></div><div class="metric-value">1,200<span>W</span></div><p class="support">Instantaneous power</p><div class="metric-accent solar-accent" aria-hidden="true"></div></section>
+      <section class="card power home"><div class="card-top"><h2>Home consumption</h2><svg class="metric-icon" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><use href="#house"/></svg></div><div class="metric-value">800<span>W</span></div><p class="support">Instantaneous power</p><div class="metric-accent home-accent" aria-hidden="true"></div></section>
+    </div>
+    <section class="card measured-state" aria-labelledby="battery-title">
+      <div class="card-top"><h2 id="battery-title">Battery charge</h2><span class="fresh"><span class="dot"></span>Fresh at last check</span></div>
+      <div class="state-details">
+        <div class="gauge"><svg viewBox="0 0 112 112" role="img" aria-label="Battery state of charge 65 percent"><circle cx="56" cy="56" r="46" fill="none" stroke="#233126" stroke-width="5" stroke-dasharray="2 4"/><circle cx="56" cy="56" r="46" fill="none" stroke="var(--lime)" stroke-width="6" stroke-linecap="round" stroke-dasharray="188 289"/></svg><div class="gauge-value"><strong>65<span>%</span></strong><span class="support">State of charge</span></div></div>
+        <div class="latest"><h3>Latest measurement</h3><p class="time">14:32:00</p><p class="date">28 Oct 2026</p><p class="zone">America/Havana<br><span>UTC−04:00</span></p></div>
+      </div>
+      <div class="check-note"><p>Checked <strong>14:32:15</strong></p><p>15 seconds old at server check</p></div>
+      <p class="preview-notice" id="preview-notice" role="status" hidden>Design preview only. No data request has been made.</p>
+    </section>
+    <section class="history-preview" id="history-preview" aria-labelledby="history-heading">
+      <div class="section-heading"><h2 id="history-heading">The last 24 hours</h2><span class="support">Overview</span></div>
+      <section class="card chart" aria-labelledby="power-title">
+        <div class="card-top"><h3 id="power-title">Solar &amp; home</h3><span class="unit">W</span></div>
+        <p class="support chart-subtitle">Illustrative history · 1-minute cadence</p>
+        <div class="legend"><span><i></i>Solar generation</span><span><i class="consumption"></i>Home consumption</span></div>
+        <div class="plot"><div class="y-axis"><span>2,400</span><span>1,200</span><span>0</span></div><div class="traces"><div class="grid" aria-hidden="true"><span></span><span></span><span></span></div><svg id="power-chart" viewBox="0 0 500 155" preserveAspectRatio="none" role="img" aria-label="Illustrative 24-hour power history in watts. Latest solar generation 1,200 W, home consumption 800 W."></svg></div></div>
+        <div class="x-axis"><span>14:32</span><span>02:32</span><span>14:32</span></div>
+        <div class="chart-foot"><p>27–28 Oct 2026</p><p>Local time · America/Havana</p></div>
+      </section>
+      <section class="card chart battery-history" aria-labelledby="soc-title">
+        <div class="card-top"><h3 id="soc-title">Battery charge</h3><span class="soc-latest">Latest 65%</span></div>
+        <p class="support chart-subtitle">State of charge · 0–100%</p>
+        <div class="plot"><div class="y-axis"><span>100%</span><span>50%</span><span>0%</span></div><div class="traces"><div class="grid" aria-hidden="true"><span></span><span></span><span></span></div><svg id="battery-chart" viewBox="0 0 500 103" preserveAspectRatio="none" role="img" aria-label="Illustrative 24-hour battery state of charge history. Latest 65 percent, scale 0 to 100 percent."></svg></div></div>
+        <div class="x-axis"><span>14:32</span><span>02:32</span><span>14:32</span></div>
+        <div class="chart-foot"><p>27–28 Oct 2026</p><p>Local time · America/Havana</p></div>
+      </section>
+    </section>
+    <section class="card installation" id="installation" aria-labelledby="installation-title">
+      <div class="card-top"><h2 id="installation-title">Your installation</h2><span class="support">Conceptual</span></div>
+      <div class="topology" role="group" aria-label="Conceptual layout: solar panels and home join the central inverter; the battery connects below it. No measured energy flows or directions are shown.">
+        <div class="node"><svg aria-hidden="true" fill="none" stroke="var(--yellow)" stroke-width="1.4" stroke-linejoin="round"><use href="#panel"/></svg><span>Solar panels</span></div>
+        <div class="node"><svg aria-hidden="true" fill="none" stroke="#c9d6cd" stroke-width="1.4" stroke-linecap="round"><use href="#inverter"/></svg><span>Inverter</span></div>
+        <div class="node"><svg aria-hidden="true" fill="none" stroke="var(--teal)" stroke-width="1.4" stroke-linejoin="round"><use href="#house"/></svg><span>Home</span></div>
+        <div class="node node-battery"><svg aria-hidden="true" fill="none" stroke="var(--lime)" stroke-width="1.4" stroke-linecap="round"><use href="#battery"/></svg><span>Battery</span></div>
+      </div>
+      <p class="support installation-note">Connections are illustrative.<br>Energy flows are not measured.</p>
+    </section>
+  </div>
+</main>
+<footer><p>Mobile v1 · Design proposal</p><p>Illustrative data · Not connected to the API</p><p class="pending">Pending your approval</p></footer>
+</div>
+<script src="illustrative-fixtures.js"></script>
+<script>
+// Static design-review behavior only. These anchors are not application routes.
+document.querySelector('.refresh').addEventListener('click',()=>{document.querySelector('#preview-notice').hidden=false;});
+document.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',()=>{document.querySelectorAll('nav a').forEach(item=>item.removeAttribute('aria-current'));link.setAttribute('aria-current','location');}));
+</script>
+</body>
+</html>
