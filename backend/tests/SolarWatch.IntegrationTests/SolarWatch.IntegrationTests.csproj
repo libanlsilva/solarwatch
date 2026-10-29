@@ -17,10 +17,12 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <Compile Include="../Support/ManualTimeProvider.cs" Link="Support/ManualTimeProvider.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SolarWatch.Api\SolarWatch.Api.csproj" />
+    <ProjectReference Include="../../../simulator/SolarWatch.Simulator/SolarWatch.Simulator.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,8 +11,10 @@ public static class ReadingGenerator
         var end = ReadingTimestamp.Normalize(endAt);
         var start = end.AddMinutes(-(count - 1));
         var random = new Random(seed);
-        return Enumerable.Range(0, count).Select(index => new ReadingSnapshot(
-            InstallationReading.DemoInstallationId, start.AddMinutes(index),
-            random.Next(0, 5001), random.Next(100, 3001), random.Next(0, 101))).ToArray();
+        return Enumerable.Range(0, count).Select(index => Next(random, start.AddMinutes(index))).ToArray();
     }
+
+    public static ReadingSnapshot Next(Random random, DateTimeOffset measuredAt) => new(
+        InstallationReading.DemoInstallationId, ReadingTimestamp.Normalize(measuredAt),
+        random.Next(0, 5001), random.Next(100, 3001), random.Next(0, 101));
 }

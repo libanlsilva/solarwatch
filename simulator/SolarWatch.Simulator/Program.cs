@@ -10,6 +10,18 @@ try
     var options = SimulatorOptions.Parse(args);
     using var handler = new HttpClientHandler { AllowAutoRedirect = false };
     using var client = new HttpClient(handler) { BaseAddress = options.ApiUrl, Timeout = TimeSpan.FromSeconds(15) };
+    if (options.Continuous)
+    {
+        using var stop = new CancellationTokenSource();
+        ConsoleCancelEventHandler interrupt = (_, eventArgs) =>
+        {
+            eventArgs.Cancel = true;
+            stop.Cancel();
+        };
+        Console.CancelKeyPress += interrupt;
+        try { return await SimulatorRunner.RunAsync(options, client, Console.Out, stop.Token); }
+        finally { Console.CancelKeyPress -= interrupt; }
+    }
     return await SimulatorRunner.RunAsync(options, client, Console.Out);
 }
 catch (ArgumentException)
