@@ -35,7 +35,7 @@ public partial class LatestReadingTests : IAsyncLifetime
     }
 
     private static WebApplicationFactory<Program> CreateFactory(string connectionString,
-        string environment = "Development", string remote = "127.0.0.1") =>
+        string environment = "Development", string remote = "127.0.0.1", TimeProvider? serverClock = null) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
@@ -43,7 +43,7 @@ public partial class LatestReadingTests : IAsyncLifetime
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<TimeProvider>();
-                services.AddSingleton<TimeProvider>(new FixedClock());
+                services.AddSingleton<TimeProvider>(serverClock ?? new FixedClock());
                 services.AddSingleton<IStartupFilter>(new RemoteAddressFilter(remote));
             });
         });

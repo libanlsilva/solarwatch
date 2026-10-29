@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process'
+import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { test, expect } from '@playwright/test'
 
 function command(...args: string[]) {
@@ -74,6 +74,62 @@ test('simulator ingests a finite batch and React discovers it only on manual ref
   expect(repeated.match(/HTTP 409/g)).toHaveLength(3)
   const after = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
   expect(after.reading).toEqual(latest.reading)
+})
+
+test('continuous CLI persists its immediate sample and React discovers it on manual refresh', async ({ page, request }) => {
+  test.setTimeout(45_000)
+  const reference = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
+  const oldEnd = new Date(new Date(reference.asOf).getTime() - 6 * 60_000).toISOString()
+  simulate(['--end-at', oldEnd])
+  await page.clock.install({ time: new Date('2040-01-01T00:00:00Z') })
+  await page.goto('/')
+  await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
+  const previousTime = await page.locator('time').first().getAttribute('datetime')
+
+  // Launch the actual executable without a dotnet-run wrapper or database credentials.
+  const simulator = spawn('dotnet', [
+    '../simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll',
+    '--continuous', '--api-url', 'http://127.0.0.1:5181', '--seed', '43',
+  ], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env: Object.fromEntries(Object.entries(process.env).filter(([key]) =>
+      !/^(SOLARWATCH_(E2E|TEST)_CONNECTION|ConnectionStrings__SolarWatch|POSTGRES_PASSWORD)$/i.test(key))),
+  })
+  let stdout = ''
+  let stderr = ''
+  simulator.stdout.on('data', (chunk) => { stdout += chunk.toString() })
+  simulator.stderr.on('data', (chunk) => { stderr += chunk.toString() })
+  const exited = new Promise<number | null>((resolve) => {
+    simulator.once('error', () => resolve(null))
+    simulator.once('close', (code) => resolve(code))
+  })
+  try {
+    await expect.poll(() => stdout, { timeout: 10_000 }).toContain('Accepted ')
+    const latest = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
+    expect(new Date(latest.reading.measuredAt).getTime()).toBeGreaterThan(new Date(oldEnd).getTime())
+    await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
+    expect(await page.locator('time').first().getAttribute('datetime')).toBe(previousTime)
+    await page.getByRole('button', { name: 'Refresh readings' }).click()
+    await expect(page.getByText('Fresh at last check')).toBeVisible()
+    await expect(page.getByTestId('solar-power')).toHaveText(`${latest.reading.solarPowerW.toLocaleString('en-US')} W`)
+    await expect(page.getByTestId('consumption-power')).toHaveText(`${latest.reading.consumptionPowerW.toLocaleString('en-US')} W`)
+    await expect(page.getByTestId('battery-charge')).toHaveText(`${latest.reading.batteryStateOfChargePercent}%`)
+    await expect(page.locator(`time[datetime="${latest.reading.measuredAt}"]`)).toBeVisible()
+
+    // Node cannot deliver a console Ctrl+C event on Windows; Linux CI verifies the real SIGINT path.
+    simulator.kill(process.platform === 'win32' ? 'SIGTERM' : 'SIGINT')
+    await expect.poll(() => simulator.exitCode ?? simulator.signalCode, { timeout: 5_000 }).not.toBeNull()
+    const code = await exited
+    if (process.platform !== 'win32') {
+      expect(code).toBe(0)
+      expect(stdout).toContain('Stopped by operator. No write is pending.')
+      expect(stdout).toContain('attempted=1, accepted=1, rejected=0, errors=0, uncertain=0')
+    }
+    expect(stderr).toBe('')
+  } finally {
+    if (simulator.exitCode === null && simulator.signalCode === null) simulator.kill('SIGKILL')
+    await exited
+  }
 })
 
 test('persisted PostgreSQL fixture reaches React through the API despite a different browser clock', async ({
