@@ -1,6 +1,6 @@
 # Approved dashboard design handoff
 
-This is **design evidence**, not the implemented React dashboard. [Issue #12](https://github.com/libanlsilva/solarwatch/issues/12) and Phase 4 remain open until the owner reviews and integrates the design PR. The MVP remains unfinished.
+This is **design evidence**, not the implemented React dashboard. [Issue #12](https://github.com/libanlsilva/solarwatch/issues/12) and Phase 4 complete with the owner-approved squash integration of [PR #13](https://github.com/libanlsilva/solarwatch/pull/13). The owner definitively approved the reusable system and resource package as well as every visual reference. The MVP remains unfinished.
 
 Read [DESIGN.md](DESIGN.md) for the small reusable system, [asset provenance](ASSETS.md) for publication permissions and [validation](VALIDATION.md) for checks and limitations.
 
@@ -22,7 +22,7 @@ The desktop capture is a prototype with illustrative readings. It is not a scree
 
 ## Reproduce and inspect
 
-1. Clone the branch/PR and open the chosen `index.html` in a modern browser. Keep the folder structure: state specimens use relative `<base>` references to their approved Overview/History sources.
+1. Clone the repository and open the chosen `index.html` in a modern browser. Keep the folder structure: state specimens use relative `<base>` references to their approved Overview/History sources.
 2. Use 1440px viewport width for desktop, 390×844 for the mobile capture, and 360/430px widths for narrow/wide mobile review. Dedicated mobile files intentionally stay phone-sized on a large review canvas.
 3. Manrope is requested from Google Fonts; internet access is needed for that font. No font file is vendored. If unavailable, the declared Segoe UI/sans-serif fallback renders the design with potentially different wrapping. PNG captures preserve the reviewed appearance.
 4. History review controls switch the fixed available/gap/empty fixtures. Mobile supports taps, keyboard-accessible minute controls and a range selector. The normal fixture selects 28 Oct 2026 08:12:00 local; the example zone is America/Havana (UTC−04:00 on these dates).
@@ -48,4 +48,4 @@ The package contains approved HTML/CSS/SVG fixture sources, the owner-authorized
 
 The local corrected exports are authoritative. The earlier exploratory Stitch screen does not mirror them. No private tool access is needed to reproduce the included design.
 
-The seven state treatments are approved, including per-resource loading/empty/error/retry, stale latest readings, refreshing, retained data and partial history. The final system document and publication packaging are submitted for PR review. No React components, UI/chart libraries, historical API, backend or simulator changes are part of this delivery. After review and squash integration, close Phase 4 and prepare a separate Phase 5 issue; do not start dashboard implementation automatically.
+The seven state treatments are approved, including per-resource loading/empty/error/retry, stale latest readings, refreshing, retained data and partial history. The owner definitively approved the final system document and publication packaging in PR #13. No React components, UI/chart libraries, historical API, backend or simulator changes are part of this delivery. Phase 4 completes with PR #13 integration. Phase 5 starts with a separate Overview implementation issue prepared for personal review; do not start implementation automatically.

@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). Phase 4 is in final design review: the owner approved the Overview/History desktop and mobile prototypes and all seven interface states. The [design handoff](docs/design/README.md) documents the reusable system and review artifacts; final PR approval and integration are still pending. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). **Phase 4 is complete with the reviewed squash integration of [PR #13](https://github.com/libanlsilva/solarwatch/pull/13):** the owner definitively approved the four Overview/History desktop/mobile prototypes, all seven interface states, the reusable system and the publication package. The [design handoff](docs/design/README.md) remains the reference for future implementation. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
 
 ## Goals and motivation
 
@@ -30,7 +30,7 @@ Captured from the local PostgreSQL/API/React demonstration; values and timestamp
 
 ## Planned functionality
 
-The approved dashboard prototypes guide the next MVP delivery after the design PR is reviewed and integrated: implement the React dashboard and history queries/charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
+The approved dashboard prototypes guide Phase 5 in small reviewed deliveries: first the shared responsive shell and Overview using the existing latest-reading API, then historical queries and real-data charts. Implementation requires approval of each delivery issue. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
 
 Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh/kWh**; 1 kWh = 1,000 Wh. This delivery does not calculate energy totals from power samples or convert battery charge percentage into stored energy.
 
@@ -99,7 +99,7 @@ See the [latest-reading contract](docs/architecture/latest-reading.md), [ingesti
 
 ## Dashboard design (not implemented)
 
-The [approved design references](docs/design/README.md) include Overview and History on desktop/mobile and seven interface states. [DESIGN.md](docs/design/DESIGN.md) records exact styles, reusable component responsibilities, independent query states, accessibility decisions and implementation recommendations. The [asset record](docs/design/ASSETS.md) documents publication permission for the supplied photograph; the external Ekova reference is excluded. Phase 4 remains open for final PR review. These prototypes are separate from the functional screenshot above and do not change local application setup.
+The [approved design references](docs/design/README.md) include Overview and History on desktop/mobile and seven interface states. [DESIGN.md](docs/design/DESIGN.md) records exact styles, reusable component responsibilities, independent query states, accessibility decisions and implementation recommendations. The [asset record](docs/design/ASSETS.md) documents publication permission for the supplied photograph; the external Ekova reference is excluded. Phase 4 completes with [PR #13](https://github.com/libanlsilva/solarwatch/pull/13); implementing the approved dashboard belongs to Phase 5. These prototypes are separate from the functional screenshot above and do not change local application setup.
 
 ## Local setup
 
