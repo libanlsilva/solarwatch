@@ -2,7 +2,7 @@
 
 [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6) delivers the first part of Phase 3: a finite .NET simulator sends readings over HTTP, PostgreSQL persists them, and the existing React view discovers the latest one on manual refresh. The [latest-reading GET contract](latest-reading.md) remains compatible.
 
-[Issue #8](https://github.com/libanlsilva/solarwatch/issues/8) adds opt-in continuous execution for review. The existing API/schema, security/validation guarantees, finite mode, and React interface remain compatible. Full reproducible 24-hour backfill is a later delivery.
+[PR #9](https://github.com/libanlsilva/solarwatch/pull/9) completes [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8) and the second Phase 3 delivery: opt-in continuous execution. The existing API/schema, security/validation guarantees, finite mode, and React interface remain compatible. Phase 3 remains in progress; full reproducible 24-hour backfill is the next separate delivery, followed by dedicated visual design before historical charts.
 
 ## Local write boundary
 

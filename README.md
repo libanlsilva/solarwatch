@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible simulation and local HTTP ingestion. The second delivery implements opt-in continuous simulation under [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), pending PR review. Phase 3 remains in progress; complete 24-hour backfill and the full MVP remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible simulation and local HTTP ingestion. The second delivery completed through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8): opt-in continuous simulation with controlled shutdown. Phase 3 remains in progress; complete reproducible 24-hour backfill and the full MVP remain unfinished.
 
 ## Goals and motivation
 
@@ -230,9 +230,10 @@ GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit t
 0. **Foundation complete:** initial structure and CI.
 1. **Product definition complete:** approved residential MVP integrated through PR #3.
 2. **Persisted latest reading complete:** PR #5 integrated PostgreSQL → API → React, development commands, state handling, and tests.
-3. **Simulated ingestion in progress:** finite-generation/local-HTTP delivery completed through PR #7 / Issue #6; opt-in continuous simulation implemented for review under Issue #8. Next: complete reproducible 24-hour backfill in a separate delivery.
-4. **History and charts planned:** last 24 hours with correct units and gaps.
-5. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
+3. **Simulated ingestion in progress:** finite-generation/local-HTTP delivery completed through PR #7 / Issue #6; continuous simulation completed through PR #9 / Issue #8. Next: complete reproducible 24-hour backfill in a separate delivery.
+4. **Dashboard visual design planned:** after the backfill delivery, define and approve a professional prototype and small reusable design system before implementing historical charts.
+5. **History and charts planned:** last 24 hours with correct units and gaps, following the approved visual design.
+6. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
 Before implementing the historical dashboard, the owner must approve a professional visual prototype and a small reusable design system in a separate delivery. The intended direction is a modern energy-monitoring dashboard, preferably dark, with metric cards, charts, and navigation. Tailwind CSS and shadcn/ui will be considered when justified. When planning charts, also evaluate more realistic solar-production and household-consumption patterns for the simulator. These are future decisions; the current functional view and synthetic generator are retained.
 
