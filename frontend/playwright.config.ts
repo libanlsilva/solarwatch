@@ -29,6 +29,8 @@ export default defineConfig({
         ASPNETCORE_ENVIRONMENT: 'Development',
         ASPNETCORE_URLS: 'http://127.0.0.1:5181',
         ConnectionStrings__SolarWatch: connection,
+        // Full history reruns intentionally exercise 1441 unique violations; assertions verify them.
+        'Logging__LogLevel__Microsoft.EntityFrameworkCore': 'Critical',
       },
     },
     {

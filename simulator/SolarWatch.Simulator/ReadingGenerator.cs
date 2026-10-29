@@ -5,6 +5,15 @@ namespace SolarWatch.Simulator;
 
 public static class ReadingGenerator
 {
+    public const int HistoryReadingCount = 1441;
+
+    public static IReadOnlyList<ReadingSnapshot> GenerateHistory24h(int seed, DateTimeOffset endAt)
+    {
+        var start = ReadingTimestamp.Normalize(endAt).AddHours(-24);
+        var random = new Random(seed);
+        return Enumerable.Range(0, HistoryReadingCount).Select(index => Next(random, start.AddMinutes(index))).ToArray();
+    }
+
     public static IReadOnlyList<ReadingSnapshot> Generate(int count, int seed, DateTimeOffset endAt)
     {
         if (count is < 1 or > SimulatorOptions.MaxCount) throw new ArgumentOutOfRangeException(nameof(count));
