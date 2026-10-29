@@ -80,12 +80,13 @@ public partial class LatestReadingTests
         public override DateTimeOffset GetUtcNow() => Now;
     }
 
-    private sealed class LostAcknowledgmentHandler(HttpMessageHandler inner, CancellationTokenSource stop) : DelegatingHandler(inner)
+    private sealed class LostAcknowledgmentHandler(HttpMessageHandler inner, CancellationTokenSource stop, int stopAfter = 1) : DelegatingHandler(inner)
     {
+        private int acknowledged;
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken);
-            if (request.Method == HttpMethod.Post && response.StatusCode == HttpStatusCode.Created)
+            if (request.Method == HttpMethod.Post && response.StatusCode == HttpStatusCode.Created && ++acknowledged == stopAfter)
             {
                 response.Dispose();
                 stop.Cancel();

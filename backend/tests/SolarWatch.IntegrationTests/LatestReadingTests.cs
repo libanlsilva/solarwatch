@@ -11,12 +11,15 @@ using SolarWatch.Api;
 using SolarWatch.Application;
 using SolarWatch.Domain;
 using SolarWatch.Infrastructure;
+using Xunit.Abstractions;
 
 namespace SolarWatch.IntegrationTests;
 
 // Tests in this class run sequentially and clear only the explicitly configured *_tests database.
 public partial class LatestReadingTests : IAsyncLifetime
 {
+    private readonly ITestOutputHelper testOutput;
+    public LatestReadingTests(ITestOutputHelper testOutput) => this.testOutput = testOutput;
     private static readonly DateTimeOffset Now = DateTimeOffset.Parse("2026-10-01T12:00:00Z");
     private string connection = null!;
     private WebApplicationFactory<Program> factory = null!;
