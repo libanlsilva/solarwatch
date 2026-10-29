@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7), resolving [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible simulation and local HTTP ingestion. Phase 3 remains in progress; continuous simulation, complete history backfill, and the full MVP remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible simulation and local HTTP ingestion. The second delivery implements opt-in continuous simulation under [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), pending PR review. Phase 3 remains in progress; complete 24-hour backfill and the full MVP remain unfinished.
 
 ## Goals and motivation
 
@@ -18,9 +18,10 @@ SolarWatch makes solar generation, household energy consumption, and battery cha
 - Development-only migration, current-time or controlled-time seed, and explicitly confirmed demo-clear commands.
 - A local Development-only ingestion endpoint with field validation and PostgreSQL-enforced duplicate conflicts, including concurrent requests.
 - A finite .NET HTTP simulator with reproducible seed/timestamps, server-based current time, bounded batches, and explicit acceptance/rejection/error reporting.
+- Optional continuous execution with an immediate reading, 60-second cadence, fresh server `asOf` per sample, and controlled Ctrl+C shutdown.
 - Meaningful backend unit tests, real PostgreSQL integration tests, frontend unit tests, and Playwright browser tests, executed in CI.
 
-The generated weather endpoint and empty template classes/tests have been removed. The finite simulator and the separate development seed are not continuous schedulers.
+The generated weather endpoint and empty template classes/tests have been removed. Finite simulation remains the default; the separate development seed remains available.
 
 ![Latest reading for the simulated residential installation](docs/screenshots/latest-reading.png)
 
@@ -28,7 +29,7 @@ Captured from the local PostgreSQL/API/React demonstration; values and timestamp
 
 ## Planned functionality
 
-Later MVP deliveries add continuous simulated ingestion and 24-hour history charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment are outside this first slice.
+Later MVP deliveries add reproducible full 24-hour backfill and history charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
 
 Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh/kWh**; 1 kWh = 1,000 Wh. This delivery does not calculate energy totals from power samples or convert battery charge percentage into stored energy.
 
@@ -57,6 +58,7 @@ UnitTests → Domain, Application
 UnitTests → Simulator (for generation and HTTP-runner tests)
 Simulator → Application (shared contracts), Domain transitively
 IntegrationTests → Api (including its real PostgreSQL infrastructure)
+IntegrationTests → Simulator (for scheduled HTTP / PostgreSQL verification)
 ```
 
 The Domain owns reading validation. Application defines query/ingestion services and a single purpose-built storage contract. Infrastructure supplies EF Core and its implementation; Api composes the services. The simulator uses HTTP and shared contracts without database access. There is no generic repository framework or messaging layer.
@@ -84,7 +86,7 @@ solarwatch/
 │   ├── requirements/MVP.md
 │   ├── architecture/               # Latest-reading and ingestion contracts
 │   └── screenshots/
-├── simulator/SolarWatch.Simulator/ # Finite .NET HTTP generator
+├── simulator/SolarWatch.Simulator/ # Finite / opt-in continuous .NET HTTP generator
 ├── docker-compose.yml
 ├── dotnet-tools.json
 ├── .env.example
@@ -172,7 +174,17 @@ Repeat that command to see three HTTP 409 rejections without overwriting rows. A
 
 Defaults: count 10, seed 42, API `http://127.0.0.1:5171`, ending instant from server `asOf`. `--count` accepts 1–120, `--seed` accepts a signed 32-bit integer, and `--end-at` requires an explicit UTC/offset timestamp no later than server time. `--help` prints all options. The solution build includes the simulator. Values are synthetic power (W) and charge (%), not a physical or energy model.
 
-The summary reports requested/attempted/accepted/rejected/error/unattempted counts. Exit 0 means all requested readings were acknowledged; invalid options, any rejection, or errors yield exit 1. 400/409 rejections allow the finite run to continue; unexpected HTTP/network/acknowledgment errors stop it without automatic retries. A failed acknowledgment may follow a persisted write, so inspect the API before retrying.
+For opt-in continuous execution, run this command instead of a finite batch:
+
+```sh
+dotnet run --project simulator/SolarWatch.Simulator --configuration Release --no-build -- --continuous --api-url http://127.0.0.1:5171 --seed 42
+```
+
+The first reading is submitted immediately after querying server `asOf`. Subsequent iterations target a 60-second cadence, with one active GET/POST sequence at a time. Slow work skips elapsed minute slots; late timer wake-ups start a new cadence rather than producing closely spaced catch-up requests. Every reading gets a new server reference; the local clock only controls elapsed waiting. React continues updating only when you press **Refresh readings**.
+
+Stop with **Ctrl+C**. A normal stop while waiting or fetching the reference exits 0 with no pending write. Cancellation during an unacknowledged POST reports uncertainty and exits 1; the row may already exist. Continuous mode stops on any 400/409 rejection, unexpected HTTP status, malformed reference/acknowledgment, timeout, or network error. Its summary reports attempted/accepted/rejected/error/uncertain counts. There are no automatic retries or catch-up batches. A seed reproduces the value sequence for equivalent iterations; live timestamps come from the API and are not a deterministic historical batch. `--count` and `--end-at` cannot be combined with `--continuous`; invalid combinations fail before contacting the API.
+
+The finite-mode summary reports requested/attempted/accepted/rejected/error/unattempted counts. Exit 0 means all requested readings were acknowledged; invalid options, any rejection, or errors yield exit 1. 400/409 rejections still allow the finite run to continue; unexpected HTTP/network/acknowledgment errors stop it without automatic retries. A failed acknowledgment may follow a persisted write, so inspect the API before retrying.
 
 **Local writes only:** `POST /api/readings` is absent outside Development and rejects non-loopback peers/hosts, forwarded requests, and non-local browser origins. Point the CLI directly at a loopback-bound API; it accepts no public URL or database credentials. Keep Development private: do not expose it through public listeners, reverse proxies, or tunnels. This guard does not replace authentication. See the [POST contract and limitations](docs/architecture/simulated-ingestion.md).
 
@@ -209,7 +221,7 @@ $env:SOLARWATCH_E2E_CONNECTION = $env:ConnectionStrings__SolarWatch.Replace('Dat
 npm run test:e2e
 ```
 
-Build the Release solution first, including the API and simulator. Playwright launches its own API on port 5181 and Vite preview on port 4181; those ports must be free. It migrates the E2E database and clears its demo readings before each test. The ingestion test runs the actual CLI, verifies stale/current batches, manual discovery in React, and duplicate conflicts. Success scenarios use the real API/database; network interruption/delay is injected only for failure/loading checks. Browser clocks are deliberately shifted in freshness tests.
+Build the Release solution first, including the API and simulator. Playwright launches its own API on port 5181 and Vite preview on port 4181; those ports must be free. It migrates the E2E database and clears its demo readings before each test. Ingestion tests run the actual finite and continuous CLI, verify persisted data, manual discovery in React, and duplicate conflicts. Linux CI sends SIGINT to verify graceful continuous shutdown; Node cannot deliver console Ctrl+C on Windows, so local Windows browser cleanup terminates the child process. Cancellation and later scheduled iterations are also verified with controlled-time unit/PostgreSQL tests on both platforms, without real-minute waits. Success scenarios use the real API/database; network interruption/delay is injected only for failure/loading checks. Browser clocks are deliberately shifted in freshness tests.
 
 GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit tests, and the full browser suite in a separate PostgreSQL-backed job. CI uses trust authentication only for disposable test services; local Compose requires a password. Browser failure traces are uploaded for diagnosis.
 
@@ -218,7 +230,7 @@ GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit t
 0. **Foundation complete:** initial structure and CI.
 1. **Product definition complete:** approved residential MVP integrated through PR #3.
 2. **Persisted latest reading complete:** PR #5 integrated PostgreSQL → API → React, development commands, state handling, and tests.
-3. **Simulated ingestion in progress:** first finite-generation/local-HTTP delivery completed through PR #7 / Issue #6. Next: opt-in continuous one-reading-per-minute simulation; complete reproducible history backfill follows in a separate delivery.
+3. **Simulated ingestion in progress:** finite-generation/local-HTTP delivery completed through PR #7 / Issue #6; opt-in continuous simulation implemented for review under Issue #8. Next: complete reproducible 24-hour backfill in a separate delivery.
 4. **History and charts planned:** last 24 hours with correct units and gaps.
 5. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
@@ -226,7 +238,7 @@ Before implementing the historical dashboard, the owner must approve a professio
 
 ## Current limitations
 
-This is a local, unauthenticated demo with Development-only ingestion. There is no continuous simulator, 24-hour query/chart, energy integration, real hardware, or public deployment. Each simulator POST is atomic; the whole run is not one transaction. Vite's proxy supports development/preview; production static hosting would require an appropriate API routing/deployment configuration. The existing API Dockerfile is retained, but this delivery validates the Compose database and host-run services, not complete app container orchestration. The UI is unchanged; a future visual prototype and small design system will precede the full dashboard.
+This is a local, unauthenticated demo with Development-only ingestion. There is no complete reproducible 24-hour backfill, history query/chart, energy integration, real hardware, or public deployment. Continuous execution has no checkpoint/resume or automatic recovery; uncertain writes require inspection. Each simulator POST is atomic; the whole run is not one transaction. Vite's proxy supports development/preview; production static hosting would require an appropriate API routing/deployment configuration. The existing API Dockerfile is retained, but this delivery validates the Compose database and host-run services, not complete app container orchestration. The UI is unchanged; an approved visual prototype and small design system will precede the historical dashboard.
 
 ## Contributing and license
 
