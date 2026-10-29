@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). Phase 4 is next: define and personally approve the visual prototype and small reusable design system before dashboard implementation. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). Phase 4 is in final design review: the owner approved the Overview/History desktop and mobile prototypes and all seven interface states. The [design handoff](docs/design/README.md) documents the reusable system and review artifacts; final PR approval and integration are still pending. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
 
 ## Goals and motivation
 
@@ -30,7 +30,7 @@ Captured from the local PostgreSQL/API/React demonstration; values and timestamp
 
 ## Planned functionality
 
-Later MVP deliveries define and approve the dashboard visual design, then add history queries and charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
+The approved dashboard prototypes guide the next MVP delivery after the design PR is reviewed and integrated: implement the React dashboard and history queries/charts. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
 
 Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh/kWh**; 1 kWh = 1,000 Wh. This delivery does not calculate energy totals from power samples or convert battery charge percentage into stored energy.
 
@@ -41,7 +41,7 @@ Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh
 | Backend | ASP.NET Core 10, C# | Latest-reading API, local ingestion, development commands, and .NET simulator |
 | Persistence | EF Core, Npgsql, PostgreSQL 17 | Migration and real persistence |
 | Frontend | React, TypeScript, Vite | Responsive latest-reading view |
-| UI/charts | Plain CSS for this slice; Tailwind CSS, shadcn/ui, Recharts planned | No dashboard component system or charts yet |
+| UI/charts | Plain CSS today; Tailwind CSS and selective shadcn/ui evaluated, Recharts recommended for later charts | Design handoff only; no UI/chart packages installed |
 | Testing | xUnit, Node.js test runner, Playwright | Unit, PostgreSQL integration, and Chromium E2E tests |
 | Infrastructure | Docker Compose, GitHub Actions | PostgreSQL service; backend, frontend, and Full Stack E2E workflows |
 | Real-time updates | SignalR | Later enhancement; current refresh is manual |
@@ -96,6 +96,10 @@ solarwatch/
 ```
 
 See the [latest-reading contract](docs/architecture/latest-reading.md), [ingestion/simulator contract](docs/architecture/simulated-ingestion.md), [approved MVP](docs/requirements/MVP.md), and [development plan](docs/DEVELOPMENT_PLAN.md).
+
+## Dashboard design (not implemented)
+
+The [approved design references](docs/design/README.md) include Overview and History on desktop/mobile and seven interface states. [DESIGN.md](docs/design/DESIGN.md) records exact styles, reusable component responsibilities, independent query states, accessibility decisions and implementation recommendations. The [asset record](docs/design/ASSETS.md) documents publication permission for the supplied photograph; the external Ekova reference is excluded. Phase 4 remains open for final PR review. These prototypes are separate from the functional screenshot above and do not change local application setup.
 
 ## Local setup
 

@@ -1,0 +1,41 @@
+/* State-only contents; approved layouts, tokens, imagery and card structures remain the base. */
+[hidden]{display:none!important}
+.state-notice{max-width:350px;margin-top:10px;border:1px solid #42584588;border-radius:12px;background:#06110fee;padding:8px 10px;color:#d4e0d6;line-height:1.45}
+.state-notice strong{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;letter-spacing:-.15px;color:var(--ink,#f4f7f3)}
+.state-notice p{margin:3px 0 0!important;font-size:12px!important;font-weight:400!important;line-height:1.45!important;color:#b8cbbd!important;max-width:none!important}
+.state-notice[data-tone=attention]{border-color:#a1ac4a88}
+.state-notice[data-tone=attention] strong,.state-attention{color:#f1ff16!important}
+.state-symbol{flex-shrink:0;font-size:13px;line-height:1}
+.state-neutral{color:#b6c9bc!important}
+.state-reference span,.state-reference strong{display:block;font-size:12px;font-weight:400;line-height:1.55}
+.state-reference strong{margin-top:3px;color:#d9e6db}
+.state-reference strong[data-tone=attention]{color:#f1ff16}
+.state-skeleton{display:inline-block;vertical-align:middle;background:linear-gradient(100deg,#1a2d21,#294132 50%,#1a2d21);border-radius:7px;min-height:15px}
+.state-number{width:110px;height:36px}.state-time{width:135px;height:25px}.state-date{width:100px;height:13px}
+.gauge .state-number{width:64px!important;height:26px!important}
+.state-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;text-align:center;background:#06110fcc;pointer-events:none;z-index:2}
+.state-overlay strong{font-size:14px;font-weight:500;color:#e0e9e1;line-height:1.4}.state-overlay p{font-size:12px;color:#a9bbb0;line-height:1.5;margin:0!important}
+.state-spinner{display:inline-block;flex-shrink:0;width:15px;height:15px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:state-spin 1s linear infinite}
+@keyframes state-spin{to{transform:rotate(360deg)}}
+button.state-action{min-height:44px}button.state-action:disabled{cursor:default;opacity:.85}button.state-action[aria-busy=true]{background:#dae642!important;color:#111b09!important}
+.state-reference,.state-reference *{overflow-wrap:normal}
+.state-footer{font-size:12px!important;line-height:1.7!important;text-align:center;color:#a9bbb0;padding:14px 16px!important}
+.state-review-controls{width:100%;max-width:1440px;margin:14px auto 0;padding:16px;border-top:1px solid #29433a;text-align:center;font:12px/1.6 Manrope,"Segoe UI",sans-serif;color:#a9bbb0}
+.state-review-controls>p{margin:0 0 8px}.state-review-controls button,.state-review-controls a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin:3px;padding:9px 13px;border:1px solid #425744;border-radius:99px;background:#10201b;color:#d4e1d7;font:12px/1.4 Manrope,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer}.state-review-controls button:disabled{opacity:.4;cursor:default}.state-review-controls button:focus-visible,.state-review-controls a:focus-visible{outline:2px solid #f1ff16;outline-offset:3px}
+.state-hidden-accessible{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+html[data-state-surface=overview-mobile] .state-number{width:90px;height:32px}
+html[data-state-surface=overview-mobile] .state-notice{padding:7px 9px}
+html[data-state-surface=overview-mobile] .state-notice strong{font-size:13px}
+html[data-state-surface=overview-mobile] .state-notice p{font-size:12px!important}
+html[data-state-surface=overview-mobile] .state-notice{max-width:350px}
+html[data-state-surface=overview-mobile] .state-time{width:120px;height:23px}
+html[data-state-surface=overview-mobile] .fresh{white-space:normal;line-height:1.3}
+html[data-state-surface=overview-mobile] .check-note p{line-height:1.55}
+html[data-state-surface=overview-mobile] .state-review-controls,html[data-state-surface=history-mobile] .state-review-controls{max-width:430px}
+html[data-state-surface=history-mobile] .state-reference strong{font-size:12px;line-height:1.45}
+html[data-state-surface=history-mobile] .state-number{width:55px;height:25px}
+html[data-state-surface=history-mobile] .state-time{width:110px;height:16px}
+.state-chart-disabled{pointer-events:none;cursor:default!important}
+.state-plot-loading>.y-axis,.state-card-loading>.time-axis,.state-card-loading>.x-axis{visibility:hidden}
+.state-coverage-unavailable{background:transparent!important;outline:1px dashed #49604c;outline-offset:-1px}
+@media(prefers-reduced-motion:reduce){.state-spinner{animation:none}}
