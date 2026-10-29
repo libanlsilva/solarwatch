@@ -6,7 +6,7 @@ SolarWatch is a portfolio project developed incrementally from its initial scaff
 
 Phase 0 established the .NET 10 backend layers, React/TypeScript/Vite scaffold, repository conventions, MIT license, and backend/frontend CI. The initial commit is `a19d148`.
 
-Phase 2 completed through squash integration of PR #5: an EF Core migration persists simulated readings in PostgreSQL, the API exposes the latest snapshot, and React displays it with manual refresh and explicit data states. Meaningful unit, real PostgreSQL integration, and browser tests replace the empty templates. Compose runs the database; the API and frontend run on the host. The owner approved starting [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), the first Phase 3 delivery: finite reproducible generation and local HTTP ingestion. This implementation is pending PR review; Phase 3 as a whole is not complete. History/continuous ingestion and complete app container orchestration remain later work.
+Phase 2 completed through squash integration of PR #5: an EF Core migration persists simulated readings in PostgreSQL, the API exposes the latest snapshot, and React displays it with manual refresh and explicit data states. Meaningful unit, real PostgreSQL integration, and browser tests replace the empty templates. Compose runs the database; the API and frontend run on the host. The first Phase 3 delivery completed through reviewed squash integration of [PR #7](https://github.com/libanlsilva/solarwatch/pull/7), resolving [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible generation and local HTTP ingestion. Phase 3 as a whole is not complete. Continuous simulation, complete history backfill, history queries/charts, and complete app container orchestration remain later work.
 
 ## Residential MVP
 
@@ -23,7 +23,7 @@ Prioritize an early complete React/API/PostgreSQL feature. Add only the domain r
 | 0. Foundation | Backend and frontend scaffolds with CI | Restore/build/test and frontend lint/build succeed locally and in GitHub Actions; limitations documented | Complete |
 | 1. Product definition | Residential MVP and first full stack use case | [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2), approved requirements integrated through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3) | Complete |
 | 2. Persisted latest reading | Store a simulated reading in PostgreSQL, query it through .NET, and display it in React | [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4): migration/seed, current metrics and states, PostgreSQL integration and browser verification through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5) | Complete |
-| 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite generation/local HTTP ingestion, validation/duplicates/out-of-order arrivals, unit/PostgreSQL/browser tests; continuous simulation/history seeding in separate follow-ups | First delivery implemented for review; phase in progress |
+| 3. Simulated ingestion | Submit and refresh reproducible readings through the complete app | [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite generation/local HTTP ingestion, validation/duplicates/out-of-order arrivals, unit/PostgreSQL/browser tests; continuous simulation/history seeding in separate follow-ups | First delivery complete; phase in progress |
 | 4. History and charts | Explore the last 24 hours of persisted readings in React | Correct time boundaries and units, ordered history, partial/empty data and gaps, accessible charts, and browser verification | Planned |
 | 5. Local MVP release | Reproduce and demonstrate the accepted MVP | Verified Docker/Compose and fresh-clone setup, all MVP acceptance evidence, actual screenshots/demo, known limitations, and release notes | Planned |
 
@@ -31,9 +31,11 @@ SignalR, automatic refresh, real-device integration, authentication, and other a
 
 Each phase can contain several small pull requests. Add tests with the behavior they verify throughout development. New findings may change the order or split a phase; record the reason before expanding the scope. Mark a phase complete only when its evidence exists.
 
+The next small Phase 3 outcome is an opt-in continuous simulator that submits one reading per minute through the existing local API, with controlled shutdown and honest failure reporting. Complete reproducible 24-hour backfill remains a separate follow-up. Prepare and approve each issue before implementation; completing the finite-ingestion delivery does not authorize starting either follow-up.
+
 ## Future dashboard design
 
-The current Phase 2 view is an accepted functional baseline. Before building the complete dashboard interface, define a visual prototype and a small design system in a separate, focused delivery. Prefer a modern dark energy-monitoring dashboard with metric cards, charts, and navigation; use reusable components and introduce Tailwind CSS or shadcn/ui when justified. This direction does not add a redesign to Phase 2 or the next simulated-ingestion issue.
+The current Phase 2 view is an accepted functional baseline. Before implementing the historical dashboard, define a professional visual prototype and a small reusable design system in a separate, focused delivery and obtain owner approval. Prefer a modern dark energy-monitoring dashboard with metric cards, charts, and navigation; introduce Tailwind CSS or shadcn/ui when justified. When planning charts, evaluate more realistic solar-production and household-consumption patterns for the simulator. This future evaluation does not change the current generator or expand the next continuous-simulation issue.
 
 ## Phase 1: approved requirements
 
@@ -48,7 +50,7 @@ The [requirements document](requirements/MVP.md), tracked in [Issue #2](https://
 
 The owner approved the requirements and operating defaults on 2026-10-28, and Phase 1 completed through squash integration of PR #3. This approval confirms one reading per minute, staleness after five minutes, manual refresh, UTC storage with local-time display, and deferred accumulated-energy calculations. Current implementation progress is recorded in the phase table above.
 
-The first implementation completed [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4) through PR #5, with its [API contract and decisions](architecture/latest-reading.md) documented. The owner subsequently approved [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6). Its [finite ingestion contract](architecture/simulated-ingestion.md) documents the local-only POST, database-enforced concurrency behavior, CLI options, and remaining limitations. This delivery preserves the React interface; review and squash integration remain separate from implementation.
+The first implementation completed [Issue #4](https://github.com/libanlsilva/solarwatch/issues/4) through PR #5, with its [API contract and decisions](architecture/latest-reading.md) documented. The owner also approved the finite-ingestion implementation; PR #7 completes Issue #6 and the first Phase 3 delivery. Its [finite ingestion contract](architecture/simulated-ingestion.md) documents the local-only POST, database-enforced concurrency behavior, CLI options, and remaining limitations. The React interface is preserved. Further Phase 3 work follows the same issue/branch/CI/review/squash workflow.
 
 ## Delivery loop
 

@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery adds finite simulated ingestion under [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), pending PR review. Continuous simulation and the full MVP remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. The first Phase 3 delivery completed through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7), resolving [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6): finite reproducible simulation and local HTTP ingestion. Phase 3 remains in progress; continuous simulation, complete history backfill, and the full MVP remain unfinished.
 
 ## Goals and motivation
 
@@ -218,11 +218,11 @@ GitHub Actions runs backend tests against PostgreSQL, frontend lint/build/unit t
 0. **Foundation complete:** initial structure and CI.
 1. **Product definition complete:** approved residential MVP integrated through PR #3.
 2. **Persisted latest reading complete:** PR #5 integrated PostgreSQL → API → React, development commands, state handling, and tests.
-3. **Simulated ingestion in progress:** first finite-generation/local-HTTP delivery implemented for review under Issue #6; continuous simulation and complete history backfill remain separate follow-ups.
+3. **Simulated ingestion in progress:** first finite-generation/local-HTTP delivery completed through PR #7 / Issue #6. Next: opt-in continuous one-reading-per-minute simulation; complete reproducible history backfill follows in a separate delivery.
 4. **History and charts planned:** last 24 hours with correct units and gaps.
 5. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
-Before the complete dashboard UI is developed, a separate design step will define a visual prototype and a small reusable design system. The intended direction is a modern energy-monitoring dashboard, preferably dark, with metric cards, charts, and navigation. Tailwind CSS and shadcn/ui will be considered when justified. The current functional view is retained for this delivery.
+Before implementing the historical dashboard, the owner must approve a professional visual prototype and a small reusable design system in a separate delivery. The intended direction is a modern energy-monitoring dashboard, preferably dark, with metric cards, charts, and navigation. Tailwind CSS and shadcn/ui will be considered when justified. When planning charts, also evaluate more realistic solar-production and household-consumption patterns for the simulator. These are future decisions; the current functional view and synthetic generator are retained.
 
 ## Current limitations
 
