@@ -34,6 +34,8 @@ public class GetLatestReadingTests
 
     private sealed class StubStore(InstallationReading? reading) : IReadingStore
     {
+        public Task<bool> TryAddAsync(InstallationReading value, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
         public CancellationToken Token { get; private set; }
         public Task<InstallationReading?> GetLatestAsync(CancellationToken cancellationToken)
         {

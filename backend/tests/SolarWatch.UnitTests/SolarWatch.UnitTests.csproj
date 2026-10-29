@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\SolarWatch.Domain\SolarWatch.Domain.csproj" />
     <ProjectReference Include="..\..\src\SolarWatch.Application\SolarWatch.Application.csproj" />
+    <ProjectReference Include="../../../simulator/SolarWatch.Simulator/SolarWatch.Simulator.csproj" />
   </ItemGroup>
 
 </Project>

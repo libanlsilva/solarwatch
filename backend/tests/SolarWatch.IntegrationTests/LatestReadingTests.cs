@@ -15,7 +15,7 @@ using SolarWatch.Infrastructure;
 namespace SolarWatch.IntegrationTests;
 
 // Tests in this class run sequentially and clear only the explicitly configured *_tests database.
-public class LatestReadingTests : IAsyncLifetime
+public partial class LatestReadingTests : IAsyncLifetime
 {
     private static readonly DateTimeOffset Now = DateTimeOffset.Parse("2026-10-01T12:00:00Z");
     private string connection = null!;
@@ -34,15 +34,17 @@ public class LatestReadingTests : IAsyncLifetime
         factory = CreateFactory(connection);
     }
 
-    private static WebApplicationFactory<Program> CreateFactory(string connectionString) =>
+    private static WebApplicationFactory<Program> CreateFactory(string connectionString,
+        string environment = "Development", string remote = "127.0.0.1") =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
-            builder.UseEnvironment("Development");
+            builder.UseEnvironment(environment);
             builder.UseSetting("ConnectionStrings:SolarWatch", connectionString);
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<TimeProvider>();
                 services.AddSingleton<TimeProvider>(new FixedClock());
+                services.AddSingleton<IStartupFilter>(new RemoteAddressFilter(remote));
             });
         });
 
@@ -158,5 +160,18 @@ public class LatestReadingTests : IAsyncLifetime
     private sealed class FixedClock : TimeProvider
     {
         public override DateTimeOffset GetUtcNow() => Now;
+    }
+
+    private sealed class RemoteAddressFilter(string remote) : IStartupFilter
+    {
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) => app =>
+        {
+            app.Use(async (context, continuation) =>
+            {
+                context.Connection.RemoteIpAddress = IPAddress.Parse(remote);
+                await continuation();
+            });
+            next(app);
+        };
     }
 }

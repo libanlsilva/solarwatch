@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { test, expect } from '@playwright/test'
 
 function command(...args: string[]) {
@@ -36,6 +36,45 @@ function command(...args: string[]) {
 
 test.beforeAll(() => command('migrate'))
 test.beforeEach(() => command('clear-demo', '--confirm'))
+
+function simulate(args: string[] = [], expectedExit = 0) {
+  const result = spawnSync('dotnet', [
+      'run', '--project', '../simulator/SolarWatch.Simulator',
+      '--configuration', 'Release', '--no-build', '--',
+      '--api-url', 'http://127.0.0.1:5181', '--count', '3', ...args,
+    ], { encoding: 'utf8', timeout: 60_000, stdio: 'pipe' })
+  expect(result.status, 'Simulator exit status against the local E2E API').toBe(expectedExit)
+  return result.stdout
+}
+
+test('simulator ingests a finite batch and React discovers it only on manual refresh', async ({ page, request }) => {
+  const reference = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
+  const oldEnd = new Date(new Date(reference.asOf).getTime() - 6 * 60_000).toISOString()
+  expect(simulate(['--end-at', oldEnd])).toContain('accepted=3, rejected=0, errors=0')
+  await page.clock.install({ time: new Date('2040-01-01T00:00:00Z') })
+  await page.goto('/')
+  await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
+  const previousTime = await page.locator('time').first().getAttribute('datetime')
+
+  expect(simulate(['--seed', '43'])).toContain('accepted=3, rejected=0, errors=0')
+  const latest = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
+  expect(new Date(latest.reading.measuredAt).getTime()).toBeGreaterThan(new Date(oldEnd).getTime())
+  await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
+  expect(await page.locator('time').first().getAttribute('datetime')).toBe(previousTime)
+  await page.getByRole('button', { name: 'Refresh readings' }).click()
+  await expect(page.getByText('Fresh at last check')).toBeVisible()
+  await expect(page.getByTestId('solar-power')).toHaveText(`${latest.reading.solarPowerW.toLocaleString('en-US')} W`)
+  await expect(page.getByTestId('consumption-power')).toHaveText(`${latest.reading.consumptionPowerW.toLocaleString('en-US')} W`)
+  await expect(page.getByTestId('battery-charge')).toHaveText(`${latest.reading.batteryStateOfChargePercent}%`)
+  await expect(page.locator(`time[datetime="${latest.reading.measuredAt}"]`)).toBeVisible()
+
+  // A repeat of the controlled batch must report conflicts and leave the latest snapshot intact.
+  const repeated = simulate(['--end-at', oldEnd], 1)
+  expect(repeated).toContain('accepted=0, rejected=3, errors=0')
+  expect(repeated.match(/HTTP 409/g)).toHaveLength(3)
+  const after = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
+  expect(after.reading).toEqual(latest.reading)
+})
 
 test('persisted PostgreSQL fixture reaches React through the API despite a different browser clock', async ({
   page,
