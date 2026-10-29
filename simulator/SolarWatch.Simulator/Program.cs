@@ -10,7 +10,7 @@ try
     var options = SimulatorOptions.Parse(args);
     using var handler = new HttpClientHandler { AllowAutoRedirect = false };
     using var client = new HttpClient(handler) { BaseAddress = options.ApiUrl, Timeout = TimeSpan.FromSeconds(15) };
-    if (options.Continuous)
+    if (options.Continuous || options.History24h)
     {
         using var stop = new CancellationTokenSource();
         ConsoleCancelEventHandler interrupt = (_, eventArgs) =>

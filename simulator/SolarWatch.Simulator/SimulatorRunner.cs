@@ -12,6 +12,8 @@ public static class SimulatorRunner
     public static async Task<int> RunAsync(SimulatorOptions options, HttpClient client, TextWriter output,
         CancellationToken cancellationToken = default, TimeProvider? clock = null)
     {
+        if (options.History24h)
+            return await HistorySimulator.RunAsync(options, client, output, cancellationToken);
         if (options.Continuous)
             return await ContinuousSimulator.RunAsync(options, client, output, clock ?? TimeProvider.System, cancellationToken);
         var accepted = 0;
