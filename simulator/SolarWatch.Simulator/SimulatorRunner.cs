@@ -10,8 +10,10 @@ namespace SolarWatch.Simulator;
 public static class SimulatorRunner
 {
     public static async Task<int> RunAsync(SimulatorOptions options, HttpClient client, TextWriter output,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default, TimeProvider? clock = null)
     {
+        if (options.Continuous)
+            return await ContinuousSimulator.RunAsync(options, client, output, clock ?? TimeProvider.System, cancellationToken);
         var accepted = 0;
         var rejected = 0;
         var errors = 0;
