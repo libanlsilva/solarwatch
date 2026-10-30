@@ -212,8 +212,7 @@ test('charts preserve original microsecond readings in basic keyboard and touch 
     for (const width of [360, 390, 430, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: width < 900 ? 844 : 1186 })
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `overflow at ${width}`).toBe(true)
-      const clipped = await page.locator('.history-card').evaluateAll(elements => elements.filter(element => element.scrollWidth > element.clientWidth + 1).map(element => element.className))
-      expect(clipped, `history card overflow at ${width}`).toEqual([])
+      await expect.poll(() => page.locator('.history-card').evaluateAll(elements => elements.filter(element => element.scrollWidth > element.clientWidth + 1).map(element => element.className)), { message: `history card overflow at ${width}` }).toEqual([])
       await expect(page.getByTestId('power-plot')).toBeVisible()
       await expect(page.getByTestId('battery-plot')).toBeVisible()
     }

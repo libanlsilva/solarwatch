@@ -24,8 +24,8 @@ test('approved Overview composition is responsive, navigable and backed by Postg
   for (const width of [360, 390, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width < 900 ? 844 : 1186 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `page overflow at ${width}`).toBe(true)
-    const clipped = await page.locator('.card, .measurement-pair, .app-header').evaluateAll((elements) => elements.filter((element) => element.scrollWidth > element.clientWidth + 1).map((element) => element.className))
-    expect(clipped, `card overflow at ${width}`).toEqual([])
+    // ResizeObserver updates the chart after the viewport acknowledgement; check the settled layout.
+    await expect.poll(() => page.locator('.card, .measurement-pair, .app-header').evaluateAll((elements) => elements.filter((element) => element.scrollWidth > element.clientWidth + 1).map((element) => element.className)), { message: `card overflow at ${width}` }).toEqual([])
     const controls = await page.locator('nav a, .refresh').evaluateAll((elements) => elements.map((element) => ({ width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height })))
     expect(controls.every((control) => control.width >= 44 && control.height >= 44)).toBe(true)
     await page.getByRole('link', { name: 'Installation', exact: true }).click()
