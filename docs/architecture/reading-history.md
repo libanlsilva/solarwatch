@@ -1,6 +1,6 @@
 # Persisted 24-hour reading history
 
-Second Phase 5 delivery, tracked in [Issue #16](https://github.com/libanlsilva/solarwatch/issues/16). The issue scope is owner-approved; this implementation awaits personal PR review and integration. Phase 5 and the MVP remain incomplete. React, the approved Overview, Latest Reading and simulator behavior are unchanged.
+Second Phase 5 delivery, tracked in [Issue #16](https://github.com/libanlsilva/solarwatch/issues/16). The implementation is definitively owner-approved and complete with reviewed squash integration of [PR #17](https://github.com/libanlsilva/solarwatch/pull/17). Phase 5 and the MVP remain incomplete. React, the approved Overview, Latest Reading and simulator behavior are unchanged.
 
 ## HTTP contract
 
