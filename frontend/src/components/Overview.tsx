@@ -17,8 +17,8 @@ function Icon({ name, className = '' }: { name: IconName; className?: string }) 
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>
 }
 
-export function DashboardHeader({ pending, error, refresh, section }: {
-  pending: boolean; error: boolean; refresh: () => void
+export function DashboardHeader({ pending, disabled, error, refresh, section }: {
+  pending: boolean; disabled: boolean; error: boolean; refresh: () => void
   section: 'overview' | 'installation'
 }) {
   const header = useRef<HTMLElement>(null)
@@ -41,10 +41,11 @@ export function DashboardHeader({ pending, error, refresh, section }: {
       <span className="sr-only" id="history-unavailable">History is not available yet.</span>
       <div className="header-actions">
         <span className="simulated desktop-simulated"><span className="dot" />Simulated data</span>
-        <button className="refresh" type="button" disabled={pending} aria-label={pending ? 'Refreshing…' : error ? 'Retry' : 'Refresh readings'} onClick={refresh}>
+        <button className="refresh" type="button" disabled={disabled} aria-describedby={pending && !disabled ? 'refresh-available' : undefined} aria-label={disabled ? 'Refreshing…' : error ? 'Retry' : pending ? 'Refresh available data' : 'Refresh readings'} onClick={refresh}>
           {pending ? <span className="spinner" aria-hidden="true" /> : <Icon name="refresh" />}
-          {pending ? 'Refreshing…' : error ? 'Retry' : 'Refresh'}
+          {disabled ? 'Refreshing…' : error ? 'Retry' : 'Refresh'}
         </button>
+        <span className="sr-only" id="refresh-available">A request is in progress. Refresh updates only resources without a pending request.</span>
       </div>
     </header>
   )
@@ -132,12 +133,5 @@ export function InstallationDiagram() {
       <div className="node node-battery"><Icon name="battery" /><span>Battery</span></div>
     </div>
     <p className="support installation-note">Connections are illustrative. Energy flows are not measured.</p>
-  </section>
-}
-
-export function HistoryPending({ kind }: { kind: 'power' | 'battery' }) {
-  return <section className={`card history-pending ${kind}-history`} aria-labelledby={`${kind}-history-title`}>
-    <div className="card-top"><h2 id={`${kind}-history-title`}>{kind === 'power' ? 'Power over 24 hours' : 'Battery over 24 hours'} <span className="history-unit">{kind === 'power' ? 'W' : '%'}</span></h2><span className="planned-label">Planned</span></div>
-    <div className="history-unavailable"><span className="pending-mark" data-series={kind} aria-hidden="true" /><h3>History charts coming later</h3><p>{kind === 'power' ? 'Solar generation and home consumption history will appear here.' : 'Battery state of charge history will appear here.'}</p><p>No historical data is queried in this view.</p></div>
   </section>
 }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './browser.ts'
 import { command } from './development.ts'
 
 test.beforeAll(() => command('migrate'))
@@ -17,8 +17,9 @@ test('approved Overview composition is responsive, navigable and backed by Postg
   await expect(page.getByRole('navigation')).toContainText('Coming later')
   await expect(page.getByRole('link', { name: /History/ })).toHaveCount(0)
   await expect(page.locator('.future-section')).toHaveAttribute('aria-disabled', 'true')
-  await expect(page.locator('.history-pending svg, .history-pending canvas')).toHaveCount(0)
-  await expect(page.getByText('History charts coming later', { exact: true })).toHaveCount(2)
+  await expect(page.getByTestId('power-plot')).toBeVisible()
+  await expect(page.getByTestId('battery-plot')).toBeVisible()
+  await expect(page.getByText('History charts coming later', { exact: true })).toHaveCount(0)
 
   for (const width of [360, 390, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width < 900 ? 844 : 1186 })
@@ -68,8 +69,9 @@ test('refresh keeps the last snapshot and server reference, with no duplicate or
   let release!: () => void
   const gate = new Promise<void>((resolve) => { release = resolve })
   await page.route('**/api/readings/latest', async (route) => { await gate; await route.continue() })
+  await page.route('**/api/readings/history', async (route) => { await gate; await route.continue() })
   await page.getByRole('button', { name: 'Refresh readings' }).click()
-  await expect(page.getByRole('status')).toContainText('Refreshing readings')
+  await expect(page.locator('.hero [role="status"]')).toContainText('Refreshing readings')
   await expect(page.getByRole('button', { name: 'Refreshing…' })).toBeDisabled()
   await page.getByRole('button', { name: 'Refreshing…' }).evaluate((element: HTMLButtonElement) => { element.click(); element.click() })
   expect(requests).toBe(2)
@@ -91,7 +93,7 @@ test('a failed stale refresh retains its exact asOf and values; successful empty
   const age = await page.locator('.checked p').nth(1).textContent()
   await page.route('**/api/readings/latest', (route) => route.fulfill({ status: 503, body: 'Unavailable' }))
   await page.getByRole('button', { name: 'Refresh readings' }).click()
-  await expect(page.getByRole('alert')).toContainText('Current freshness could not be checked')
+  await expect(page.locator('.hero [role="alert"]')).toContainText('Current freshness could not be checked')
   await expect(page.getByTestId('solar-power')).toHaveText('1,200 W')
   await expect(page.getByTestId('checked-at')).toHaveAttribute('datetime', reference!)
   await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
@@ -141,9 +143,9 @@ test('strict freshness boundary and reduced motion apply to the rendered compone
   const gate = new Promise<void>((resolve) => { release = resolve })
   await page.route('**/api/readings/latest', async (route) => { await gate; await route.abort() })
   await page.getByRole('button', { name: 'Refresh readings' }).click()
-  await expect(page.locator('.spinner')).toHaveCSS('animation-name', 'none')
+  await expect(page.locator('.app-header .spinner')).toHaveCSS('animation-name', 'none')
   release()
-  await expect(page.getByRole('alert')).toBeVisible()
+  await expect(page.locator('.hero [role="alert"]')).toBeVisible()
 })
 
 test('200 percent text enlargement remains readable without horizontal overflow', async ({ page }) => {
@@ -208,7 +210,7 @@ test('latest states retain the approved hero notice placement on desktop and mob
   await capture('empty')
   phase = 'error'
   await page.reload()
-  await expect(page.getByRole('alert')).toContainText('Unable to load readings')
+  await expect(page.locator('.hero [role="alert"]')).toContainText('Unable to load readings')
   await capture('error')
   phase = 'stale'
   await page.getByRole('button', { name: 'Retry', exact: true }).click()
@@ -216,12 +218,13 @@ test('latest states retain the approved hero notice placement on desktop and mob
   await capture('stale')
   phase = 'refreshing'
   gate = new Promise<void>((resolve) => { release = resolve })
+  await page.route('**/api/readings/history', async (route) => { await gate; await route.continue() })
   await page.getByRole('button', { name: 'Refresh readings' }).click()
   await expect(page.getByRole('button', { name: 'Refreshing…' })).toBeDisabled()
   await capture('refreshing')
   phase = 'error'
   release()
-  await expect(page.getByRole('alert')).toContainText('Current freshness could not be checked')
+  await expect(page.locator('.hero [role="alert"]')).toContainText('Current freshness could not be checked')
   await expect(page.getByTestId('checked-at')).toHaveAttribute('datetime', stale.asOf)
   await expect(page.getByTestId('solar-power')).toHaveText('1,200 W')
   await capture('retained')

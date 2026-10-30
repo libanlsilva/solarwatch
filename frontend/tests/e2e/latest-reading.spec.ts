@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { test, expect } from '@playwright/test'
+import { test, expect } from './browser.ts'
 import { command } from './development.ts'
 
 test.beforeAll(() => command('migrate'))
@@ -100,7 +100,7 @@ test('continuous CLI persists its immediate sample and React discovers it on man
   }
 })
 
-test('24-hour history CLI confirms 1441 minute samples and a full rerun conflicts without overwriting', async ({ page, request }) => {
+test('24-hour history CLI confirms 1441 minute samples and a full rerun conflicts without overwriting', async ({ page, request }, testInfo) => {
   test.setTimeout(180_000)
   const reference = await (await request.get('http://127.0.0.1:5181/api/readings/latest')).json()
   const endAt = new Date(reference.asOf).toISOString()
@@ -141,12 +141,30 @@ test('24-hour history CLI confirms 1441 minute samples and a full rerun conflict
   })
   expect(Date.parse(latest.reading.measuredAt)).toBe(end)
   await expect(page.getByRole('heading', { name: 'No measurements yet' })).toBeVisible()
+  const historyReceived = page.waitForResponse(response => response.url().endsWith('/api/readings/history'))
   await page.getByRole('button', { name: 'Refresh readings' }).click()
+  const plottedHistory = await (await historyReceived).json()
   await expect(page.getByText('Fresh at last check')).toBeVisible()
   await expect(page.getByTestId('solar-power')).toHaveText(`${latest.reading.solarPowerW.toLocaleString('en-US')} W`)
   await expect(page.getByTestId('consumption-power')).toHaveText(`${latest.reading.consumptionPowerW.toLocaleString('en-US')} W`)
   await expect(page.getByTestId('battery-charge')).toHaveText(`${latest.reading.batteryStateOfChargePercent}%`)
   await expect(page.locator(`time[datetime="${latest.reading.measuredAt}"]`)).toBeVisible()
+
+  // Reuse this real 1,441-POST journey for full-data chart captures; no extra large setup run.
+  await expect(page.locator('.solar-series .recharts-area-curve')).toBeVisible()
+  await expect(page.locator('.consumption-series .recharts-line-curve')).toBeVisible()
+  await expect(page.locator('.battery-series .recharts-area-curve')).toBeVisible()
+  // A later live server window can exclude the earliest generated sample; every returned row is drawn.
+  expect(plottedHistory.readings.length).toBeGreaterThan(1400)
+  const solarPath = await page.locator('.solar-series .recharts-area-curve').getAttribute('d')
+  expect(solarPath!.match(/[ML]/g)).toHaveLength(plottedHistory.readings.length)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.evaluate(() => document.fonts.ready)
+  await page.setViewportSize({ width: 1440, height: 1186 })
+  await page.screenshot({ path: testInfo.outputPath('overview-charts-desktop.png'), fullPage: true })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.screenshot({ path: testInfo.outputPath('overview-charts-mobile.png') })
+  await page.screenshot({ path: testInfo.outputPath('overview-charts-mobile-full.png'), fullPage: true })
 
   const repeated = history(1)
   expect(repeated).toContain('accepted=0, rejected=1441, conflicts=1441, errors=0, uncertain=0, unattempted=0')
@@ -243,6 +261,7 @@ test('loading is visible and a failed refresh clearly retains the previous readi
     await gate
     await route.continue()
   })
+  await page.route('**/api/readings/history', async (route) => { await gate; await route.continue() })
   await page.goto('/')
   await expect(page.getByText('Loading latest reading…')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Refreshing…' })).toBeDisabled()
