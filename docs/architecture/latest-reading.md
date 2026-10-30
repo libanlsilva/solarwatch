@@ -1,6 +1,6 @@
 # Latest persisted reading
 
-This first feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. The next delivery adds [local finite simulated ingestion](simulated-ingestion.md) while preserving this GET contract. History and continuous simulation remain later work.
+This feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. Finite, continuous and 24-hour [simulated ingestion](simulated-ingestion.md) preserve this GET contract. The [approved Overview](overview-ui.md) now reuses it; historical queries and charts remain later work.
 
 ## API contract
 
@@ -31,7 +31,7 @@ An unsuccessful refresh retains the previous snapshot with a visible warning and
 - **PostgreSQL migration:** a single `readings` table uses `(InstallationId, MeasuredAt)` as its primary key and database constraints for supported identity and numeric values. Latest selection orders by measurement time, independent of insertion order. UTC timestamps use `timestamp with time zone`; PostgreSQL stores microsecond precision.
 - **Explicit development setup:** normal API startup neither migrates nor seeds. The `migrate`, `seed-demo`, and confirmed `clear-demo` commands require Development. Default seed time comes from the server clock; a supplied ISO timestamp supports deterministic fixtures. Seeding does not overwrite existing rows at that timestamp.
 - **HTTP development path:** Vite proxies `/api` to the local API, avoiding cross-origin configuration for this slice. Production HTTP/HTTPS and reverse-proxy configuration are outside this delivery.
-- **Small UI:** plain CSS and inline SVG are sufficient for this view; a dashboard component library is not introduced yet.
+- **Small UI:** the original view and its approved Overview replacement use plain CSS and inline SVG. No dashboard component library is needed for this delivery.
 
 The local POST and duplicate-ingestion HTTP contract are documented separately in [simulated ingestion](simulated-ingestion.md). The existing migration and primary key support that delivery without a schema change.
 
