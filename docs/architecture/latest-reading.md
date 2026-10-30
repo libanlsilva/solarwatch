@@ -1,6 +1,6 @@
 # Latest persisted reading
 
-This feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. Finite, continuous and 24-hour [simulated ingestion](simulated-ingestion.md) preserve this GET contract. The [approved Overview](overview-ui.md) now reuses it; the separate [24-hour history query](reading-history.md) reuses its snapshot shape, while React history and charts remain later work.
+This feature implements the narrow path PostgreSQL → ASP.NET Core API → React for the single `residential-demo` installation. Finite, continuous and 24-hour [simulated ingestion](simulated-ingestion.md) preserve this GET contract. The [approved Overview](overview-ui.md) now reuses it; the separate [24-hour history query](reading-history.md) reuses its snapshot shape, the separately approved [Overview chart delivery](overview-charts.md) now consumes history with independent UI state. Detailed History remains later work.
 
 ## API contract
 
