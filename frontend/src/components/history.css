@@ -1,0 +1,50 @@
+.history-card { padding: 22px; display: flex; flex-direction: column; }
+.history-card .card-top { flex-wrap: wrap; }
+.history-period { padding: 5px 10px; border: 1px solid #41534680; border-radius: 99px; font-size: 12px; color: #cfddd2; white-space: nowrap; }
+.history-period.battery-text { color: var(--lime); }
+.mobile-chart-title { display: none; }
+.history-range { margin-top: 4px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.history-legend { display: flex; flex-wrap: wrap; column-gap: 18px; row-gap: 6px; margin-top: 13px; font-size: 12px; color: #d2ded4; }
+.history-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.history-legend i { width: 14px; height: 0; border-top: 3px solid; border-radius: 2px; }
+.solar-key, .solar-text { color: var(--yellow); }
+.consumption-key, .consumption-text { color: var(--teal); }
+.history-legend .consumption-key { border-top-style: dashed; }
+.battery-key, .battery-text { color: var(--lime); }
+.history-data { min-width: 0; margin-top: 12px; }
+.history-plot { width: 100%; min-width: 0; height: 176px; }
+.battery-plot { height: 124px; }
+.history-plot .recharts-surface:focus-visible { outline: 2px solid var(--yellow); outline-offset: -2px; border-radius: 4px; }
+.history-tooltip { max-width: 245px; padding: 10px 12px; border: 1px solid #526153; border-radius: 12px; background: #06110ff5; color: var(--ink); font-size: 12px; box-shadow: 0 8px 20px #0005; overflow-wrap: anywhere; }
+.history-tooltip time { font-weight: 700; }
+.history-tooltip p { margin-top: 4px; }
+.history-tooltip p:first-of-type { color: var(--muted); }
+.history-tooltip strong { font-weight: 600; }
+.history-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.history-notice.attention-text { color: var(--yellow); }
+.history-notice .spinner { width: 12px; height: 12px; }
+.history-check { margin-top: 12px; padding-top: 10px; border-top: 1px solid #36503c66; font-size: 12px; line-height: 1.6; color: var(--muted); overflow-wrap: anywhere; }
+.history-check time { color: #d2ded4; }
+.history-retry { min-width: 44px; min-height: 44px; padding: 9px 14px; border: 1px solid #7d8c35; border-radius: 99px; background: #1a2518; color: var(--yellow); font-size: 12px; font-weight: 700; }
+.history-retry:hover:enabled { background: #293324; }
+.history-retry:disabled { cursor: default; opacity: .6; }
+.history-empty { min-height: 176px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+.battery-history .history-empty { min-height: 124px; }
+.history-empty h3 { font-size: 14px; }
+.history-empty p { margin-top: 7px; color: var(--muted); font-size: 12px; }
+.history-skeleton { height: 176px; display: flex; flex-direction: column; justify-content: space-around; padding: 12px 0; }
+.battery-history .history-skeleton { height: 124px; }
+.history-skeleton span { display: block; height: 16px; background: #23382d; border-radius: 5px; }
+.history-skeleton span:nth-child(2) { width: 82%; }
+.history-skeleton span:nth-child(3) { width: 91%; }
+@media (max-width: 900px) {
+  .desktop-chart-title, .history-card .history-unit { display: none; }
+  .mobile-chart-title { display: inline; }
+  .history-card { margin: 14px 16px 0; padding: 18px 16px 16px; }
+  .power-history { margin-top: 27px; }
+  .history-card h2 { font-size: 15px; }
+  .history-period { padding: 4px 8px; }
+  .history-legend { column-gap: 12px; }
+  .history-tooltip { max-width: 210px; }
+}
+@media (max-width: 374px) { .history-card { margin-inline: 12px; } }

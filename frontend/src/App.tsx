@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
-import { DashboardHeader, HistoryPending, InstallationDiagram, MeasurementCard, MetricCard, QueryNotice } from './components/Overview.tsx'
+import { DashboardHeader, InstallationDiagram, MeasurementCard, MetricCard, QueryNotice } from './components/Overview.tsx'
+import { HistoryCharts } from './components/HistoryCharts.tsx'
 import { useLatestReading } from './useLatestReading.ts'
+import { useHistory } from './useHistory.ts'
 
 export default function App() {
   const { snapshot, pending, error, refresh } = useLatestReading()
+  const history = useHistory()
+  const refreshAvailable = () => { refresh(); history.refresh() }
   const [section, setSection] = useState<'overview' | 'installation'>(() => window.location.hash === '#installation' ? 'installation' : 'overview')
   useEffect(() => {
     const updateSection = () => setSection(window.location.hash === '#installation' ? 'installation' : 'overview')
@@ -19,7 +23,7 @@ export default function App() {
       <div className="dashboard-shell" id="overview">
         <img className="hero-photo" src="/images/solar-house.png" alt="Illustrative home with rooftop solar panels at dusk, not a camera feed." />
         <div className="photo-veil" aria-hidden="true" />
-        <DashboardHeader pending={pending} error={error} refresh={refresh} section={section} />
+        <DashboardHeader pending={pending || history.pending} disabled={pending && history.pending} error={error} refresh={refreshAvailable} section={section} />
         <main className="overview-grid" id="main-content" tabIndex={-1}>
           <div className="overview-left">
             <section className="hero" aria-labelledby="overview-title">
@@ -36,8 +40,7 @@ export default function App() {
           </div>
           <div className="overview-right">
             <MeasurementCard snapshot={snapshot} pending={pending} error={error} />
-            <HistoryPending kind="power" />
-            <HistoryPending kind="battery" />
+            <HistoryCharts snapshot={history.snapshot} pending={history.pending} error={history.error} retry={history.refresh} />
           </div>
         </main>
       </div>

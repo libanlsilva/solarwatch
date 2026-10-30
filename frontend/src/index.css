@@ -116,17 +116,9 @@ nav a[aria-current], nav a:hover { color: var(--ink); background: #22302a; }
 .skeleton-time { width: min(135px, 100%); height: 25px; }
 .skeleton-date { width: min(100px, 100%); height: 13px; }
 .gauge .skeleton-number { width: 64px; height: 26px; }
-.history-pending { display: flex; flex-direction: column; padding: 20px; }
 .power-history { min-height: 362px; }
 .battery-history { min-height: 288px; flex: 1; }
 .history-unit { font-size: 12px; color: var(--muted); margin-left: 4px; font-weight: 400; }
-.planned-label { font-size: 12px; color: #cfddd2; padding: 5px 10px; border: 1px solid #41534680; border-radius: 99px; }
-.history-unavailable { margin: auto; padding: 28px 16px; max-width: 330px; text-align: center; }
-.history-unavailable h3 { font-size: 16px; }
-.history-unavailable p { margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; }
-.history-unavailable p:last-child { margin-top: 16px; }
-.pending-mark { display: block; width: 28px; height: 3px; background: var(--yellow); border-radius: 99px; margin: 0 auto 18px; }
-.pending-mark[data-series="battery"] { background: var(--lime); }
 .installation { margin: 22px 5px 0; padding: 20px 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; scroll-margin-top: 24px; }
 .topology { position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 86px 76px; gap: 20px 24px; margin-top: 18px; }
 .topology::before, .topology::after { content: ""; position: absolute; z-index: -1; background: #728679; }
@@ -161,7 +153,6 @@ nav a[aria-current], nav a:hover { color: var(--ink); background: #22302a; }
   .battery .gauge { width: 112px; height: 112px; margin: 0; }
   .gauge strong { font-size: 32px; }
   .battery-dot { display: none; }
-  .history-pending .card-top { flex-wrap: wrap; }
   .topology { column-gap: 12px; }
 }
 @media (max-width: 900px) {
@@ -227,11 +218,8 @@ nav a[aria-current], nav a:hover { color: var(--ink); background: #22302a; }
   .latest .checked { grid-row: 3; grid-column: 1 / -1; margin-top: 0; padding-top: 10px; }
   .check-date { display: inline; }
   .skeleton-number { width: 90px; height: 32px; }
-  .history-pending { margin: 14px 16px 0; padding: 18px 16px 16px; }
   .power-history { order: 4; margin-top: 27px; min-height: 325px; }
   .battery-history { order: 5; min-height: 286px; }
-  .history-pending .card-top { flex-wrap: wrap; }
-  .history-unavailable { padding: 30px 10px; }
   .installation { order: 6; padding: 18px 16px 17px; margin: 22px 16px 0; scroll-margin-top: 0; }
   .installation .card-top { flex-wrap: wrap; }
   .topology { grid-template-rows: 78px 70px; gap: 18px 14px; margin-top: 20px; }
@@ -251,7 +239,7 @@ nav a[aria-current], nav a:hover { color: var(--ink); background: #22302a; }
   .icon-bubble, .icon-bubble svg { width: 14px; height: 14px; }
   .measurement-pair { column-gap: 15px; margin-inline: 12px; }
   .fresh { gap: 4px; }
-  .history-pending, .installation { margin-inline: 12px; }
+  .installation { margin-inline: 12px; }
 }
 @media (min-width: 601px) and (max-width: 900px) { body { padding: 24px 0; } .dashboard-shell { border: 1px solid #29433a; border-radius: 24px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .spinner { animation: none; } }
