@@ -34,6 +34,8 @@ public class GetLatestReadingTests
 
     private sealed class StubStore(InstallationReading? reading) : IReadingStore
     {
+        public Task<IReadOnlyList<InstallationReading>> GetHistoryAsync(DateTimeOffset from, DateTimeOffset to,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<bool> TryAddAsync(InstallationReading value, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
         public CancellationToken Token { get; private set; }

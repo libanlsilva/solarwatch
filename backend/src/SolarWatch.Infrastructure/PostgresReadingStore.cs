@@ -13,6 +13,14 @@ public sealed class PostgresReadingStore(SolarWatchDbContext db) : IReadingStore
             .OrderByDescending(x => x.MeasuredAt)
             .FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<InstallationReading>> GetHistoryAsync(DateTimeOffset from, DateTimeOffset to,
+        CancellationToken cancellationToken) =>
+        await db.Readings.AsNoTracking()
+            .Where(x => x.InstallationId == InstallationReading.DemoInstallationId &&
+                x.MeasuredAt >= from && x.MeasuredAt <= to)
+            .OrderBy(x => x.MeasuredAt)
+            .ToListAsync(cancellationToken);
+
     public async Task<bool> TryAddAsync(InstallationReading reading, CancellationToken cancellationToken)
     {
         db.Readings.Add(reading);

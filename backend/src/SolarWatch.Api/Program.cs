@@ -14,6 +14,7 @@ builder.Services.AddDbContext<SolarWatchDbContext>(options => options.UseNpgsql(
         ?? throw new InvalidOperationException("Configure ConnectionStrings:SolarWatch using user secrets or an environment variable.")));
 builder.Services.AddScoped<IReadingStore, PostgresReadingStore>();
 builder.Services.AddScoped<GetLatestReading>();
+builder.Services.AddScoped<GetReadingHistory>();
 builder.Services.AddScoped<SubmitReading>();
 
 var app = builder.Build();
@@ -39,6 +40,7 @@ app.MapGet("/api/readings/latest", async (GetLatestReading query, HttpContext co
     .Produces<LatestReadingResponse>()
     .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
 app.MapLocalIngestion();
+app.MapReadingHistory();
 app.Run();
 
 public partial class Program;
