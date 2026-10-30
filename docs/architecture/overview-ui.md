@@ -1,6 +1,6 @@
 # Approved Overview implementation
 
-First Phase 5 delivery, tracked in [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), personally approved and complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15). Phase 4 is complete; Phase 5 and the MVP remain open. The backend contract, database schema, simulator, security guards and dependencies are unchanged. The next proposed delivery is the real 24-hour history query API; historical charts and changes to the approved Overview remain outside that delivery and require separate approval.
+First Phase 5 delivery, tracked in [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), personally approved and complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15). Phase 4 is complete; Phase 5 and the MVP remain open. The backend contract, database schema, simulator, security guards and dependencies are unchanged. The separate [history API delivery](reading-history.md), tracked in Issue #16, awaits personal PR review and integration; historical charts and changes to the approved Overview remain outside that delivery and require separate approval.
 
 ## Design and component boundaries
 
@@ -17,7 +17,7 @@ Use the frozen [Desktop v2 and Mobile v1](../design/README.md) and [small design
 - Pending refresh retains the successful snapshot. Failure retains the exact values and original `asOf`, including a stale label when applicable, and says current freshness could not be verified. Initial error means unknown availability; a prior successful empty result is qualified after failed refresh. A later successful empty response clears old measurements.
 - Cancellation aborts transport and invalidates its identity. Even if a loader completes after cancellation, it cannot publish into a newer request or clear its busy state. React cleanup cancels the mounted view's owner; development StrictMode remounts receive a new owner.
 - Stale means `asOf - measuredAt > 300 seconds`. Exactly 300 seconds remains fresh. Age is the duration at that successful server check, not a live counter. Measurement and check dates/offsets use their own actual instants, including DST differences. No successful time is invented while initially loading or failing.
-- Only the latest resource is implemented. Future historical requests must keep their own snapshot/reference/error/busy state, as required by the design system; a failed history query must not disable latest metrics.
+- Only the latest resource is queried by React. Future historical requests must keep their own snapshot/reference/error/busy state, as required by the design system; a failed history query must not disable latest metrics.
 
 ## Responsive navigation and accessibility
 
