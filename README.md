@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). **Phase 4 is complete with the reviewed squash integration of [PR #13](https://github.com/libanlsilva/solarwatch/pull/13):** the owner definitively approved the four Overview/History desktop/mobile prototypes, all seven interface states, the reusable system and the publication package. The [design handoff](docs/design/README.md) remains the reference for future implementation. **Phase 5 is in progress:** its first delivery, [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), is personally approved and complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15): the approved responsive Overview uses real latest-reading data. The next history API delivery awaits issue review; Phase 5 remains unfinished. **The MVP is not complete:** historical queries/charts and later release work remain unfinished.
+**Status: Early Development.** Phase 2 completed through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5): PostgreSQL → .NET API → React displays one simulated installation's latest reading. **Phase 3 is complete:** finite HTTP simulation through [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), continuous simulation through [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and full reproducible 24-hour preparation through reviewed integration of [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). **Phase 4 is complete with the reviewed squash integration of [PR #13](https://github.com/libanlsilva/solarwatch/pull/13):** the owner definitively approved the four Overview/History desktop/mobile prototypes, all seven interface states, the reusable system and the publication package. The [design handoff](docs/design/README.md) remains the reference for future implementation. **Phase 5 is in progress:** its first delivery, [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), is personally approved and complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15): the approved responsive Overview uses real latest-reading data. The second delivery, [Issue #16](https://github.com/libanlsilva/solarwatch/issues/16), is personally approved and complete with reviewed squash integration of [PR #17](https://github.com/libanlsilva/solarwatch/pull/17): the real 24-hour history API. Phase 5 remains unfinished. **The MVP is not complete:** React historical views/charts and later release work remain unfinished.
 
 ## Goals and motivation
 
@@ -13,6 +13,7 @@ SolarWatch makes solar generation, household energy consumption, and battery cha
 - One residential demo installation with panels, a battery, and an inverter, using simulated readings.
 - EF Core migration and PostgreSQL persistence for reading snapshots.
 - A latest-reading API returning generation (W), consumption (W), battery state of charge (%), measurement time, and server reference time (`asOf`).
+- A read-only 24-hour history API with one pre-query UTC reference, inclusive microsecond bounds, chronological persisted rows, empty/partial results and sanitized database errors. React does not query it yet.
 - The approved desktop/mobile React Overview: solar photograph, asymmetric metric cards, battery gauge, local measurement/check times, conceptual installation and compact responsive navigation.
 - Manual refresh with loading skeletons, empty, error/retry, refreshing, retained-data and stale-data states; single-flight requests and cancellation protect against obsolete responses.
 - Working Overview/Installation anchors; History is visibly coming later. Historical card regions explicitly identify unavailable functionality and draw no illustrative charts.
@@ -34,7 +35,7 @@ Captured from the implemented production frontend preview connected to the real 
 
 ## Planned functionality
 
-The approved dashboard prototypes guide Phase 5 in small reviewed deliveries: first the shared responsive shell and Overview using the existing latest-reading API, then historical queries and real-data charts. Implementation requires approval of each delivery issue. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
+The approved dashboard prototypes guide Phase 5 in small reviewed deliveries: the integrated responsive Overview uses Latest Reading; Issue #16 / PR #17 completes the integrated history API. Consuming history from React, real-data charts and detailed History remain later deliveries. Implementation requires approval of each delivery issue. Hardware integration, authentication, multiple users/installations, SignalR, alerts, forecasts, accumulated-energy calculations, and production deployment remain outside this MVP.
 
 Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh/kWh**; 1 kWh = 1,000 Wh. This delivery does not calculate energy totals from power samples or convert battery charge percentage into stored energy.
 
@@ -42,7 +43,7 @@ Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh
 
 | Area | Technology | State |
 | --- | --- | --- |
-| Backend | ASP.NET Core 10, C# | Latest-reading API, local ingestion, development commands, and .NET simulator |
+| Backend | ASP.NET Core 10, C# | Latest-reading and 24-hour history APIs, local ingestion, development commands, and .NET simulator |
 | Persistence | EF Core, Npgsql, PostgreSQL 17 | Migration and real persistence |
 | Frontend | React, TypeScript, Vite | Approved responsive Overview connected to Latest Reading |
 | UI/charts | Plain CSS Overview; Tailwind CSS and selective shadcn/ui evaluated, Recharts recommended for later charts | No UI/chart packages installed; historical regions explicitly unavailable |
@@ -99,7 +100,7 @@ solarwatch/
 └── LICENSE
 ```
 
-See the [latest-reading contract](docs/architecture/latest-reading.md), [ingestion/simulator contract](docs/architecture/simulated-ingestion.md), [approved MVP](docs/requirements/MVP.md), and [development plan](docs/DEVELOPMENT_PLAN.md).
+See the [latest-reading contract](docs/architecture/latest-reading.md), [24-hour history contract](docs/architecture/reading-history.md), [ingestion/simulator contract](docs/architecture/simulated-ingestion.md), [approved MVP](docs/requirements/MVP.md), and [development plan](docs/DEVELOPMENT_PLAN.md).
 
 ## Approved dashboard design and implementation
 
@@ -211,6 +212,21 @@ The summary reports requested/attempted/accepted/rejected/**conflicts**/errors/*
 
 **Local writes only:** `POST /api/readings` is absent outside Development and rejects non-loopback peers/hosts, forwarded requests, and non-local browser origins. Point the CLI directly at a loopback-bound API; it accepts no public URL or database credentials. Keep Development private: do not expose it through public listeners, reverse proxies, or tunnels. This guard does not replace authentication. See the [POST contract and limitations](docs/architecture/simulated-ingestion.md).
 
+### 6. Query the persisted last 24 hours
+
+With the Development API running, query the new read-only endpoint:
+
+```powershell
+$history = Invoke-RestMethod http://localhost:5171/api/readings/history
+$history | Select-Object asOf, from, to
+$history.readings.Count
+$history.readings | Select-Object -First 5 measuredAt, solarPowerW, consumptionPowerW, batteryStateOfChargePercent
+```
+
+The window is `[asOf - 24 hours, asOf]`, using one normalized UTC server reference captured before the query. Results are chronological persisted readings only; missing minutes remain absent and actual zeros remain zero. Empty results return HTTP 200 with `readings: []`; database failures return sanitized HTTP 503 Problem Details.
+
+The query has no client-selectable dates. A live query's window advances after a simulator run, so its count need not equal the generator's 1,441 samples; there is no artificial result cap. See the [history contract and reproducible examples](docs/architecture/reading-history.md). React remains connected only to Latest Reading; the approved Overview and pending-chart notices are unchanged.
+
 ## Validation
 
 ### Backend unit and real PostgreSQL integration tests
@@ -252,7 +268,9 @@ The history integration tests verify all 1,441 stored keys/values, both boundari
 
 Local history-delivery validation on Windows, .NET 10, Node 24, and PostgreSQL 17 (Compose): **110 .NET unit tests, 50 real PostgreSQL integration tests, 4 frontend unit tests, and 8 Playwright tests passed**; restore/Release build and frontend lint/build passed.
 
-Issue #14 Overview validation: **110 .NET unit, 50 PostgreSQL integration, 13 frontend unit and 15 Playwright tests passed**; restore/Release build and frontend lint/production build passed. Browser coverage now includes the approved layout, navigation, all latest-reading states, zero values, retained server references, pending duplicate prevention, responsive widths, reduced motion and text enlargement. See the [implementation record](docs/architecture/overview-ui.md) for evidence and limitations.
+Issue #14 Overview validation: **110 .NET unit, 50 PostgreSQL integration, 13 frontend unit and 15 Playwright tests passed**; restore/Release build and frontend lint/production build passed. Browser coverage includes the approved layout, navigation, all latest-reading states, zero values, retained server references, pending duplicate prevention, responsive widths, reduced motion and text enlargement. See the [implementation record](docs/architecture/overview-ui.md) for evidence and limitations.
+
+Issue #16 history-query validation: **116 .NET unit, 56 real PostgreSQL integration, 13 frontend unit and 15 Playwright tests passed** (200 total, no skips); restore/Release build and frontend lint/build passed. New tests verify the single pre-query reference, UTC/microsecond normalization, inclusive boundaries and adjacent exclusions, ordering, zeros, gaps, 1,441 samples plus an additional off-cadence sample, sanitized errors and cancellation of a real blocked PostgreSQL query. Existing CI commands discover the new tests without workflow changes. See the [history implementation record](docs/architecture/reading-history.md).
 
 | Measured scenario (1,441 individual POSTs per run) | Fresh preparation | Identical conflict-only repeat |
 | --- | --- | --- |
@@ -268,14 +286,14 @@ These are individual local validation measurements, not benchmarks or performanc
 2. **Persisted latest reading complete:** PR #5 integrated PostgreSQL → API → React, development commands, state handling, and tests.
 3. **Simulated ingestion complete:** finite, continuous, and reproducible 24-hour preparation integrated through PR #7 / Issue #6, PR #9 / Issue #8, and PR #11 / Issue #10, with validation, safe conflicts, and automated verification.
 4. **Dashboard visual design complete:** PR #13 / Issue #12 integrated the four personally approved prototypes, seven interface states, reusable system and authorized assets.
-5. **Approved dashboard implementation in progress:** the first delivery, [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), is complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15): shared responsive structure and the approved Overview using real latest readings. Phase 5 and the MVP remain incomplete. The next proposed delivery is the server-referenced 24-hour history API; later separate deliveries add real-data charts and detailed History with correct units, gaps and accessible selection. Implementation of each new delivery requires owner approval.
+5. **Approved dashboard implementation in progress:** the first delivery, [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), is complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15): shared responsive structure and the approved Overview using real latest readings. Phase 5 and the MVP remain incomplete. The second delivery, [Issue #16](https://github.com/libanlsilva/solarwatch/issues/16), is complete with reviewed squash integration of [PR #17](https://github.com/libanlsilva/solarwatch/pull/17): the server-referenced 24-hour history API. The next proposed delivery adds real Overview charts using that API, with independent query states and truthful missing-data treatment. The detailed History screen and synchronized minute selection remain a separate later delivery. Implementation of each new delivery requires owner approval.
 6. **Local MVP release planned:** full acceptance evidence, complete local orchestration, and release notes.
 
 Use the frozen approved designs and [DESIGN.md](docs/design/DESIGN.md) throughout Phase 5. The first implementation uses existing React/TypeScript and CSS without new dependencies. Evaluate chart libraries and more realistic simulator patterns only in separately reviewed later work; keep the generator unchanged in this Overview delivery.
 
 ## Current limitations
 
-This is a local, unauthenticated demo with Development-only ingestion. Historical data can be prepared, but there is no history query/chart, energy integration, real hardware, or public deployment. Simulator runs have no checkpoint/resume or automatic recovery; uncertain writes require inspection. Each POST is atomic; the whole run is not one transaction. Existing conflicting data is retained rather than forcibly replaced. Vite's proxy supports development/preview; production static hosting would require appropriate API routing/deployment configuration. The existing API Dockerfile is retained; validation covers the Compose database and host-run services, not complete app container orchestration. Overview implements the approved design; History navigation and chart regions explicitly remain unavailable. Manrope loads from Google Fonts with Segoe UI/sans-serif fallback; offline typography may wrap differently. Intermediate layouts are tested adaptations, not separately approved tablet prototypes.
+This is a local, unauthenticated demo with Development-only ingestion. Historical data can be prepared and queried through the API; React history consumption/charts, energy integration, real hardware and public deployment remain unavailable. Simulator runs have no checkpoint/resume or automatic recovery; uncertain writes require inspection. Each POST is atomic; the whole run is not one transaction. Existing conflicting data is retained rather than forcibly replaced. Vite's proxy supports development/preview; production static hosting would require appropriate API routing/deployment configuration. The existing API Dockerfile is retained; validation covers the Compose database and host-run services, not complete app container orchestration. Overview implements the approved design; History navigation and chart regions explicitly remain unavailable. Manrope loads from Google Fonts with Segoe UI/sans-serif fallback; offline typography may wrap differently. Intermediate layouts are tested adaptations, not separately approved tablet prototypes.
 
 ## Contributing and license
 

@@ -56,6 +56,8 @@ public class SubmitReadingTests
     private sealed class Clock : TimeProvider { public override DateTimeOffset GetUtcNow() => Now; }
     private sealed class RecordingStore(bool accepts = true) : IReadingStore
     {
+        public Task<IReadOnlyList<InstallationReading>> GetHistoryAsync(DateTimeOffset from, DateTimeOffset to,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
         public InstallationReading? Reading { get; private set; }
         public CancellationToken Token { get; private set; }
         public Task<InstallationReading?> GetLatestAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
