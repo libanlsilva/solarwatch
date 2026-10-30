@@ -1,6 +1,6 @@
 # Approved Overview implementation
 
-First Phase 5 delivery, tracked in [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), pending personal PR review/integration. Phase 4 is complete; Phase 5 and the MVP remain open. The backend contract, database schema, simulator, security guards and dependencies are unchanged.
+First Phase 5 delivery, tracked in [Issue #14](https://github.com/libanlsilva/solarwatch/issues/14), personally approved and complete with reviewed squash integration of [PR #15](https://github.com/libanlsilva/solarwatch/pull/15). Phase 4 is complete; Phase 5 and the MVP remain open. The backend contract, database schema, simulator, security guards and dependencies are unchanged. The next proposed delivery is the real 24-hour history query API; historical charts and changes to the approved Overview remain outside that delivery and require separate approval.
 
 ## Design and component boundaries
 
