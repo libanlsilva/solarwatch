@@ -54,7 +54,7 @@ export function QueryNotice({ snapshot, pending, error }: LatestReadingState) {
   const reading = snapshot?.reading
   const stale = snapshot ? isStale(snapshot) : false
   if (pending) return <div className="state-notice" role="status"><h2>{snapshot ? 'Refreshing readings…' : 'Loading latest reading…'}</h2><p>{snapshot ? 'Keeping the last successful result while we check.' : 'Waiting for the installation’s latest measurement.'}</p></div>
-  if (error) return <div className="state-notice attention" role="alert"><h2>{reading ? 'Previous reading' : 'Readings are unavailable'}</h2><p>Unable to {snapshot ? 'refresh' : 'load'} readings. {reading ? 'The previous reading has not been verified again. Current freshness could not be checked.' : snapshot ? 'The last successful result had no measurements; current availability could not be checked.' : 'Check the connection and use Retry.'}</p></div>
+  if (error) return <div className="state-notice attention" role="alert"><h2>{reading ? 'Previous reading' : 'Readings are unavailable'}</h2><p>{reading ? 'The previous reading has not been verified again. Current freshness could not be checked. Use Retry.' : snapshot ? 'Unable to refresh readings. The last successful result was empty; current availability is unknown.' : 'Unable to load readings. Check the connection and use Retry.'}</p></div>
   if (snapshot && !reading) return <div className="state-notice" role="status"><h2>No measurements yet</h2><p>Waiting for the first reading. Refresh once data is available.</p></div>
   if (stale) return <div className="state-notice attention" role="status"><h2>Latest reading is old</h2><p>More than five minutes old at the server check. Refresh to check for a newer measurement.</p></div>
   return <p className="sr-only" role="status">Latest reading updated.</p>
@@ -110,7 +110,7 @@ export function MeasurementCard({ snapshot, pending, error }: LatestReadingState
           <p className="zone"><span>{localTimeZone}</span> <span>({utcOffsetAt(reading.measuredAt)})</span></p>
         </> : <div className="missing-time">{skeleton ? <><Skeleton kind="time" /><Skeleton kind="date" /></> : <p className="time">—<span className="sr-only">No measurement timestamp</span></p>}</div>}
       </div>
-      {reading ? <span className={`fresh ${stale ? 'stale' : ''}`}><span className="dot" />{stale ? 'Stale reading' : 'Fresh at last check'}</span> : <span className="fresh neutral">{skeleton ? 'Awaiting reading' : 'No reading available'}</span>}
+      {reading ? <span className={`fresh ${stale ? 'stale' : error ? 'neutral' : ''}`}><span className="dot" />{stale ? 'Stale reading' : error ? 'Last check: fresh' : 'Fresh at last check'}</span> : <span className="fresh neutral">{skeleton ? 'Awaiting reading' : 'No reading available'}</span>}
       <div className="checked">
         {snapshot && checkedDate ? <>
           <p>{error || pending ? 'Last successful check' : 'Checked'} <time data-testid="checked-at" dateTime={snapshot.asOf}>{measurementTime.format(checkedDate)}<span className="check-date"> · {measurementDate.format(checkedDate)} {utcOffsetAt(snapshot.asOf)}</span></time></p>

@@ -169,3 +169,60 @@ test('200 percent text enlargement remains readable without horizontal overflow'
     await expect(page.getByRole('heading', { name: 'Your installation' })).toBeInViewport()
   }
 })
+
+test('latest states retain the approved hero notice placement on desktop and mobile', async ({ page }, testInfo) => {
+  test.setTimeout(90_000)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const stale = {
+    asOf: '2026-10-28T18:39:30Z', reading: {
+      installationId: 'residential-demo', measuredAt: '2026-10-28T18:32:00Z',
+      solarPowerW: 1200, consumptionPowerW: 800, batteryStateOfChargePercent: 65,
+    },
+  }
+  let phase: 'loading' | 'empty' | 'error' | 'stale' | 'refreshing' = 'loading'
+  let release!: () => void
+  let gate = new Promise<void>((resolve) => { release = resolve })
+  await page.route('**/api/readings/latest', async (route) => {
+    if (phase === 'loading' || phase === 'refreshing') await gate
+    if (phase === 'error') await route.abort()
+    else await route.fulfill({ json: phase === 'empty' ? { asOf: stale.asOf, reading: null } : stale })
+  })
+  async function capture(name: string) {
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 1186 })
+      await expect(page.locator('.hero-copy')).toBeHidden()
+      const notice = (await page.locator('.state-notice').boundingBox())!
+      const power = (await page.locator('.metric-pair').boundingBox())!
+      expect(notice.y + notice.height, `${name} notice overlap at ${width}`).toBeLessThanOrEqual(power.y)
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+      await page.screenshot({ path: testInfo.outputPath(`${name}-${width}.png`), fullPage: true })
+    }
+  }
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'Loading latest reading…' })).toBeVisible()
+  await expect(page.getByTestId('solar-power')).toHaveCount(0)
+  await capture('loading')
+  phase = 'empty'
+  release()
+  await expect(page.getByRole('heading', { name: 'No measurements yet' })).toBeVisible()
+  await capture('empty')
+  phase = 'error'
+  await page.reload()
+  await expect(page.getByRole('alert')).toContainText('Unable to load readings')
+  await capture('error')
+  phase = 'stale'
+  await page.getByRole('button', { name: 'Retry', exact: true }).click()
+  await expect(page.getByText('Stale reading', { exact: true })).toBeVisible()
+  await capture('stale')
+  phase = 'refreshing'
+  gate = new Promise<void>((resolve) => { release = resolve })
+  await page.getByRole('button', { name: 'Refresh readings' }).click()
+  await expect(page.getByRole('button', { name: 'Refreshing…' })).toBeDisabled()
+  await capture('refreshing')
+  phase = 'error'
+  release()
+  await expect(page.getByRole('alert')).toContainText('Current freshness could not be checked')
+  await expect(page.getByTestId('checked-at')).toHaveAttribute('datetime', stale.asOf)
+  await expect(page.getByTestId('solar-power')).toHaveText('1,200 W')
+  await capture('retained')
+})
