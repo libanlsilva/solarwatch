@@ -1,6 +1,6 @@
 # Real history charts in Overview
 
-Third Phase 5 delivery, [Issue #18](https://github.com/libanlsilva/solarwatch/issues/18): replace the two pending-history cards with real API-backed plots. Scope and implementation start are owner-approved; the implementation awaits personal PR review and integration. Phase 5 and the MVP remain open. The approved Overview composition, navigation, photo, metrics and installation are preserved; detailed History and synchronized minute selection remain later work.
+Third Phase 5 delivery, [Issue #18](https://github.com/libanlsilva/solarwatch/issues/18): replace the two pending-history cards with real API-backed plots. The implementation is definitively owner-approved and complete with reviewed squash integration of [PR #19](https://github.com/libanlsilva/solarwatch/pull/19). Phase 5 and the MVP remain open. The approved Overview composition, navigation, photo, metrics and installation are preserved; detailed History and synchronized minute selection remain later work.
 
 ## Data and time
 
