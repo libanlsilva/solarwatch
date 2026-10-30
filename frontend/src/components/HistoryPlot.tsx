@@ -6,6 +6,7 @@ import type { Reading } from '../readings.ts'
 import { measurementDate, utcOffsetAt } from '../measurementDisplay.ts'
 
 const axisTime = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+const axisDate = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' })
 const axisNumber = new Intl.NumberFormat(undefined, { notation: 'compact', maximumSignificantDigits: 3 })
 const readingNumber = new Intl.NumberFormat(undefined, { maximumSignificantDigits: 15 })
 const colors = { solar: 'var(--yellow)', consumption: 'var(--teal)', battery: 'var(--lime)' }
@@ -37,17 +38,17 @@ function HistoryDot({ cx, cy, payload, series, showAll, lastTimestamp }: {
     data-value={payload[series]} />
 }
 
-export default function HistoryPlotView({ kind, snapshot, plot }: { kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot }) {
+export default function HistoryPlotView({ kind, snapshot, plot, detail = false }: { kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean }) {
   const id = useId().replace(/:/g, '')
   const inspected = useRef(0)
   const [keyboardIndex, setKeyboardIndex] = useState<number | null>(null)
   const [dismissed, setDismissed] = useState(false)
   const battery = kind === 'battery'
   const startMilliseconds = Number(utcMicroseconds(snapshot.from) / 1000n)
-  const ticks = [0, plot.duration / 4, plot.duration / 2, plot.duration * 3 / 4, plot.duration]
+  const ticks = detail ? [0, plot.duration / 2, plot.duration] : [0, plot.duration / 4, plot.duration / 2, plot.duration * 3 / 4, plot.duration]
   const showAll = snapshot.readings.length <= 48
   const lastTimestamp = snapshot.readings.at(-1)!.measuredAt
-  return <div className={`history-plot ${kind}-plot`} data-testid={`${kind}-plot`}
+  return <div className={`history-plot ${kind}-plot ${detail ? 'detail-plot' : ''}`} data-testid={`${kind}-plot`}
     onPointerDownCapture={() => { setKeyboardIndex(null); setDismissed(false) }}
     onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) { setKeyboardIndex(null); setDismissed(true) } }}
     onKeyDownCapture={event => {
@@ -76,7 +77,10 @@ export default function HistoryPlotView({ kind, snapshot, plot }: { kind: 'power
         <CartesianGrid stroke="#31513a66" vertical={false} />
         <XAxis dataKey="x" type="number" scale="linear" domain={[0, plot.duration]} ticks={ticks}
           allowDataOverflow tickFormatter={value => axisTime.format(new Date(startMilliseconds + Number(value)))}
-          tick={{ fill: '#a9bbb0', fontSize: 12 }} tickLine={false} axisLine={false} height={27} minTickGap={12} />
+          tick={detail ? ({ x, y, payload }) => {
+            const date = new Date(startMilliseconds + Number(payload.value))
+            return <text x={x} y={Number(y) + 12} textAnchor="middle" fill="#a9bbb0" fontSize={12}><tspan x={x}>{axisTime.format(date)}</tspan><tspan x={x} dy={16}>{axisDate.format(date)}</tspan></text>
+          } : { fill: '#a9bbb0', fontSize: 12 }} tickLine={false} axisLine={false} height={detail ? 45 : 27} minTickGap={12} />
         <YAxis domain={[0, battery ? 100 : plot.powerMax]} ticks={battery ? [0, 50, 100] : [0, plot.powerMax / 2, plot.powerMax]}
           tickFormatter={value => axisNumber.format(Number(value))} tick={{ fill: '#a9bbb0', fontSize: 12 }}
           axisLine={false} tickLine={false} width={43} padding={{ top: 4, bottom: 4 }} />

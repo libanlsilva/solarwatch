@@ -1,4 +1,5 @@
 import type { LatestReadingState } from '../latestReadingQuery.ts'
+import type { Section } from '../navigation.ts'
 import { useLayoutEffect, useRef } from 'react'
 import { isStale } from '../readings.ts'
 import { ageAtServerCheck, localTimeZone, measurementDate, measurementNumber, measurementTime, utcOffsetAt } from '../measurementDisplay.ts'
@@ -19,7 +20,7 @@ function Icon({ name, className = '' }: { name: IconName; className?: string }) 
 
 export function DashboardHeader({ pending, disabled, error, refresh, section }: {
   pending: boolean; disabled: boolean; error: boolean; refresh: () => void
-  section: 'overview' | 'installation'
+  section: Section
 }) {
   const header = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
@@ -35,10 +36,9 @@ export function DashboardHeader({ pending, disabled, error, refresh, section }: 
       <a className="brand" href="#overview" aria-label="SolarWatch Overview"><Icon name="sun" />SolarWatch</a>
       <nav aria-label="Main navigation">
         <a href="#overview" aria-current={section === 'overview' ? 'location' : undefined}>Overview</a>
-        <span className="future-section" aria-disabled="true" aria-describedby="history-unavailable">History<span className="nav-future">Coming later</span></span>
+        <a href="#history" aria-current={section === 'history' ? 'page' : undefined}>History</a>
         <a href="#installation" aria-current={section === 'installation' ? 'location' : undefined}>Installation</a>
       </nav>
-      <span className="sr-only" id="history-unavailable">History is not available yet.</span>
       <div className="header-actions">
         <span className="simulated desktop-simulated"><span className="dot" />Simulated data</span>
         <button className="refresh" type="button" disabled={disabled} aria-describedby={pending && !disabled ? 'refresh-available' : undefined} aria-label={disabled ? 'Refreshing…' : error ? 'Retry' : pending ? 'Refresh available data' : 'Refresh readings'} onClick={refresh}>

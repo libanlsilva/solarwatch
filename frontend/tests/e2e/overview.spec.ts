@@ -14,9 +14,7 @@ test('approved Overview composition is responsive, navigable and backed by Postg
   await page.evaluate(() => document.fonts.ready)
   await page.screenshot({ path: testInfo.outputPath('overview-desktop.png'), fullPage: true })
 
-  await expect(page.getByRole('navigation')).toContainText('Coming later')
-  await expect(page.getByRole('link', { name: /History/ })).toHaveCount(0)
-  await expect(page.locator('.future-section')).toHaveAttribute('aria-disabled', 'true')
+  await expect(page.getByRole('link', { name: 'History', exact: true })).toHaveAttribute('href', '#history')
   await expect(page.getByTestId('power-plot')).toBeVisible()
   await expect(page.getByTestId('battery-plot')).toBeVisible()
   await expect(page.getByText('History charts coming later', { exact: true })).toHaveCount(0)
