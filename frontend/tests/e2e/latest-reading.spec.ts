@@ -1,38 +1,6 @@
-import { execFileSync, spawn, spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { test, expect } from '@playwright/test'
-
-function command(...args: string[]) {
-  // Credentials are supplied through the environment, never command arguments or test output.
-  try {
-    execFileSync(
-      'dotnet',
-      [
-        'run',
-        '--project',
-        '../backend/src/SolarWatch.Api',
-        '--configuration',
-        'Release',
-        '--no-build',
-        '--no-launch-profile',
-        '--',
-        ...args,
-      ],
-      {
-        env: {
-          ...process.env,
-          ASPNETCORE_ENVIRONMENT: 'Development',
-          ConnectionStrings__SolarWatch: process.env.SOLARWATCH_E2E_CONNECTION,
-        },
-        stdio: 'pipe',
-        timeout: 60_000,
-      },
-    )
-  } catch {
-    throw new Error(
-      `Development command failed: ${args[0]}. Check the dedicated E2E database and migration setup.`,
-    )
-  }
-}
+import { command } from './development.ts'
 
 test.beforeAll(() => command('migrate'))
 test.beforeEach(() => command('clear-demo', '--confirm'))
@@ -215,7 +183,7 @@ test('persisted PostgreSQL fixture reaches React through the API despite a diffe
   await expect(page.getByTestId('consumption-power')).toHaveText('800 W')
   await expect(page.getByTestId('battery-charge')).toHaveText('65%')
   await expect(page.getByRole('meter')).toHaveAttribute('aria-valuenow', '65')
-  await expect(page.getByText('Simulated data')).toBeVisible()
+  await expect(page.locator('.simulated:visible')).toHaveText('Simulated data')
   await expect(page.getByText('Fresh at last check')).toBeVisible()
   await expect(
     page.locator(`time[datetime="${snapshot.reading.measuredAt}"]`),
@@ -294,7 +262,7 @@ test('loading is visible and a failed refresh clearly retains the previous readi
   await page.getByRole('button', { name: 'Retry', exact: true }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
   await expect(
-    page.getByRole('heading', { name: 'Latest reading', exact: true }),
+    page.getByRole('heading', { name: 'Latest measurement', exact: true }),
   ).toBeVisible()
 })
 

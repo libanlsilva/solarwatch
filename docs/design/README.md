@@ -2,6 +2,8 @@
 
 This is **design evidence**, not the implemented React dashboard. [Issue #12](https://github.com/libanlsilva/solarwatch/issues/12) and Phase 4 complete with the owner-approved squash integration of [PR #13](https://github.com/libanlsilva/solarwatch/pull/13). The owner definitively approved the reusable system and resource package as well as every visual reference. The MVP remains unfinished.
 
+This package records the approved Phase 4 handoff. For current React implementation progress and actual screenshots, see the [project README](../../README.md) and [Overview implementation record](../architecture/overview-ui.md). The frozen design sources remain unchanged.
+
 Read [DESIGN.md](DESIGN.md) for the small reusable system, [asset provenance](ASSETS.md) for publication permissions and [validation](VALIDATION.md) for checks and limitations.
 
 ## Approved references
