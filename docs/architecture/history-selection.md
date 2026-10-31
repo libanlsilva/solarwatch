@@ -1,6 +1,6 @@
 # History synchronized inspection — delivery B
 
-Issue [#22](https://github.com/libanlsilva/solarwatch/issues/22) and its precise temporal/reconciliation rules were expressly approved by the owner. This branch implements delivery B for PR review; it does not complete Phase 5 or the MVP. The [delivery A record](history-view.md) describes the preceding read-only increment. The frozen History Desktop v1, History Mobile v1 and [design system](../design/DESIGN.md) remain unchanged.
+Issue [#22](https://github.com/libanlsilva/solarwatch/issues/22) and its precise temporal/reconciliation rules were expressly approved by the owner. The owner personally approved delivery B and authorized its squash integration in [PR #23](https://github.com/libanlsilva/solarwatch/pull/23) (`6395727eb16b0b9eff2dc13fc70878906bffef5f`); this delivery is complete. Phase 5 and the MVP remain pending. The [delivery A record](history-view.md) describes the preceding read-only increment. The frozen History Desktop v1, History Mobile v1 and [design system](../design/DESIGN.md) remain unchanged.
 
 ## Ownership and temporal rules
 
@@ -83,4 +83,4 @@ Actual local validation: **116 .NET unit + 56 real PostgreSQL integration + 46 f
 
 The complete Playwright run passed in 3.5 minutes locally; the unchanged 1,441-request CLI journey measured 5.893s fresh / 11.028s conflict-only repeat. These are individual local timings, not benchmarks. The three existing workflows automatically discover the new unit/spec files; no CI exclusions, new workflow, backend change or dependency is required. The frozen-design verifier passes: 60 unchanged exports, eight layouts, 24 states and 12 gallery pairs, with no script/data-request/resource errors. The chart module remains lazy-loaded; measured production output is 259.31kB main JS (79.54kB gzip), 376.91kB chart JS (108.70kB gzip) and 28.37kB CSS (6.77kB gzip), before transport headers. No library version or lockfile changes.
 
-Remaining work: personal PR review/integration, combined final Phase 5 acceptance/accessibility validation and the separately planned local MVP release. Manual screen-reader/native zoom checks and separately approved tablet designs are not claimed by these automated checks. More realistic energy patterns remain a separate unimplemented roadmap item.
+Remaining work: combined final Phase 5 acceptance/accessibility validation, proposed in [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24) for review without implementation, and the separately planned local MVP release. Manual screen-reader/native zoom checks and separately approved tablet designs are not claimed by these automated checks. More realistic energy patterns remain a separate unimplemented roadmap item.
