@@ -1,7 +1,7 @@
 import { Component, lazy, Suspense, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { prepareHistory } from '../history.ts'
-import type { HistoryPlot } from '../history.ts'
+import type { HistoryPlot, HistoryResponse } from '../history.ts'
 import type { HistoryState } from '../historyQuery.ts'
 import { localTimeZone, measurementDate, measurementTime, utcOffsetAt } from '../measurementDisplay.ts'
 import './history.css'
@@ -16,6 +16,14 @@ class ChartBoundary extends Component<{ children: ReactNode }, { failed: boolean
   render() {
     return this.state.failed ? <div className="history-empty" role="alert"><h3>Chart display is unavailable</h3><p>Reload the page to try loading the chart again.</p></div> : this.props.children
   }
+}
+
+export function HistoryPlotFrame({ kind, snapshot, plot, detail = false }: {
+  kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean
+}) {
+  return <ChartBoundary><Suspense fallback={<div className="history-skeleton" aria-label="Loading chart display"><span /><span /><span /></div>}>
+    <HistoryPlotView key={snapshot.asOf} kind={kind} snapshot={snapshot} plot={plot} detail={detail} />
+  </Suspense></ChartBoundary>
 }
 
 function HistoryCard({ kind, snapshot, pending, error, plot, retry }: HistoryState & {
@@ -36,7 +44,7 @@ function HistoryCard({ kind, snapshot, pending, error, plot, retry }: HistorySta
       {power ? <><span><i className="solar-key" />Solar generation</span><span><i className="consumption-key" />Home consumption</span></> : <span><i className="battery-key" />State of charge</span>}
     </div>
     <div className="history-data" aria-busy={pending}>
-      {populated && plot ? <ChartBoundary><Suspense fallback={<div className="history-skeleton" aria-label="Loading chart display"><span /><span /><span /></div>}><HistoryPlotView key={snapshot.asOf} kind={kind} snapshot={snapshot} plot={plot} /></Suspense></ChartBoundary> : pending ?
+      {populated && plot ? <HistoryPlotFrame kind={kind} snapshot={snapshot} plot={plot} /> : pending ?
         <div className="history-skeleton" aria-hidden="true"><span /><span /><span /></div> :
         <div className="history-empty"><h3>{error ? 'History could not be loaded' : 'No measurements in this window'}</h3><p>{error ? 'Latest Reading is checked separately.' : 'No values are substituted for missing readings.'}</p></div>}
     </div>

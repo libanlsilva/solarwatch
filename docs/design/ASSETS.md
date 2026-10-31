@@ -17,3 +17,7 @@ The same authorized photograph is kept in four source folders so the frozen appr
 ## Current Overview chart captures
 
 The Issue #18 application captures under `docs/screenshots/overview-charts-desktop.png`, `overview-charts-mobile.png` and `overview-charts-mobile-full.png` reuse the same owner-authorized photograph within the implemented SolarWatch UI. They were exported from the real production frontend preview/.NET/PostgreSQL E2E journey and include persisted simulated readings. Existing publication permission and lack of additional attribution requirements apply; no new external imagery or reference-dashboard assets are included. Approved prototype exports and the original first-delivery captures remain intact.
+
+## Current History delivery A captures
+
+The Issue #20 application captures under `docs/screenshots/history-*.png` reuse the same owner-authorized photograph and publication permission. Full-day captures come from the existing simulator → API → PostgreSQL → React browser journey; partial captures use six records persisted through the real ingestion API. They document the implemented read-only screen and simulated data, separately from frozen prototype exports. No external reference imagery or new third-party assets are included.

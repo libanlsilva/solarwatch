@@ -4,8 +4,7 @@ export function command(...args: string[]) {
   // Credentials stay in the environment, never arguments or command output.
   try {
     execFileSync('dotnet', [
-      'run', '--project', '../backend/src/SolarWatch.Api', '--configuration',
-      'Release', '--no-build', '--no-launch-profile', '--', ...args,
+      '../backend/src/SolarWatch.Api/bin/Release/net10.0/SolarWatch.Api.dll', ...args,
     ], {
       env: { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development', ConnectionStrings__SolarWatch: process.env.SOLARWATCH_E2E_CONNECTION },
       stdio: 'pipe', timeout: 60_000,

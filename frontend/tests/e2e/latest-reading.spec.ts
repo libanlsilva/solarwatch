@@ -7,8 +7,7 @@ test.beforeEach(() => command('clear-demo', '--confirm'))
 
 function simulate(args: string[] = [], expectedExit = 0) {
   const result = spawnSync('dotnet', [
-      'run', '--project', '../simulator/SolarWatch.Simulator',
-      '--configuration', 'Release', '--no-build', '--',
+      '../simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll',
       '--api-url', 'http://127.0.0.1:5181', '--count', '3', ...args,
     ], { encoding: 'utf8', timeout: 60_000, stdio: 'pipe' })
   expect(result.status, 'Simulator exit status against the local E2E API').toBe(expectedExit)
@@ -165,6 +164,21 @@ test('24-hour history CLI confirms 1441 minute samples and a full rerun conflict
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({ path: testInfo.outputPath('overview-charts-mobile.png') })
   await page.screenshot({ path: testInfo.outputPath('overview-charts-mobile-full.png'), fullPage: true })
+
+  // The detailed screen reuses this persisted full-day snapshot; no second 1,441-POST setup.
+  await page.getByRole('link', { name: 'History', exact: true }).click()
+  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', plottedHistory.readings.at(-1).measuredAt)
+  await expect(page.locator('.solar-series .recharts-area-curve')).toBeVisible()
+  const detailPath = await page.locator('.solar-series .recharts-area-curve').getAttribute('d')
+  expect(detailPath!.match(/[ML]/g)).toHaveLength(plottedHistory.readings.length)
+  await page.getByRole('heading', { name: 'History', exact: true }).click()
+  await page.setViewportSize({ width: 1440, height: 1186 })
+  await expect.poll(() => page.getByTestId('power-plot').evaluate(element => element.clientWidth)).toBeGreaterThan(600)
+  await page.screenshot({ path: testInfo.outputPath('history-desktop.png'), fullPage: true })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect.poll(() => page.getByTestId('power-plot').evaluate(element => element.clientWidth)).toBeLessThan(390)
+  await page.screenshot({ path: testInfo.outputPath('history-mobile.png') })
+  await page.screenshot({ path: testInfo.outputPath('history-mobile-full.png'), fullPage: true })
 
   const repeated = history(1)
   expect(repeated).toContain('accepted=0, rejected=1441, conflicts=1441, errors=0, uncertain=0, unattempted=0')
