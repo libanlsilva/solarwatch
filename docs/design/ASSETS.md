@@ -21,3 +21,7 @@ The Issue #18 application captures under `docs/screenshots/overview-charts-deskt
 ## Current History delivery A captures
 
 The Issue #20 application captures under `docs/screenshots/history-*.png` reuse the same owner-authorized photograph and publication permission. Full-day captures come from the existing simulator → API → PostgreSQL → React browser journey; partial captures use six records persisted through the real ingestion API. They document the implemented read-only screen and simulated data, separately from frozen prototype exports. No external reference imagery or new third-party assets are included.
+
+## Current History delivery B captures
+
+The six Issue #22 application captures under `docs/screenshots/history-interactive-*.png` reuse the same owner-authorized photograph and publication permission, without additional attribution requirements. They show exact-record selection and an unavailable minute in the implemented desktop/mobile UI, using five simulated observations persisted through the real API/PostgreSQL. No frontend fixtures, new third-party assets or external reference-dashboard images are published. All earlier captures and frozen prototype exports remain unchanged.

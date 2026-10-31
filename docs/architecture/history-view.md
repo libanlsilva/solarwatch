@@ -4,6 +4,8 @@
 
 ## Navigation and ownership
 
+This document records delivery A's historical scope and verification. [Delivery B](history-selection.md), owner-approved Issue #22, evolves its read-only context and independent History tooltips into synchronized Selected Reading and UTC-minute inspection. Navigation/query ownership and the frozen design references below remain applicable.
+
 Open `http://localhost:5173/#history` after following the [local setup](../../README.md#local-setup). Native hash links support direct entry, reload and browser Back/Forward without a router, rewrite rules or dependencies. Overview and Installation retain their existing anchors; returning from History mounts Overview before scrolling to Installation. Cross-view navigation focuses the main region; the skip link focuses the current view without changing its route.
 
 The App keeps **one History query owner** across both screens. Initial entry fetches history once; changing sections reuses its snapshot, pending request, error and original reference without refetching. It does not abort a useful in-flight request merely because the chart presentation changed. On application teardown, the existing request owner aborts work and ignores obsolete completions. No browser clock, polling, background retry, cache library or store is introduced.
