@@ -24,7 +24,7 @@ async function seed(request: APIRequestContext) {
   return rows
 }
 
-test('direct History, reload and Back/Forward share one history snapshot; context never borrows Latest', async ({ page, request }) => {
+test('direct History, reload and Back/Forward share one history snapshot; default context never borrows Latest and Refresh preserves exact selection', async ({ page, request }) => {
   const rows = await seed(request)
   const calls = { latest: 0, history: 0 }
   page.on('request', request => {
@@ -34,7 +34,7 @@ test('direct History, reload and Back/Forward share one history snapshot; contex
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/#history')
   await expect(page.getByRole('heading', { name: 'History', exact: true })).toBeVisible()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
   await expect(page.locator('.history-point[data-series="solar"]')).toHaveCount(6)
   expect(calls).toEqual({ latest: 0, history: 1 })
   const originalAsOf = await page.getByTestId('history-asof').getAttribute('datetime')
@@ -43,25 +43,26 @@ test('direct History, reload and Back/Forward share one history snapshot; contex
   await page.getByRole('link', { name: 'Overview', exact: true }).click()
   await expect(page.getByTestId('solar-power')).toHaveText('1,777 W')
   await page.goBack()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
   await expect(page.getByTestId('history-asof')).toHaveAttribute('datetime', originalAsOf!)
   expect(calls).toEqual({ latest: 1, history: 1 })
   await page.goForward()
   await expect(page.getByRole('heading', { name: /Your home/ })).toBeVisible()
   await page.getByRole('link', { name: 'History', exact: true }).click()
   await page.getByRole('button', { name: 'Refresh readings' }).click()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', newRow.measuredAt)
-  await expect(page.getByTestId('history-latest-solar')).toHaveText('1,777W')
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+  await expect(page.getByTestId('history-selected-solar')).toHaveText('3,000W')
+  await expect(page.locator('.history-point[data-series="solar"]').last()).toHaveAttribute('data-measured-at', newRow.measuredAt)
   expect(calls).toEqual({ latest: 1, history: 2 })
   await page.getByRole('link', { name: 'Installation', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Your installation' })).toBeInViewport()
   await page.goBack()
   await expect(page.getByRole('link', { name: 'History', exact: true })).toHaveAttribute('aria-current', 'page')
   await page.reload()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', newRow.measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', newRow.measuredAt)
   expect(calls).toEqual({ latest: 1, history: 3 })
-  await expect(page.getByRole('slider')).toHaveCount(0)
-  await expect(page.getByRole('heading', { name: 'Selected reading', exact: true })).toHaveCount(0)
+  await expect(page.locator('.minute-slider')).toHaveCount(1)
+  await expect(page.getByRole('heading', { name: 'Selected reading', exact: true })).toHaveCount(1)
 })
 
 test('History Refresh is single-flight; failures retain the complete snapshot and successful empty clears it', async ({ page, request }) => {
@@ -69,7 +70,7 @@ test('History Refresh is single-flight; failures retain the complete snapshot an
   let historyCalls = 0
   page.on('request', request => { if (request.url().endsWith('/api/readings/history')) historyCalls++ })
   await page.goto('/#history')
-  await expect(page.getByTestId('history-latest-time')).toBeVisible()
+  await expect(page.getByTestId('history-selected-time')).toBeVisible()
   const reference = await page.getByTestId('history-asof').getAttribute('datetime')
   const range = await page.getByTestId('history-window').innerHTML()
   let release!: () => void
@@ -80,7 +81,7 @@ test('History Refresh is single-flight; failures retain the complete snapshot an
   await expect(page.getByRole('status')).toContainText('Refreshing history')
   await page.getByRole('button', { name: 'Refreshing…' }).evaluate((button: HTMLButtonElement) => { button.click(); button.click() })
   expect(historyCalls).toBe(2)
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
   // Navigating while this same query is in flight neither aborts it nor creates a second owner.
   await page.getByRole('link', { name: 'Overview', exact: true }).click()
   await expect(page.getByTestId('solar-power')).toHaveText('3,000 W')
@@ -95,7 +96,7 @@ test('History Refresh is single-flight; failures retain the complete snapshot an
   await page.unroute('**/api/readings/history')
   await page.getByRole('button', { name: 'History Retry', exact: true }).click()
   await expect(page.locator('.history-workspace')).toHaveAttribute('data-history-state', 'empty')
-  await expect(page.getByTestId('history-latest-time')).toHaveCount(0)
+  await expect(page.getByTestId('history-selected-time')).toHaveCount(0)
   await expect(page.locator('.history-point')).toHaveCount(0)
   await expect(page.locator('.history-context')).toContainText('No reading available')
   await expect(page.locator('.history-coverage')).toContainText('0 recorded measurements')
@@ -112,7 +113,7 @@ test('initial loading/error/retry have no fake metadata or values and page reloa
   await page.goto('/#history')
   await expect(page.locator('.history-workspace')).toHaveAttribute('data-history-state', 'pending')
   await expect(page.getByTestId('history-asof')).toHaveCount(0)
-  await expect(page.getByTestId('history-latest-solar')).toHaveCount(0)
+  await expect(page.getByTestId('history-selected-solar')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Refreshing…' })).toBeDisabled()
   held = false
   await page.reload()
@@ -120,7 +121,7 @@ test('initial loading/error/retry have no fake metadata or values and page reloa
   release()
   await page.unroute('**/api/readings/history')
   await page.getByRole('button', { name: 'History Retry', exact: true }).click()
-  await expect(page.getByTestId('history-latest-solar')).toHaveText('3,000W')
+  await expect(page.getByTestId('history-selected-solar')).toHaveText('3,000W')
   await expect(page.locator('.history-workspace')).toHaveAttribute('data-history-state', 'ready')
 })
 
@@ -162,14 +163,15 @@ test('real partial History stays legible at all approved widths, on short phones
   await writeFile(layoutPath, JSON.stringify(shortPhoneLayouts, null, 2))
   await testInfo.attach('short-phone-layout.json', { path: layoutPath, contentType: 'application/json' })
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.locator('.power-detail .recharts-surface').focus()
+  await page.getByTestId('power-plot').focus()
+  await page.keyboard.press('Home')
   await page.keyboard.press('ArrowRight')
-  await expect(page.locator('.power-detail [role="tooltip"] time')).toHaveAttribute('datetime', rows[1].measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows[1].measuredAt)
   await page.keyboard.press('Escape')
   await expect(page.locator('.power-detail [role="tooltip"]')).toHaveCount(0)
-  await page.locator('.battery-detail .recharts-surface').click({ position: { x: 95, y: 55 } })
-  await expect(page.locator('.battery-detail [role="tooltip"]')).toBeVisible()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+  await page.getByTestId('battery-plot').focus()
+  await page.keyboard.press('End')
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
   await page.getByRole('link', { name: 'Overview', exact: true }).focus()
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'History', exact: true })).toBeFocused()
@@ -188,7 +190,7 @@ test('real partial History stays legible at all approved widths, on short phones
   await page.screenshot({ path: testInfo.outputPath('history-partial-mobile-full.png'), fullPage: true })
 })
 
-test('History chart inspection and navigation work with actual touchscreen input without changing read-only context', async ({ browser, request }) => {
+test('History chart inspection and navigation work with actual touchscreen input through the shared selected context', async ({ browser, request }) => {
   const rows = await seed(request)
   const context = await browser.newContext({ viewport: { width: 390, height: 667 }, isMobile: true, hasTouch: true, timezoneId: 'America/Havana', reducedMotion: 'reduce' })
   try {
@@ -196,12 +198,15 @@ test('History chart inspection and navigation work with actual touchscreen input
     await boundExternalFonts(page)
     await page.goto('http://127.0.0.1:4181/#history')
     await expect(page.locator('.history-point[data-series="solar"]')).toHaveCount(6)
-    await page.locator('.history-point[data-series="solar"]').last().tap()
-    await expect(page.locator('.power-detail [role="tooltip"] time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
-    await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+    const point = page.locator('.history-point[data-series="solar"]').last()
+    await point.scrollIntoViewIfNeeded()
+    const box = (await point.boundingBox())!
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2)
+    await expect(page.locator('.selection-marker')).toHaveCount(3)
+    await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
     await page.getByRole('link', { name: 'Installation', exact: true }).tap()
     await expect(page.getByRole('heading', { name: 'Your installation' })).toBeInViewport()
     await page.getByRole('link', { name: 'History', exact: true }).tap()
-    await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
+    await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', rows.at(-1).measuredAt)
   } finally { await context.close() }
 })
