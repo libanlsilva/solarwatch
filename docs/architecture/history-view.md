@@ -1,6 +1,6 @@
 # Responsive History — delivery A
 
-[Issue #20](https://github.com/libanlsilva/solarwatch/issues/20) is the owner-approved fourth Phase 5 delivery. This branch implements its read-only screen for PR review; integration is still pending. Phase 5 and the MVP remain open. The frozen [History Desktop v1](../design/prototypes/history-desktop-v1/index.html), [History Mobile v1](../design/prototypes/history-mobile-v1/index.html), [states](../design/README.md) and [DESIGN.md](../design/DESIGN.md) are the visual references.
+[Issue #20](https://github.com/libanlsilva/solarwatch/issues/20) is the owner-approved fourth Phase 5 delivery. The owner definitively approved the implementation; this delivery completes with reviewed squash integration of [PR #21](https://github.com/libanlsilva/solarwatch/pull/21). Phase 5 and the MVP remain open. The frozen [History Desktop v1](../design/prototypes/history-desktop-v1/index.html), [History Mobile v1](../design/prototypes/history-mobile-v1/index.html), [states](../design/README.md) and [DESIGN.md](../design/DESIGN.md) are the visual references.
 
 ## Navigation and ownership
 
