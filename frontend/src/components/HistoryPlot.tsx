@@ -4,6 +4,9 @@ import { localHistoryTime, utcMicroseconds } from '../history.ts'
 import type { HistoryPoint, HistoryPlot, HistoryResponse } from '../history.ts'
 import type { Reading } from '../readings.ts'
 import { measurementDate, utcOffsetAt } from '../measurementDisplay.ts'
+import type { HistoryInspection } from '../historySelection.ts'
+import { stepObservation } from '../historySelection.ts'
+import { HistorySelectionLayer } from './HistorySelectionLayer.tsx'
 
 const axisTime = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
 const axisDate = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' })
@@ -38,7 +41,7 @@ function HistoryDot({ cx, cy, payload, series, showAll, lastTimestamp }: {
     data-value={payload[series]} />
 }
 
-export default function HistoryPlotView({ kind, snapshot, plot, detail = false }: { kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean }) {
+export default function HistoryPlotView({ kind, snapshot, plot, detail = false, inspection }: { kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean; inspection?: HistoryInspection }) {
   const id = useId().replace(/:/g, '')
   const inspected = useRef(0)
   const [keyboardIndex, setKeyboardIndex] = useState<number | null>(null)
@@ -49,9 +52,20 @@ export default function HistoryPlotView({ kind, snapshot, plot, detail = false }
   const showAll = snapshot.readings.length <= 48
   const lastTimestamp = snapshot.readings.at(-1)!.measuredAt
   return <div className={`history-plot ${kind}-plot ${detail ? 'detail-plot' : ''}`} data-testid={`${kind}-plot`}
-    onPointerDownCapture={() => { setKeyboardIndex(null); setDismissed(false) }}
-    onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) { setKeyboardIndex(null); setDismissed(true) } }}
+    tabIndex={inspection ? 0 : undefined} role={inspection ? 'group' : undefined}
+    aria-label={inspection ? `${battery ? 'Battery history' : 'Power history'}. Left and right keys inspect recorded readings; Home and End select the first and last reading.` : undefined}
+    aria-describedby={inspection ? 'history-selection-help' : undefined}
+    data-selection-mode={inspection?.selection.kind} data-selection-at={inspection ? inspection.resolved.reading?.measuredAt ?? (inspection.selection.kind === 'observation' ? inspection.selection.measuredAt : String(inspection.selection.minute)) : undefined}
+    onPointerDownCapture={() => { if (!inspection) { setKeyboardIndex(null); setDismissed(false) } }}
+    onBlurCapture={event => { if (!inspection && !event.currentTarget.contains(event.relatedTarget)) { setKeyboardIndex(null); setDismissed(true) } }}
     onKeyDownCapture={event => {
+      if (inspection) {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Escape'].includes(event.key)) return
+        event.preventDefault(); event.stopPropagation()
+        if (event.key === 'Escape') return
+        inspection.select(event.key === 'Home' || event.key === 'End' ? { kind: 'observation', measuredAt: snapshot.readings[event.key === 'Home' ? 0 : snapshot.readings.length - 1].measuredAt } : stepObservation(snapshot, inspection.selection, event.key === 'ArrowRight' ? 1 : -1))
+        return
+      }
       if (!['ArrowLeft', 'ArrowRight', 'Escape'].includes(event.key)) return
       event.preventDefault()
       event.stopPropagation()
@@ -63,7 +77,7 @@ export default function HistoryPlotView({ kind, snapshot, plot, detail = false }
     }}>
     <ResponsiveContainer width="100%" height="100%" minWidth={0}>
       <ComposedChart data={plot.points} margin={{ top: 6, right: 10, bottom: 0, left: 0 }}
-        accessibilityLayer aria-label={`${battery ? 'Battery charge history in percent' : 'Solar generation and home consumption history in watts'}. Use arrow keys to inspect recorded readings.`}>
+        accessibilityLayer={!inspection} aria-hidden={inspection ? true : undefined} aria-label={`${battery ? 'Battery charge history in percent' : 'Solar generation and home consumption history in watts'}. Use arrow keys to inspect recorded readings.`}>
         <defs>
           <linearGradient id={`fill-${id}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={battery ? colors.battery : colors.solar} stopOpacity=".16" />
@@ -86,11 +100,11 @@ export default function HistoryPlotView({ kind, snapshot, plot, detail = false }
           axisLine={false} tickLine={false} width={43} padding={{ top: 4, bottom: 4 }} />
         {plot.gaps.map((gap, index) => <ReferenceArea key={index} className="history-gap" x1={gap.from} x2={gap.to}
           fill={`url(#gap-${id})`} fillOpacity={1} strokeOpacity={0} />)}
-        <Tooltip trigger="click" cursor={false} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }}
+        {!inspection && <Tooltip trigger="click" cursor={false} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }}
           active={dismissed ? false : keyboardIndex !== null ? true : undefined}
           position={keyboardIndex !== null ? { x: 45, y: 5 } : undefined}
           content={props => <HistoryTooltip {...props} kind={kind} readingOverride={keyboardIndex === null ? undefined : snapshot.readings[keyboardIndex]}
-            onRead={reading => { if (keyboardIndex === null) inspected.current = snapshot.readings.indexOf(reading) }} />} />
+            onRead={reading => { if (keyboardIndex === null) inspected.current = snapshot.readings.indexOf(reading) }} />} />}
         <Area className={`history-series ${battery ? 'battery-series' : 'solar-series'}`} dataKey={battery ? 'battery' : 'solar'}
           name={battery ? 'Battery charge' : 'Solar generation'} unit={battery ? '%' : ' W'} type="linear" connectNulls={false}
           stroke={battery ? colors.battery : colors.solar} strokeWidth={2.2} fill={`url(#fill-${id})`}
@@ -100,6 +114,7 @@ export default function HistoryPlotView({ kind, snapshot, plot, detail = false }
           type="linear" connectNulls={false} stroke={colors.consumption} strokeWidth={2} strokeDasharray="5 5"
           isAnimationActive={false} activeDot={false}
           dot={props => <HistoryDot {...props} series="consumption" showAll={showAll} lastTimestamp={lastTimestamp} />} />}
+        {inspection && <HistorySelectionLayer kind={kind} snapshot={snapshot} plot={plot} inspection={inspection} />}
       </ComposedChart>
     </ResponsiveContainer>
   </div>

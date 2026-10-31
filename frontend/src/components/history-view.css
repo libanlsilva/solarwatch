@@ -39,3 +39,17 @@
 /* Keep charts reachable on short phones: only the main header remains sticky. */
 @media(max-width:900px) and (max-height:740px){.history-context{position:static}}
 @media(max-width:374px){.history-window{margin-inline:12px;padding-inline:13px}.history-workspace{padding-inline:12px}.history-heading,.detail-notice{padding-inline:16px}.history-context,.detail-chart,.history-coverage{padding-inline:13px}.detail-range{font-size:13px}.context-values{gap:7px}.context-values dd{font-size:23px}}
+.selection-status{font-size:12px;color:var(--muted);white-space:nowrap}
+.inspection-minute{margin-top:10px;overflow-wrap:anywhere}.selection-message,.selection-notice{margin-top:9px;overflow-wrap:anywhere}
+.selection-notice{color:#d2ded4}.minute-controls{display:flex;align-items:center;gap:10px;border-top:1px solid #36503c66;padding-top:12px;margin-top:14px}
+.minute-controls button{flex:0 0 44px;min-height:44px;border:1px solid #425744;border-radius:99px;background:#142319;color:#e1e9e1;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.minute-controls button:hover:enabled{background:#22302a}.minute-controls button:disabled{opacity:.4;cursor:default}
+.desktop-minute-step{flex:1;text-align:center}.minute-slider{display:none;min-width:0;flex:1;height:44px;margin:0;accent-color:var(--yellow);cursor:ew-resize}
+.history-inspection-target{cursor:crosshair;touch-action:pan-y}.detail-plot:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+/* Recharts orders graphical layers separately. History has one plot-space hit
+   target; data marks and shaded gaps must not intercept its pointer events. */
+.detail-plot .recharts-surface *{pointer-events:none}.detail-plot .history-inspection-target{pointer-events:all}
+.selection-cursor{pointer-events:none}.selection-cursor.unavailable{stroke-dasharray:2 5}
+@media(max-width:900px){.minute-slider{display:block}.desktop-minute-step{display:none}.minute-controls{border-top:0;padding-top:0;margin-top:7px}.inspection-minute{margin-top:7px}.selection-message,.selection-notice{margin-top:4px;font-size:12px;line-height:1.45}.history-context .context-values dd{font-size:24px}}
+@media(max-width:900px) and (min-height:741px){.history-context{position:var(--history-context-position,sticky)}}
+@media(max-width:900px) and (min-height:741px){.history-view .detail-chart,.history-view .detail-plot{scroll-margin-top:calc(var(--header-offset) + var(--history-context-height,0px) + 16px)}}

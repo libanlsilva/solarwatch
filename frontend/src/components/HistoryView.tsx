@@ -4,17 +4,21 @@ import { historyViewData } from '../historyViewData.ts'
 import type { HistoryState } from '../historyQuery.ts'
 import { localTimeZone, measurementDate, measurementTime, utcOffsetAt } from '../measurementDisplay.ts'
 import { HistoryPlotFrame } from './HistoryCharts.tsx'
+import { SelectedReading } from './SelectedReading.tsx'
+import { useHistorySelection } from '../useHistorySelection.ts'
+import { resolveSelection } from '../historySelection.ts'
 import './history-view.css'
 
 const dateRange = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
-const number = new Intl.NumberFormat(undefined, { maximumSignificantDigits: 6 })
 
 export function HistoryView({ snapshot, pending, error, refresh }: HistoryState & { refresh: () => void }) {
   const model = useMemo(() => snapshot ? historyViewData(snapshot) : null, [snapshot])
+  const { selection, select, notice } = useHistorySelection(snapshot)
+  const resolved = useMemo(() => snapshot && selection ? resolveSelection(snapshot, selection) : null, [snapshot, selection])
+  const inspection = selection && resolved ? { selection, resolved, select } : null
   const populated = !!model?.latest
   const coverage = !snapshot ? 'Not checked' : !populated ? 'Empty window' : model!.intervals.length ? 'Partial history' : 'Available history'
   const message = pending ? snapshot ? 'Refreshing history…' : 'Loading history…' : error ? snapshot ? 'Unable to update. Previous history is still available.' : 'History could not be loaded. Please try again.' : !populated ? 'No measurements in this window. Missing readings are never shown as zero.' : model!.intervals.length ? 'Partial history. Shaded intervals contain no measurements; curves stop across gaps longer than five minutes.' : 'History updated. Only recorded measurements are shown.'
-  const latest = model?.latest
   const range = (instant: string) => <time dateTime={instant} title={localHistoryTime(instant)}>{dateRange.format(new Date(instant))}</time>
   return <main className="history-view" id="main-content" tabIndex={-1}>
     <section className="history-heading" aria-labelledby="history-title">
@@ -39,24 +43,11 @@ export function HistoryView({ snapshot, pending, error, refresh }: HistoryState 
         {(['power', 'battery'] as const).map(kind => <section className={`detail-chart ${kind}-detail`} key={kind} aria-labelledby={`detail-${kind}-title`}>
           <div className="card-top"><h3 id={`detail-${kind}-title`}>{kind === 'power' ? 'Solar & home' : 'Battery charge'}</h3><span className="history-support">{kind === 'power' ? 'Power · W' : 'State of charge · %'}</span></div>
           <div className="detail-mobile-legend history-legend">{kind === 'power' ? <><span><i className="solar-key" />Solar generation</span><span><i className="consumption-key" />Home consumption</span></> : <span><i className="battery-key" />State of charge</span>}</div>
-          <div className="detail-data">{populated && snapshot && model ? <HistoryPlotFrame kind={kind} snapshot={snapshot} plot={model.plot} detail /> : pending ? <div className="history-skeleton" aria-label="Loading historical measurements"><span /><span /><span /></div> : <div className="history-empty"><h3>{error ? 'History is unavailable' : 'No measurements in this window'}</h3><p>{error ? 'Retry the history query to check again.' : 'No values have been substituted.'}</p></div>}</div>
+          <div className="detail-data">{populated && snapshot && model ? <HistoryPlotFrame kind={kind} snapshot={snapshot} plot={model.plot} detail inspection={inspection ?? undefined} /> : pending ? <div className="history-skeleton" aria-label="Loading historical measurements"><span /><span /><span /></div> : <div className="history-empty"><h3>{error ? 'History is unavailable' : 'No measurements in this window'}</h3><p>{error ? 'Retry the history query to check again.' : 'No values have been substituted.'}</p></div>}</div>
         </section>)}
-        <div className="detail-chart-foot history-support"><p>Click, tap or focus a chart and use arrow keys to inspect its recorded values.</p><p>Each chart is independent. The context card shows the latest available reading in this window.</p></div>
+        <div className="detail-chart-foot history-support"><p>Click an identifiable point or use chart arrow keys to select a recorded reading.</p><p>Both charts share Selected reading. Use minute controls to inspect missing minutes.</p></div>
       </section>
-      <section className="history-context card" aria-labelledby="history-context-title" aria-busy={pending && !snapshot}>
-        <h2 id="history-context-title">Latest available reading</h2>
-        {latest ? <>
-          <p className="context-recorded">Recorded in this window</p>
-          <p className="context-timestamp"><time dateTime={latest.measuredAt} data-testid="history-latest-time"><span>{measurementDate.format(new Date(latest.measuredAt))}</span><strong>{localHistoryTime(latest.measuredAt, undefined, false)}</strong></time></p>
-          <p className="history-support context-zone">{localTimeZone} · {utcOffsetAt(latest.measuredAt)}</p>
-          <dl className="context-values">
-            <div><dt><i className="solar-key" /><span className="context-full-label">Solar generation</span><span className="context-short-label">Solar</span></dt><dd className="solar-text" data-testid="history-latest-solar">{number.format(latest.solarPowerW)}<small>W</small></dd></div>
-            <div><dt><i className="consumption-key" /><span className="context-full-label">Home consumption</span><span className="context-short-label">Home</span></dt><dd className="consumption-text" data-testid="history-latest-home">{number.format(latest.consumptionPowerW)}<small>W</small></dd></div>
-            <div><dt><i className="battery-key" />Battery</dt><dd className="battery-text" data-testid="history-latest-battery">{number.format(latest.batteryStateOfChargePercent)}<small>%</small></dd></div>
-          </dl>
-        </> : pending ? <div className="history-skeleton" aria-label="Loading reading context"><span /><span /><span /></div> : <p className="context-no-reading">{error ? 'Reading context is unavailable.' : 'No reading available in this window.'}</p>}
-        <p className="history-support context-note">Read-only context from the queried history.{error && snapshot ? ' Previous successful result.' : ''}</p>
-      </section>
+      <SelectedReading snapshot={snapshot} pending={pending} error={error} inspection={inspection} notice={notice} />
       <section className="history-coverage card" aria-labelledby="coverage-title"><div className="card-top"><h2 id="coverage-title">Reading coverage</h2><span className="history-support"><i className="gap-key" /> Missing</span></div>
         {snapshot && model && <><div className={`coverage-track ${!populated ? 'empty-track' : ''}`} aria-label={coverage}>{model.intervals.map((gap, index) => <span key={index} style={{ left: `${gap.from / model.plot.duration * 100}%`, width: `${(gap.to - gap.from) / model.plot.duration * 100}%` }} />)}</div>
           <p>{snapshot.readings.length.toLocaleString()} recorded measurements in this window. {populated ? 'Gaps are unavailable data, never zero.' : 'The entire window is empty.'}</p>

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { prepareHistory } from '../history.ts'
 import type { HistoryPlot, HistoryResponse } from '../history.ts'
 import type { HistoryState } from '../historyQuery.ts'
+import type { HistoryInspection } from '../historySelection.ts'
 import { localTimeZone, measurementDate, measurementTime, utcOffsetAt } from '../measurementDisplay.ts'
 import './history.css'
 
@@ -18,11 +19,11 @@ class ChartBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 }
 
-export function HistoryPlotFrame({ kind, snapshot, plot, detail = false }: {
-  kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean
+export function HistoryPlotFrame({ kind, snapshot, plot, detail = false, inspection }: {
+  kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean; inspection?: HistoryInspection
 }) {
   return <ChartBoundary><Suspense fallback={<div className="history-skeleton" aria-label="Loading chart display"><span /><span /><span /></div>}>
-    <HistoryPlotView key={snapshot.asOf} kind={kind} snapshot={snapshot} plot={plot} detail={detail} />
+    <HistoryPlotView key={inspection ? 'shared-history' : snapshot.asOf} kind={kind} snapshot={snapshot} plot={plot} detail={detail} inspection={inspection} />
   </Suspense></ChartBoundary>
 }
 

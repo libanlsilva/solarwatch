@@ -167,7 +167,7 @@ test('24-hour history CLI confirms 1441 minute samples and a full rerun conflict
 
   // The detailed screen reuses this persisted full-day snapshot; no second 1,441-POST setup.
   await page.getByRole('link', { name: 'History', exact: true }).click()
-  await expect(page.getByTestId('history-latest-time')).toHaveAttribute('datetime', plottedHistory.readings.at(-1).measuredAt)
+  await expect(page.getByTestId('history-selected-time')).toHaveAttribute('datetime', plottedHistory.readings.at(-1).measuredAt)
   await expect(page.locator('.solar-series .recharts-area-curve')).toBeVisible()
   const detailPath = await page.locator('.solar-series .recharts-area-curve').getAttribute('d')
   expect(detailPath!.match(/[ML]/g)).toHaveLength(plottedHistory.readings.length)
