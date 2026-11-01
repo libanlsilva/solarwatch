@@ -25,3 +25,7 @@ The Issue #20 application captures under `docs/screenshots/history-*.png` reuse 
 ## Current History delivery B captures
 
 The six Issue #22 application captures under `docs/screenshots/history-interactive-*.png` reuse the same owner-authorized photograph and publication permission, without additional attribution requirements. They show exact-record selection and an unavailable minute in the implemented desktop/mobile UI, using five simulated observations persisted through the real API/PostgreSQL. No frontend fixtures, new third-party assets or external reference-dashboard images are published. All earlier captures and frozen prototype exports remain unchanged.
+
+## Phase 5 validation captures
+
+The five Issue #24 captures under `docs/validation/screenshots/` reuse the same owner-authorized photograph and publication permission. Four come from the current real simulator/API/PostgreSQL Playwright run; the enlarged-text capture uses six observations persisted through the real local API in a separate audit database. They are application audit evidence, not altered approved prototypes. No new external imagery, font binaries or third-party reference assets are included.

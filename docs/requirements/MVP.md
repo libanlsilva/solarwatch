@@ -1,6 +1,6 @@
 # Residential MVP requirements
 
-**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through [PR #3](https://github.com/libanlsilva/solarwatch/pull/3), Phase 2 through [PR #5](https://github.com/libanlsilva/solarwatch/pull/5), and Phase 3 through reviewed integration of [PR #7](https://github.com/libanlsilva/solarwatch/pull/7) / [Issue #6](https://github.com/libanlsilva/solarwatch/issues/6), [PR #9](https://github.com/libanlsilva/solarwatch/pull/9) / [Issue #8](https://github.com/libanlsilva/solarwatch/issues/8), and [PR #11](https://github.com/libanlsilva/solarwatch/pull/11) / [Issue #10](https://github.com/libanlsilva/solarwatch/issues/10). Phase 4 visual design is next, pending issue review and personal approval of the resulting prototype. **The MVP remains unfinished:** historical queries/charts and release verification are still outstanding. The approved requirements below are unchanged.
+**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through PR #3. The implemented latest-reading, simulator, Overview and History deliveries are tracked in the [development plan](../DEVELOPMENT_PLAN.md). Owner-approved [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24) now records [Phase 5 validation](../validation/PHASE5.md) for personal PR review, including findings and unverified manual checks. **Phase 5 and the MVP remain pending.** The approved requirements below are unchanged.
 
 **Tracking:** [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2). See the [development plan](../DEVELOPMENT_PLAN.md) for delivery order.
 
@@ -103,6 +103,8 @@ Authentication and access requirements must be reconsidered before any public de
 Keep one API, one PostgreSQL database, one React client, and a small development simulator. No message broker, microservices, event-sourcing framework, generic repository framework, or separate read/write infrastructure is required by these scenarios. Introduce dependencies only when an accepted slice needs them.
 
 ## Review and implementation handoff
+
+The following paragraphs preserve the earlier delivery handoff history. Current implementation and pending acceptance are described in the status above and the roadmap; these historical slice boundaries do not imply that the now-integrated history API/charts are unimplemented.
 
 Requirements review and Phase 1 integration are complete. PR #5 completed Phase 2 and implements the latest-reading path and AC-01 through AC-05, with its contract and verification described in [latest-reading.md](../architecture/latest-reading.md). PR #7 completed Issue #6 and finite HTTP ingestion/verification of AC-08 through AC-10; see [simulated-ingestion.md](../architecture/simulated-ingestion.md). PR #9 completed Issue #8 and continuous execution. Reviewed integration of PR #11 completes Issue #10, the AC-11 data-generation outcome, and Phase 3 while preserving ingestion guarantees and verification. This does not implement history-query/chart behavior in AC-06/AC-07 or complete the MVP. Phase 4 defines the prototype and reusable design system for personal owner approval before historical dashboard implementation.
 
