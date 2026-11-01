@@ -4,6 +4,12 @@ Owner-approved [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24).
 
 **Recommendation:** retain Phase 5's open status until the owner reviews the findings, the recommended blocking correction and the unverified manual checks. Green automated tests do not settle those decisions. The realistic-energy-pattern simulator improvement remains separate and is not a blocker for this audit.
 
+## Post-audit status
+
+The owner personally approved this audit and its findings; [PR #27](https://github.com/libanlsilva/solarwatch/pull/27) was squash-integrated as `7db08d3` and Issue #24 is closed. All three workflows passed on that main commit. The report, original evidence and findings below describe the audited baseline and remain unchanged.
+
+The owner separately approved implementing F1 through [Issue #26](https://github.com/libanlsilva/solarwatch/issues/26). The [focused correction record](REFRESH_ACCESSIBILITY.md) documents the implementation, regression and AX-tree evidence, pending personal PR review. This does not close Phase 5 or the MVP. F2 remains a separate low-severity readability observation; native screen-reader/zoom checks remain unverified. The realistic-pattern simulator improvement remains independent.
+
 ## Execution and evidence
 
 The [portable evidence record](evidence/phase5.json) contains versions, server references, persisted sample identities, response digest, restart comparison, all 48 layout cases, seven History footprints, contrast measurements and image hashes. Windows NT 10.0.26300.0; .NET SDK 10.0.300; Node 24.15.0; npm 12.2.0; PostgreSQL 17.11; Chromium 156.0.8078.4; browser zone `America/Havana`.
