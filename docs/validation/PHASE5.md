@@ -8,7 +8,9 @@ Owner-approved [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24).
 
 The owner personally approved this audit and its findings; [PR #27](https://github.com/libanlsilva/solarwatch/pull/27) was squash-integrated as `7db08d3` and Issue #24 is closed. All three workflows passed on that main commit. The report, original evidence and findings below describe the audited baseline and remain unchanged.
 
-The owner separately approved implementing F1 through [Issue #26](https://github.com/libanlsilva/solarwatch/issues/26). The [focused correction record](REFRESH_ACCESSIBILITY.md) documents the implementation, regression and AX-tree evidence, pending personal PR review. This does not close Phase 5 or the MVP. F2 remains a separate low-severity readability observation; native screen-reader/zoom checks remain unverified. The realistic-pattern simulator improvement remains independent.
+**F1 is corrected:** the owner personally approved [PR #28](https://github.com/libanlsilva/solarwatch/pull/28), squash-integrated as `269f132`; [Issue #26](https://github.com/libanlsilva/solarwatch/issues/26) is closed. The [focused correction record](REFRESH_ACCESSIBILITY.md) preserves the 17-state Chromium AX evidence and 251-test regression results; all three workflows also pass on that main commit. The original F1 finding below remains historical evidence of the audited baseline, not an outstanding defect.
+
+[Issue #29](https://github.com/libanlsilva/solarwatch/issues/29) proposes a small F2 readability correction and focused native browser zoom/reflow and real screen-reader checks, pending owner review; implementation has not started. F2 and the unverified native coverage remain open for explicit disposition. This does not close Phase 5 or the MVP. The realistic-pattern simulator improvement remains independent.
 
 ## Execution and evidence
 
