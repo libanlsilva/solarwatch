@@ -1,0 +1,752 @@
+{
+  "kind": "Phase 5 verification evidence; not phase closure or accessibility certification",
+  "productCommit": "c0b1d58301bd5d78e796c8d49a93668710037b51",
+  "generatedAt": "2026-10-31T23:53:23.643Z",
+  "environment": {
+    "os": "Windows NT 10.0.26300.0",
+    "dotnetSdk": "10.0.300",
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "postgresql": "17.11",
+    "playwright": "1.64.1",
+    "chromium": "156.0.8078.4",
+    "timeZone": "America/Havana"
+  },
+  "existingSuite": {
+    "backendUnit": 116,
+    "postgresIntegration": 56,
+    "frontendUnit": 46,
+    "playwright": 32,
+    "total": 250,
+    "skipped": 0,
+    "playwrightLocalDuration": "3.8 minutes",
+    "cli1441Requests": {
+      "freshSeconds": 5.601,
+      "repeatSeconds": 9.099
+    },
+    "buildWarnings": 0,
+    "buildErrors": 0
+  },
+  "provenance": {
+    "positiveJourney": "Existing simulator -> local Development API -> dedicated PostgreSQL -> real React preview. Diagnostic setup: six persisted POST observations in a separate solarwatch_phase5_e2e database.",
+    "history": {
+      "asOf": "2026-10-31T23:53:24.313395+00:00",
+      "from": "2026-10-30T23:53:24.313395+00:00",
+      "to": "2026-10-31T23:53:24.313395+00:00",
+      "count": 6,
+      "sha256": "51c48b61ebc3dc15d508a1b3a1cff17dec931b5f69111a2edf2fb199548f2a12",
+      "first": {
+        "installationId": "residential-demo",
+        "measuredAt": "2026-10-30T23:54:00.123456+00:00",
+        "solarPowerW": 0,
+        "consumptionPowerW": 0,
+        "batteryStateOfChargePercent": 0
+      },
+      "last": {
+        "installationId": "residential-demo",
+        "measuredAt": "2026-10-31T22:53:00.123456+00:00",
+        "solarPowerW": 1200,
+        "consumptionPowerW": 800,
+        "batteryStateOfChargePercent": 65
+      }
+    },
+    "apiRestart": {
+      "method": "Real API process stopped and restarted; PostgreSQL retained; HTTP snapshots compared",
+      "beforeAsOf": "2026-10-31T23:16:10.9779853+00:00",
+      "afterAsOf": "2026-10-31T23:16:22.5787245+00:00",
+      "beforeReading": {
+        "installationId": "residential-demo",
+        "measuredAt": "2026-10-31T22:53:00.123456+00:00",
+        "solarPowerW": 1200,
+        "consumptionPowerW": 800,
+        "batteryStateOfChargePercent": 65
+      },
+      "latestPreserved": true,
+      "measuredAt": "2026-10-31T22:53:00.123456+00:00",
+      "afterReading": {
+        "installationId": "residential-demo",
+        "measuredAt": "2026-10-31T22:53:00.123456+00:00",
+        "solarPowerW": 1200,
+        "consumptionPowerW": 800,
+        "batteryStateOfChargePercent": 65
+      },
+      "readingCount": 6,
+      "allReadingsPreserved": true
+    }
+  },
+  "diagnostics": {
+    "kind": "Agent-executed automated diagnostics; observations require review, not extra passing tests",
+    "fonts": "Intentionally blocked for fallback audit, not an API failure.",
+    "layoutCases": [
+      {
+        "section": "Overview",
+        "width": 360,
+        "height": 640,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 360,
+        "height": 640,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 360,
+        "height": 640,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 390,
+        "height": 667,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 390,
+        "height": 667,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 390,
+        "height": 667,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 430,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 430,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 430,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 768,
+        "height": 1024,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 768,
+        "height": 1024,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 768,
+        "height": 1024,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 1024,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 1024,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 1024,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 1440,
+        "height": 1186,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 1440,
+        "height": 1186,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 1440,
+        "height": 1186,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 374,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 374,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 374,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 375,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 375,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 375,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 899,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 899,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 899,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 900,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 900,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 900,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 901,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 901,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 901,
+        "height": 844,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 1249,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 1249,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 1249,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 1250,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 1250,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 1250,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 1251,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 1251,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 1251,
+        "height": 900,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 667,
+        "height": 375,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 667,
+        "height": 375,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 667,
+        "height": 375,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Overview",
+        "width": 844,
+        "height": 390,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "Installation",
+        "width": 844,
+        "height": 390,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      },
+      {
+        "section": "History",
+        "width": 844,
+        "height": 390,
+        "pageOverflow": false,
+        "overflow": [],
+        "smallControls": []
+      }
+    ],
+    "requestsDuring48NavigationCases": [
+      {
+        "path": "/api/readings/latest",
+        "method": "GET"
+      },
+      {
+        "path": "/api/readings/history",
+        "method": "GET"
+      }
+    ],
+    "keyboard": {
+      "observations": 132,
+      "occludedCenters": [],
+      "outsideViewport": [],
+      "toleranceCssPixels": 1
+    },
+    "footprints": [
+      {
+        "state": "selected",
+        "width": 390,
+        "height": 844,
+        "header": {
+          "height": 131,
+          "bottom": 131,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 249.359375,
+          "top": 414.9375,
+          "position": "sticky"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,200",
+            "lines": 1
+          },
+          {
+            "value": "800",
+            "lines": 1
+          },
+          {
+            "value": "65",
+            "lines": 1
+          }
+        ]
+      },
+      {
+        "state": "missing",
+        "width": 390,
+        "height": 844,
+        "header": {
+          "height": 131,
+          "bottom": 131,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 249.359375,
+          "top": 414.9375,
+          "position": "sticky"
+        },
+        "numericWrapping": []
+      },
+      {
+        "state": "overlap",
+        "width": 390,
+        "height": 844,
+        "header": {
+          "height": 131,
+          "bottom": 131,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 288.140625,
+          "top": 143,
+          "position": "sticky"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,500",
+            "lines": 1
+          },
+          {
+            "value": "750",
+            "lines": 1
+          },
+          {
+            "value": "50",
+            "lines": 1
+          }
+        ]
+      },
+      {
+        "state": "enlarged",
+        "width": 390,
+        "height": 844,
+        "header": {
+          "height": 259,
+          "bottom": 259,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 536.15625,
+          "top": 895.125,
+          "position": "static"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,200",
+            "lines": 2
+          },
+          {
+            "value": "800",
+            "lines": 1
+          },
+          {
+            "value": "65",
+            "lines": 1
+          }
+        ]
+      },
+      {
+        "state": "enlarged-short-360",
+        "width": 360,
+        "height": 640,
+        "header": {
+          "height": 259,
+          "bottom": 259,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 575.34375,
+          "top": 927.515625,
+          "position": "static"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,200",
+            "lines": 2
+          },
+          {
+            "value": "800",
+            "lines": 1
+          },
+          {
+            "value": "65",
+            "lines": 1
+          }
+        ]
+      },
+      {
+        "state": "enlarged-short-390",
+        "width": 390,
+        "height": 667,
+        "header": {
+          "height": 259,
+          "bottom": 259,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 536.15625,
+          "top": 895.125,
+          "position": "static"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,200",
+            "lines": 2
+          },
+          {
+            "value": "800",
+            "lines": 1
+          },
+          {
+            "value": "65",
+            "lines": 1
+          }
+        ]
+      },
+      {
+        "state": "enlarged-landscape",
+        "width": 844,
+        "height": 390,
+        "header": {
+          "height": 151,
+          "bottom": 176,
+          "position": "sticky"
+        },
+        "context": {
+          "height": 395.765625,
+          "top": 667.34375,
+          "position": "static"
+        },
+        "numericWrapping": [
+          {
+            "value": "1,200",
+            "lines": 1
+          },
+          {
+            "value": "800",
+            "lines": 1
+          },
+          {
+            "value": "65",
+            "lines": 1
+          }
+        ]
+      }
+    ],
+    "contrast": {
+      "method": "Nine rendered-background samples per visible text run after temporarily hiding text, DPR 1, external-font fallback; computed color/fill and ancestor opacity. Sampled coverage, not exhaustive certification.",
+      "samples": 1425,
+      "minimumNormal": 5.5,
+      "minimumLarge": 9.05,
+      "findings": []
+    },
+    "idleGuidance": {
+      "text": "A request is in progress. Refresh updates only resources without a pending request.",
+      "class": "sr-only",
+      "buttonDescription": null,
+      "buttonName": "Refresh readings",
+      "pendingRegions": 0
+    },
+    "scriptErrors": []
+  },
+  "frozenExports": {
+    "verified": 60,
+    "mainLayouts": 8,
+    "stateCases": 24,
+    "galleryPairs": 12,
+    "errors": [],
+    "dataRequests": [],
+    "missingResources": [],
+    "note": "First unmodified run returned the aggregate resource/isolation failure. A log-only in-memory diagnostic rerun and the final unmodified rerun passed. No frozen file changed; initial cause was not reproduced."
+  },
+  "agentDirectedBrowserInspection": {
+    "browser": "Connected Chrome via browser extension; live Chrome version not collected",
+    "actions": [
+      "History chart Home selects persisted zero reading",
+      "Next minute exposes unavailable W/W/% and no value markers",
+      "Overview and Installation navigation",
+      "Reload after API restart shows same PostgreSQL measurement"
+    ],
+    "afterRestart": {
+      "measuredAt": "2026-10-31T22:53:00.123456+00:00",
+      "solarPowerW": 1200,
+      "consumptionPowerW": 800,
+      "batteryPercent": 65
+    },
+    "qualification": "Agent-directed UI/AX inspection and visual image review, not an independent human or spoken screen-reader session."
+  },
+  "pending": [
+    "Native browser zoom/reflow at real zoom levels; Windows native input helper unavailable",
+    "Native screen-reader spoken output",
+    "Physical mobile-device / browser-chrome / safe-area verification; automated touch is Chromium emulation"
+  ],
+  "issues": {
+    "refreshGuidance": 26,
+    "verification": 24
+  },
+  "screenshots": [
+    {
+      "file": "screenshots/history-desktop.png",
+      "sha256": "f25cdf3323e2a11e061841a3ee146ac63064af6cbe93eef463b5d5e79e4b7757",
+      "source": "Current existing Full Stack 1441-request Playwright journey; actual server response can contain 1440 in-window rows as time advances"
+    },
+    {
+      "file": "screenshots/history-mobile.png",
+      "sha256": "28e30ba454d913d96c2aa0b8710b0cafb0263fe5e9638840ac3dcd39b8d8e34b",
+      "source": "Current existing Full Stack 1441-request Playwright journey; actual server response can contain 1440 in-window rows as time advances"
+    },
+    {
+      "file": "screenshots/history-text-200.png",
+      "sha256": "803f41ac7a2596ee0402563dd556bd9aa38fbe4b16fdb18fe8e921396d45e6e9",
+      "source": "Diagnostic six-row PostgreSQL dataset with 200% HTML text"
+    },
+    {
+      "file": "screenshots/overview-desktop.png",
+      "sha256": "308691a2d38060a906c2ab6a7256f81668d6d95c05a3d8b8d1266e918ec568c0",
+      "source": "Current existing Full Stack 1441-request Playwright journey; actual server response can contain 1440 in-window rows as time advances"
+    },
+    {
+      "file": "screenshots/overview-mobile.png",
+      "sha256": "b5eec27092cd3eaa611cf1c4f43a3ee1c986b0f3e7837d2b0d8bde11b422d28f",
+      "source": "Current existing Full Stack 1441-request Playwright journey; actual server response can contain 1440 in-window rows as time advances"
+    }
+  ]
+}
