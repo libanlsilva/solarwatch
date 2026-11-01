@@ -1,0 +1,287 @@
+{
+  "method": "Chromium CDP exposed AX nodes and computed button descriptions; not spoken screen-reader output",
+  "browser": "156.0.8078.4",
+  "source": "Real PostgreSQL seed -> API; held GETs continue to the real API; errors use test-only route.abort",
+  "persisted": {
+    "installationId": "residential-demo",
+    "measuredAt": "2026-11-01T02:41:29.216396+00:00",
+    "solarPowerW": 1200,
+    "consumptionPowerW": 800,
+    "batteryStateOfChargePercent": 65
+  },
+  "states": [
+    {
+      "state": "initial-both-pending",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Loading latest reading…Waiting for the installation’s latest measurement.",
+        "Loading history…"
+      ],
+      "calls": {
+        "latest": 1,
+        "history": 1
+      }
+    },
+    {
+      "state": "history-pending-latest-available",
+      "described": true,
+      "buttonName": "Refresh available data",
+      "reference": "refresh-available",
+      "guidanceNodes": [
+        {
+          "role": "button",
+          "name": "Refresh available data",
+          "description": "A request is in progress. Refresh updates only resources without a pending request."
+        }
+      ],
+      "liveMessages": [
+        "Latest reading updated.",
+        "Loading history…"
+      ],
+      "calls": {
+        "latest": 1,
+        "history": 1
+      }
+    },
+    {
+      "state": "both-pending-after-latest-refresh",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing readings…Keeping the last successful result while we check.",
+        "Loading history…"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 1
+      }
+    },
+    {
+      "state": "latest-pending-history-available",
+      "described": true,
+      "buttonName": "Refresh available data",
+      "reference": "refresh-available",
+      "guidanceNodes": [
+        {
+          "role": "button",
+          "name": "Refresh available data",
+          "description": "A request is in progress. Refresh updates only resources without a pending request."
+        }
+      ],
+      "liveMessages": [
+        "Refreshing readings…Keeping the last successful result while we check.",
+        "Partial history · missing intervals are not measurements"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 1
+      }
+    },
+    {
+      "state": "both-pending-after-history-refresh",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing readings…Keeping the last successful result while we check.",
+        "Refreshing history…"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 2
+      }
+    },
+    {
+      "state": "overview-settled-success",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Latest reading updated.",
+        "Partial history · missing intervals are not measurements"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 2
+      }
+    },
+    {
+      "state": "installation-idle",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Latest reading updated.",
+        "Partial history · missing intervals are not measurements"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 2
+      }
+    },
+    {
+      "state": "history-idle",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Partial history. Shaded intervals contain no measurements; curves stop across gaps longer than five minutes.",
+        "Exact observation. Oct 31, 2026, 22:41:29.216396, America/Havana, UTC-04:00. Solar 1,200 W, home 800 W, battery 65%. "
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 2
+      }
+    },
+    {
+      "state": "overview-idle",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Latest reading updated.",
+        "Partial history · missing intervals are not measurements"
+      ],
+      "calls": {
+        "latest": 2,
+        "history": 2
+      }
+    },
+    {
+      "state": "both-refreshing",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing readings…Keeping the last successful result while we check.",
+        "Refreshing history…"
+      ],
+      "calls": {
+        "latest": 3,
+        "history": 3
+      }
+    },
+    {
+      "state": "latest-error-history-pending",
+      "described": true,
+      "buttonName": "Retry",
+      "reference": "refresh-available",
+      "guidanceNodes": [
+        {
+          "role": "button",
+          "name": "Retry",
+          "description": "A request is in progress. Refresh updates only resources without a pending request."
+        }
+      ],
+      "liveMessages": [
+        "Previous readingThe previous reading has not been verified again. Current freshness could not be checked. Use Retry.",
+        "Refreshing history…"
+      ],
+      "calls": {
+        "latest": 3,
+        "history": 3
+      }
+    },
+    {
+      "state": "both-retry-pending",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing readings…Keeping the last successful result while we check.",
+        "Refreshing history…"
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 3
+      }
+    },
+    {
+      "state": "overview-recovered-success",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Latest reading updated.",
+        "Partial history · missing intervals are not measurements"
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 3
+      }
+    },
+    {
+      "state": "history-only-refreshing",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing history…",
+        "Exact observation. Oct 31, 2026, 22:41:29.216396, America/Havana, UTC-04:00. Solar 1,200 W, home 800 W, battery 65%. "
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 4
+      }
+    },
+    {
+      "state": "history-settled-error",
+      "described": false,
+      "buttonName": "Retry",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Unable to update. Previous history is still available.History Retry",
+        "Exact observation. Oct 31, 2026, 22:41:29.216396, America/Havana, UTC-04:00. Solar 1,200 W, home 800 W, battery 65%. "
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 4
+      }
+    },
+    {
+      "state": "history-only-retrying",
+      "described": false,
+      "buttonName": "Refreshing…",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Refreshing history…",
+        "Exact observation. Oct 31, 2026, 22:41:29.216396, America/Havana, UTC-04:00. Solar 1,200 W, home 800 W, battery 65%. "
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 5
+      }
+    },
+    {
+      "state": "history-recovered-success",
+      "described": false,
+      "buttonName": "Refresh readings",
+      "reference": null,
+      "guidanceNodes": [],
+      "liveMessages": [
+        "Partial history. Shaded intervals contain no measurements; curves stop across gaps longer than five minutes.",
+        "Exact observation. Oct 31, 2026, 22:41:29.216396, America/Havana, UTC-04:00. Solar 1,200 W, home 800 W, battery 65%. "
+      ],
+      "calls": {
+        "latest": 4,
+        "history": 5
+      }
+    }
+  ]
+}

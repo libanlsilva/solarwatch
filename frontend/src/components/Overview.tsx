@@ -45,7 +45,7 @@ export function DashboardHeader({ pending, disabled, error, refresh, section }: 
           {pending ? <span className="spinner" aria-hidden="true" /> : <Icon name="refresh" />}
           {disabled ? 'Refreshing…' : error ? 'Retry' : 'Refresh'}
         </button>
-        <span className="sr-only" id="refresh-available">A request is in progress. Refresh updates only resources without a pending request.</span>
+        {pending && !disabled && <span hidden id="refresh-available">A request is in progress. Refresh updates only resources without a pending request.</span>}
       </div>
     </header>
   )

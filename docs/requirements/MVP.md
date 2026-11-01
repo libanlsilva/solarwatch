@@ -1,6 +1,6 @@
 # Residential MVP requirements
 
-**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through PR #3. The implemented latest-reading, simulator, Overview and History deliveries are tracked in the [development plan](../DEVELOPMENT_PLAN.md). Owner-approved [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24) now records [Phase 5 validation](../validation/PHASE5.md) for personal PR review, including findings and unverified manual checks. **Phase 5 and the MVP remain pending.** The approved requirements below are unchanged.
+**Status:** requirements and operating defaults approved by the owner on 2026-10-28; Phase 1 completed through PR #3. The implemented latest-reading, simulator, Overview and History deliveries are tracked in the [development plan](../DEVELOPMENT_PLAN.md). Owner-approved [Issue #24](https://github.com/libanlsilva/solarwatch/issues/24) records personally approved [Phase 5 validation](../validation/PHASE5.md), integrated through [PR #27](https://github.com/libanlsilva/solarwatch/pull/27). Its [focused Refresh correction](../validation/REFRESH_ACCESSIBILITY.md) awaits review; F2 and native manual checks remain pending. **Phase 5 and the MVP remain pending.** The approved requirements below are unchanged.
 
 **Tracking:** [Issue #2](https://github.com/libanlsilva/solarwatch/issues/2). See the [development plan](../DEVELOPMENT_PLAN.md) for delivery order.
 
