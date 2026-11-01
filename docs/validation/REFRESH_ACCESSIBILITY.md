@@ -1,6 +1,6 @@
 # Refresh accessibility correction
 
-Owner-approved [Issue #26](https://github.com/libanlsilva/solarwatch/issues/26), based on main `7db08d3` after the personally approved audit [PR #27](https://github.com/libanlsilva/solarwatch/pull/27). **The correction awaits personal PR review; Phase 5 and the MVP remain pending.**
+Owner-approved [Issue #26](https://github.com/libanlsilva/solarwatch/issues/26), based on main `7db08d3` after the personally approved audit [PR #27](https://github.com/libanlsilva/solarwatch/pull/27). **F1 is corrected and personally approved:** [PR #28](https://github.com/libanlsilva/solarwatch/pull/28) was squash-integrated as `269f132`; Issue #26 is closed. **Phase 5 and the MVP remain pending.**
 
 ## Finding and bounded change
 
@@ -33,6 +33,8 @@ Successful responses use the real .NET API and PostgreSQL seed; the original per
 | Complete real PostgreSQL / API / React Playwright suite | 33 pass; no skips |
 | Total | **251 pass**: all 250 baseline tests preserved plus one focused regression |
 
+All three workflows passed on the integrated main commit `269f132`: [Backend CI](https://github.com/libanlsilva/solarwatch/actions/runs/41267832032), [Frontend CI](https://github.com/libanlsilva/solarwatch/actions/runs/41267832108) and [Full Stack E2E](https://github.com/libanlsilva/solarwatch/actions/runs/41267832091). The original versioned AX record remains unchanged.
+
 Use the README's dedicated `_tests` / `_e2e` database setup and test commands. After the Release API and production frontend builds, run all browser tests with `npm run test:e2e` from `frontend`, or only this regression with:
 
 ```sh
@@ -43,4 +45,4 @@ The test generates and attaches `refresh-guidance-ax.json` in its Playwright out
 
 ## Remaining limitations
 
-The AX-tree and computed-description checks verify browser accessibility semantics, **not spoken screen-reader output or native browser zoom**. Those native checks remain unverified and require owner disposition. F2 (200% HTML-text numeric wrapping) remains documented in the [original audit](PHASE5.md); it is not modified or accepted as resolved here. No new visual capture is needed for this nonvisual correction; the four approved prototypes and original audit captures remain intact. Realistic simulator patterns remain separate future work. Neither this correction nor green CI completes Phase 5 or the MVP.
+The AX-tree and computed-description checks verify browser accessibility semantics, **not spoken screen-reader output or native browser zoom**. Those native checks remain unverified and require owner disposition. [Issue #29](https://github.com/libanlsilva/solarwatch/issues/29) proposes the focused F2/native-check follow-up for review; implementation has not started. F2 (200% HTML-text numeric wrapping) remains documented in the [original audit](PHASE5.md); it is not modified or accepted as resolved here. No new visual capture is needed for this nonvisual correction; the four approved prototypes and original audit captures remain intact. Realistic simulator patterns remain separate future work. Neither this correction nor green CI completes Phase 5 or the MVP.
