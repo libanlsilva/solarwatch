@@ -1,6 +1,6 @@
 # Selected Reading reflow and final Phase 5 checks
 
-Owner-approved [Issue #29](https://github.com/libanlsilva/solarwatch/issues/29), based on main `9007534`. **Implementation awaits personal PR review. Phase 5 and the MVP remain pending.** This is a focused F2 correction and native-verification attempt, not a new product audit. The [original audit](PHASE5.md), its evidence and all frozen designs remain intact; F1 remains resolved through PR #28.
+Owner-approved [Issue #29](https://github.com/libanlsilva/solarwatch/issues/29), based on main `9007534`. **F2 is corrected and personally approved:** [PR #31](https://github.com/libanlsilva/solarwatch/pull/31) was squash-integrated as `8ab3788`; Issue #29 is closed. **Phase 5 and the MVP remain pending. Phase 6 is not authorized.** See the [current acceptance handoff](PHASE5_ACCEPTANCE.md) and [brief Windows manual checklist](WINDOWS_MANUAL_CHECKS.md). This is a focused F2 correction and native-verification attempt, not a new product audit. The [original audit](PHASE5.md), its evidence and all frozen designs remain intact; F1 remains resolved through PR #28.
 
 ## F2 reproduction and correction
 
@@ -68,4 +68,4 @@ The focused enlargement targets follow [W3C Resize Text](https://www.w3.org/WAI/
 
 ## Recommendation
 
-F2 is corrected for the documented cases, with a regression that fails on the baseline and passes after the small layout change. Existing automated checks have not identified an additional functional blocker. **Review and accept the correction separately from Phase 5 closure.** Keep the phase open until native verification is supplied or the owner explicitly accepts the listed residual risks; any confirmed inability to read a required value or operate a required control blocks closure. No broad repeat audit is recommended. Phase 6/MVP release and realistic simulator patterns remain separate work.
+F2 is corrected for the documented cases, with a regression that fails on the baseline and passes after the small layout change. Existing automated checks have not identified an additional functional blocker. **The owner has accepted the F2 correction separately from Phase 5 closure.** Keep the phase open until native verification is supplied or the owner explicitly accepts the listed residual risks; any confirmed inability to read a required value or operate a required control blocks closure. No broad repeat audit is recommended. Phase 6/MVP release and realistic simulator patterns remain separate work.
