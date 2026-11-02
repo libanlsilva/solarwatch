@@ -1,0 +1,1238 @@
+{
+  "method": "HTML text enlargement, DOM Range geometry and real PostgreSQL -> API -> React; not native zoom or spoken reader output",
+  "browser": "156.0.8078.4",
+  "readings": [
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T00:18:00+00:00",
+      "solarPowerW": 0,
+      "consumptionPowerW": 0,
+      "batteryStateOfChargePercent": 0
+    },
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T01:18:00+00:00",
+      "solarPowerW": 12345.67,
+      "consumptionPowerW": 98765.43,
+      "batteryStateOfChargePercent": 100
+    },
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T02:17:00+00:00",
+      "solarPowerW": 1200,
+      "consumptionPowerW": 800,
+      "batteryStateOfChargePercent": 65
+    }
+  ],
+  "cases": [
+    {
+      "label": "original-390x667-1200",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 158,
+          "row": 1116.890625
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 158,
+          "row": 1116.890625
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 326,
+          "row": 1225.890625
+        }
+      ]
+    },
+    {
+      "label": "normal-360",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 98,
+          "row": 26.71875
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 98,
+          "row": 26.71875
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 98,
+          "row": 26.71875
+        }
+      ]
+    },
+    {
+      "label": "200%-360-original",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 157.96875,
+          "row": -204.328125
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 143.03125,
+          "row": -204.328125
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 308,
+          "row": -98.328125
+        }
+      ]
+    },
+    {
+      "label": "200%-360-zero",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 97.984375,
+          "row": -98.328125
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 97.984375,
+          "row": -98.328125
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 98.03125,
+          "row": -98.328125
+        }
+      ]
+    },
+    {
+      "label": "200%-360-large",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 308,
+          "row": -310.328125
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 308,
+          "row": -204.328125
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 308,
+          "row": -98.328125
+        }
+      ]
+    },
+    {
+      "label": "200%-360-unavailable",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 97.984375,
+          "row": 207.671875
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 97.984375,
+          "row": 207.671875
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 98.03125,
+          "row": 207.671875
+        }
+      ]
+    },
+    {
+      "label": "normal-390",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 197.21875
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 197.21875
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 197.21875
+        }
+      ]
+    },
+    {
+      "label": "200%-390-original",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 158,
+          "row": 1116.890625
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 158,
+          "row": 1116.890625
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 326,
+          "row": 1225.890625
+        }
+      ]
+    },
+    {
+      "label": "200%-390-zero",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": -100.109375
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": -100.109375
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": -100.109375
+        }
+      ]
+    },
+    {
+      "label": "200%-390-large",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 326,
+          "row": -318.109375
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 326,
+          "row": -209.109375
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 326,
+          "row": -100.109375
+        }
+      ]
+    },
+    {
+      "label": "200%-390-unavailable",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 220.890625
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 220.890625
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 220.890625
+        }
+      ]
+    },
+    {
+      "label": "normal-430",
+      "viewport": {
+        "width": 430,
+        "height": 844
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 374.71875
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.34375,
+          "row": 374.71875
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 374.71875
+        }
+      ]
+    },
+    {
+      "label": "200%-430-original",
+      "viewport": {
+        "width": 430,
+        "height": 844
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 178,
+          "row": 912.3125
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 178,
+          "row": 912.3125
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 366,
+          "row": 1021.3125
+        }
+      ]
+    },
+    {
+      "label": "200%-430-zero",
+      "viewport": {
+        "width": 430,
+        "height": 844
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 912.3125
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.34375,
+          "row": 912.3125
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 912.3125
+        }
+      ]
+    },
+    {
+      "label": "200%-430-large",
+      "viewport": {
+        "width": 430,
+        "height": 844
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 366,
+          "row": 912.3125
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 366,
+          "row": 1021.3125
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 366,
+          "row": 1130.3125
+        }
+      ]
+    },
+    {
+      "label": "200%-430-unavailable",
+      "viewport": {
+        "width": 430,
+        "height": 844
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 383.3125
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.34375,
+          "row": 383.3125
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 115.328125,
+          "row": 383.3125
+        }
+      ]
+    },
+    {
+      "label": "normal-667",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -105.28125
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.34375,
+          "row": -105.28125
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -105.28125
+        }
+      ]
+    },
+    {
+      "label": "200%-667-original",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -231.078125
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.34375,
+          "row": -231.078125
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -231.078125
+        }
+      ]
+    },
+    {
+      "label": "200%-667-zero",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -231.078125
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.34375,
+          "row": -231.078125
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": -231.078125
+        }
+      ]
+    },
+    {
+      "label": "200%-667-large",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 262,
+          "row": -340.078125
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 262,
+          "row": -340.078125
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 534,
+          "row": -231.078125
+        }
+      ]
+    },
+    {
+      "label": "200%-667-unavailable",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": 94.921875
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.34375,
+          "row": 94.921875
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 171.328125,
+          "row": 94.921875
+        }
+      ]
+    },
+    {
+      "label": "normal-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 32,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 216.34375
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 32,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 297.34375
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 32,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 378.34375
+        }
+      ]
+    },
+    {
+      "label": "200%-1440-original",
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 977.75
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 1116.75
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 1255.75
+        }
+      ]
+    },
+    {
+      "label": "200%-1440-zero",
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 977.75
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 1116.75
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 252,
+          "row": 1255.75
+        }
+      ]
+    },
+    {
+      "label": "200%-1440-large",
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 338.421875,
+          "row": 903.359375
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 338.421875,
+          "row": 1042.359375
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 338.421875,
+          "row": 1181.359375
+        }
+      ]
+    },
+    {
+      "label": "200%-1440-unavailable",
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 269.453125,
+          "row": 195.9375
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 269.453125,
+          "row": 334.9375
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 64,
+          "fits": true,
+          "sameLine": true,
+          "width": 269.453125,
+          "row": 473.9375
+        }
+      ]
+    },
+    {
+      "label": "normal-320",
+      "viewport": {
+        "width": 320,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 84.65625,
+          "row": 171.40625
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 84.671875,
+          "row": 171.40625
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 24,
+          "fits": true,
+          "sameLine": true,
+          "width": 84.671875,
+          "row": 171.40625
+        }
+      ]
+    },
+    {
+      "label": "200%-320-original",
+      "viewport": {
+        "width": 320,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 268,
+          "row": -59.9375
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 130.5,
+          "row": 46.0625
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 130.5,
+          "row": 46.0625
+        }
+      ]
+    },
+    {
+      "label": "200%-320-zero",
+      "viewport": {
+        "width": 320,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 74.03125,
+          "row": 46.0625
+        },
+        {
+          "value": "0",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 81.9375,
+          "row": 46.0625
+        },
+        {
+          "value": "0",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 98.03125,
+          "row": 46.0625
+        }
+      ]
+    },
+    {
+      "label": "200%-320-large",
+      "viewport": {
+        "width": 320,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "12,345.67",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 268,
+          "row": -165.9375
+        },
+        {
+          "value": "98,765.43",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 268,
+          "row": -59.9375
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 268,
+          "row": 46.0625
+        }
+      ]
+    },
+    {
+      "label": "200%-320-unavailable",
+      "viewport": {
+        "width": 320,
+        "height": 640
+      },
+      "values": [
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 74.03125,
+          "row": 47.0625
+        },
+        {
+          "value": "—",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 81.9375,
+          "row": 47.0625
+        },
+        {
+          "value": "—",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 98.03125,
+          "row": 47.0625
+        }
+      ]
+    }
+  ]
+}

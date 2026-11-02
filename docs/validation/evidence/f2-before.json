@@ -1,0 +1,68 @@
+{
+  "method": "HTML text enlargement, DOM Range geometry and real PostgreSQL -> API -> React; not native zoom or spoken reader output",
+  "browser": "156.0.8078.4",
+  "readings": [
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T00:17:00+00:00",
+      "solarPowerW": 0,
+      "consumptionPowerW": 0,
+      "batteryStateOfChargePercent": 0
+    },
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T01:17:00+00:00",
+      "solarPowerW": 12345.67,
+      "consumptionPowerW": 98765.43,
+      "batteryStateOfChargePercent": 100
+    },
+    {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-02T02:16:00+00:00",
+      "solarPowerW": 1200,
+      "consumptionPowerW": 800,
+      "batteryStateOfChargePercent": 65
+    }
+  ],
+  "cases": [
+    {
+      "label": "original-390x667-1200",
+      "viewport": {
+        "width": 390,
+        "height": 667
+      },
+      "values": [
+        {
+          "value": "1,200",
+          "unit": "W",
+          "lines": 2,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 1078.5
+        },
+        {
+          "value": "800",
+          "unit": "W",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": false,
+          "width": 102,
+          "row": 1078.5
+        },
+        {
+          "value": "65",
+          "unit": "%",
+          "lines": 1,
+          "fontSize": 48,
+          "fits": true,
+          "sameLine": true,
+          "width": 102,
+          "row": 1078.5
+        }
+      ]
+    }
+  ]
+}

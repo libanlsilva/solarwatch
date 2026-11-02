@@ -1,0 +1,22 @@
+[
+  {
+    "at": "2026-11-01T03:27:18.451Z",
+    "method": "sky.list_apps",
+    "error": "Error: Computer Use native pipe is unavailable: failed to connect native pipe: The system cannot find the file specified. (os error 2)"
+  },
+  {
+    "at": "2026-11-01T03:27:51.879Z",
+    "method": "sky.list_apps retry after 2s",
+    "error": "Error: Computer Use native pipe is unavailable: failed to connect native pipe: The system cannot find the file specified. (os error 2)"
+  },
+  {
+    "at": "2026-11-01T03:30:09.384Z",
+    "method": "sky.list_apps after JS kernel reset and reimport",
+    "error": "Error: Computer Use native pipe is unavailable: failed to connect native pipe: The system cannot find the file specified. (os error 2)"
+  },
+  {
+    "at": "2026-11-02T02:20:29.549Z",
+    "method": "sky.list_apps after resumed work; native channel availability recheck",
+    "error": "Error: Computer Use native pipe is unavailable: failed to connect native pipe: The system cannot find the file specified. (os error 2)"
+  }
+]
