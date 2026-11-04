@@ -155,6 +155,9 @@ test('24-hour history CLI confirms 1441 minute samples and a full rerun conflict
   await expect(page.locator('.battery-series .recharts-area-curve')).toBeVisible()
   // A later live server window can exclude the earliest generated sample; every returned row is drawn.
   expect(plottedHistory.readings.length).toBeGreaterThan(1400)
+  // Diagnostic comparison with residential-v1; reuse this existing random load.
+  await page.locator('.power-history').screenshot({ path: testInfo.outputPath('random-power-reference.png') })
+  await page.locator('.battery-history').screenshot({ path: testInfo.outputPath('random-battery-reference.png') })
   const solarPath = await page.locator('.solar-series .recharts-area-curve').getAttribute('d')
   expect(solarPath!.match(/[ML]/g)).toHaveLength(plottedHistory.readings.length)
   await page.emulateMedia({ reducedMotion: 'reduce' })
