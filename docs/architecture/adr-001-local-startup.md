@@ -1,6 +1,6 @@
 # ADR-001: retain the verified host-run local startup
 
-**Status:** proposed, pending personal PR review. Issue #37 authorizes evaluation only. **Recommendation: NO-GO for full-stack Compose in the current local MVP.** Phase 6 and the MVP remain open; no release is authorized.
+**Status:** accepted by the owner after personal review of PR #39. **Decision: NO-GO for full-stack Compose in the current local MVP.** Phase 6 and the MVP remain open; no release is authorized.
 
 ## Context and evidence
 
@@ -41,4 +41,4 @@ The alternative must keep proxy access read-only and preserve the API filter. No
 
 Do not create a Compose implementation delivery or release blocker. Reconsider if a concrete audience needs it and the owner approves a separately scoped, tested topology. No runtime/configuration/dependency changes are made here.
 
-Next: review [simulator-pattern Issue #38](https://github.com/libanlsilva/solarwatch/issues/38) before definitive captures/demo, then prepare demonstration/acceptance using the verified startup. Simulator implementation remains unauthorized; this ADR authorizes no final captures, Phase 6/MVP closure or release. Native/physical checks retain their [unverified status and limited Phase 5 acceptance](../validation/PHASE5_ACCEPTANCE.md).
+Next: implement the separately owner-approved [simulator-pattern Issue #38](https://github.com/libanlsilva/solarwatch/issues/38) on a new branch after this decision is integrated, before definitive captures/demo. That implementation requires its own reviewed PR. Final captures, Phase 6/MVP closure and release remain unauthorized. Native/physical checks retain their [unverified status and limited Phase 5 acceptance](../validation/PHASE5_ACCEPTANCE.md).

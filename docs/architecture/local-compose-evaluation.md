@@ -1,6 +1,6 @@
 # Local startup: host-run apps first, full-stack Compose later
 
-**Issue #37 follow-up:** [ADR-001](adr-001-local-startup.md) recommends **NO-GO for full-stack Compose in the current local MVP**, pending personal PR review. The original delivery A evaluation below is retained; a future container implementation is not a release requirement.
+**Issue #37 follow-up:** [ADR-001](adr-001-local-startup.md) records the personally accepted **NO-GO for full-stack Compose in the current local MVP** through PR #39. The original delivery A evaluation below is retained; a future container implementation is not a release requirement.
 
 Issue #34's first Phase 6 delivery verifies the existing PostgreSQL Compose + host-run ASP.NET Core/React path from two actual GitHub clones. **Full-stack Compose is evaluated here, not implemented.** Phase 6 and the MVP remain pending; public production hosting is outside this local scope.
 
