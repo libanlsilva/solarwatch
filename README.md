@@ -125,6 +125,8 @@ The [approved design references](docs/design/README.md) include Overview and His
 
 ## Local setup
 
+Owner-approved [Issue #37](https://github.com/libanlsilva/solarwatch/issues/37) evaluates full-stack Compose. [ADR-001](docs/architecture/adr-001-local-startup.md) recommends **NO-GO for the current local MVP**, pending personal PR review: retain the verified host-run path. The separately proposed [residential simulator-pattern issue #38](https://github.com/libanlsilva/solarwatch/issues/38) is for review before definitive captures/demo, not implemented. Phase 6 and the MVP remain pending.
+
 For a new checkout without affecting an existing database, follow the [verified isolated clean-clone walkthrough](docs/development/CLEAN_CLONE.md). Its [two-run verification record](docs/validation/CLEAN_CLONE.md) covers explicit configuration, migrations, simulated history, connected React, manual Refresh and persistent stop/restart. The [Compose evaluation](docs/architecture/local-compose-evaluation.md) keeps full-stack containerization separate; the reference path below still runs only PostgreSQL in Compose.
 
 Prerequisites: .NET 10 SDK, Node.js 24 with npm, Git, Docker with Linux containers, and access to NuGet/npm. Compose runs PostgreSQL only; the API and frontend run on the host.
