@@ -1,0 +1,628 @@
+{
+  "scope": "Issue #34; Phase 6 delivery A; real GitHub clones, local host-run apps and isolated PostgreSQL",
+  "dateUtc": "2026-11-04",
+  "versions": {
+    "windows": "10.0.26300.0",
+    ".NET SDK": "10.0.300",
+    "Node.js": "24.15.0",
+    "npm.cmd": "11.12.1",
+    "Git": "2.53.0.windows.3",
+    "Docker": "29.5.2",
+    "Compose": "v5.1.4",
+    "PostgreSQL": "17.11",
+    "Chromium": "156.0.8078.4"
+  },
+  "configurationIsolation": {
+    "source": "git clone --depth 1 --branch main https://github.com/libanlsilva/solarwatch.git",
+    "profile": "New per-run USERPROFILE, APPDATA, LOCALAPPDATA and DOTNET_CLI_HOME directories; no UserSecrets directory",
+    "packages": "Empty npm user/global configs; explicit NuGet config clearing inherited feeds and using public nuget.org",
+    "allowedReuse": [
+      "Installed toolchains",
+      "Public package caches",
+      "Playwright browser cache",
+      "Docker image cache"
+    ],
+    "runtime": "Inherited app connection/URL prefixes cleared; explicit Development, loopback URLs and connection supplied in child shells",
+    "credentials": "Fresh per-run random password; populated .env ignored; no secret value included in evidence",
+    "cloneTests": "Dedicated solarwatch_a_tests and solarwatch_a_e2e databases; demo ConnectionStrings__SolarWatch and ASPNETCORE_URLS cleared in test shell",
+    "missingConnection": {
+      "exitCode": -532462766,
+      "expectedMissingConnectionError": true,
+      "userSecretsDirectoryAbsent": true
+    }
+  },
+  "runs": [
+    {
+      "setup": {
+        "run": "a",
+        "started": "2026-11-04T05:34:26.7990409+00:00",
+        "cloneSource": "https://github.com/libanlsilva/solarwatch.git",
+        "shallow": true,
+        "commit": "dbae20671ac0a7831733c6f6ef6943b9938fa099",
+        "initialGitStatus": [],
+        "absentBeforeSetup": {
+          "backend/src/SolarWatch.Api/bin": true,
+          "frontend/node_modules": true,
+          "backend/src/SolarWatch.Api/obj": true,
+          ".env": true,
+          "frontend/dist": true
+        },
+        "project": "solarwatch-phase6-a-20261104",
+        "databasePort": 5544,
+        "steps": [
+          {
+            "exitCode": 0,
+            "seconds": 8.12,
+            "name": "compose-up"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 21.779,
+            "name": "restore"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 75.335,
+            "name": "build"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 9.809,
+            "name": "migrate"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 59.972,
+            "name": "npm-ci"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 2.544,
+            "name": "frontend-lint"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 7.181,
+            "name": "frontend-build"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 3.371,
+            "name": "frontend-unit"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 12.668,
+            "name": "browser-install"
+          }
+        ],
+        "profileSecretsAbsent": true,
+        "finalGitStatus": [],
+        "ended": "2026-11-04T05:37:48.7582896+00:00"
+      },
+      "ports": {
+        "postgres": 5544,
+        "api": 5271,
+        "frontend": 5273
+      },
+      "seed": {
+        "freshOutput": "Demo reading available at 2026-11-04T05:38:45.9180610+00:00 (UTC).",
+        "controlledRepeatOutput": "Demo reading available at 2026-11-04T05:38:45.9180610+00:00 (UTC).",
+        "metrics": {
+          "solarPowerW": 1200,
+          "consumptionPowerW": 800,
+          "batteryStateOfChargePercent": 65
+        }
+      },
+      "historyLoad": {
+        "mode": "--history-24h --seed 42",
+        "referenceSource": "API Latest asOf passed to --end-at; retained CLI end is the existing microsecond-normalized reference, not the unrecorded original asOf string",
+        "normalizedReference": "2026-11-04T05:38:54.1391410+00:00",
+        "first": "2026-11-03T05:38:54.1391410+00:00",
+        "last": "2026-11-04T05:38:54.1391410+00:00",
+        "acceptedLines": 1441,
+        "cadenceSeconds": 60,
+        "inclusiveHours": 24,
+        "metricsSequenceSha256": "e7b4e240cc2ab1b2e51723ec391d1123781010f89ce4abd136dbbde45761c767",
+        "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0, elapsedSeconds=19.740. No automatic retries were made."
+      },
+      "confirmedDuplicateRerun": {
+        "at": "2026-11-04T05:44:40.562Z",
+        "before": {
+          "count": 1443,
+          "first": "2026-11-03T05:38:54.139141+00:00",
+          "last": "2026-11-04T05:41:37.944226+00:00",
+          "digest": "14ebcdd3fffd6505ffed586eecfe6289"
+        },
+        "reference": "2026-11-04T05:38:54.1391410+00:00",
+        "seconds": 40.6899641,
+        "exitCode": 1,
+        "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=0, rejected=1441, conflicts=1441, errors=0, uncertain=0, unattempted=0, elapsedSeconds=40.337. No automatic retries were made.",
+        "after": {
+          "count": 1443,
+          "first": "2026-11-03T05:38:54.139141+00:00",
+          "last": "2026-11-04T05:41:37.944226+00:00",
+          "digest": "14ebcdd3fffd6505ffed586eecfe6289"
+        }
+      },
+      "connectedBrowser": {
+        "source": "Real clean-clone production build -> Vite preview proxy -> .NET -> isolated PostgreSQL; no API mocks",
+        "browser": "156.0.8078.4",
+        "externalFonts": "Blocked; declared fallback used for captures",
+        "apiPort": "5271",
+        "webPort": "5273",
+        "errors": [],
+        "calls": {
+          "latest": 2,
+          "history": 2
+        },
+        "initial": {
+          "asOf": "2026-11-04T05:41:36.6006509+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:38:54.139141+00:00",
+            "solarPowerW": 4818,
+            "consumptionPowerW": 2607,
+            "batteryStateOfChargePercent": 53
+          }
+        },
+        "finiteSummary": "Summary: requested=1, attempted=1, accepted=1, rejected=0, errors=0, unattempted=0.",
+        "added": {
+          "asOf": "2026-11-04T05:41:38.3546809+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "beforeManualRefresh": {
+          "retainedAsOf": "2026-11-04T05:41:36.6006509+00:00",
+          "calls": {
+            "latest": 1,
+            "history": 1
+          }
+        },
+        "refreshed": {
+          "asOf": "2026-11-04T05:41:39.0245534+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "history": {
+          "asOf": "2026-11-04T05:41:39.03867+00:00",
+          "from": "2026-11-03T05:41:39.03867+00:00",
+          "to": "2026-11-04T05:41:39.03867+00:00",
+          "count": 1440,
+          "first": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-03T05:41:54.139141+00:00",
+            "solarPowerW": 3807,
+            "consumptionPowerW": 780,
+            "batteryStateOfChargePercent": 25
+          },
+          "last": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "forwardedWriteStatus": 403,
+        "completed": "2026-11-04T05:41:43.358Z",
+        "result": "pass"
+      },
+      "restart": {
+        "lifecycle": {
+          "run": "a",
+          "hostStop": "Ctrl+C API shutdown observed; npm.cmd batch confirmed Y",
+          "apiTerminalWrapperExit": 1,
+          "portsClosed": [
+            5271,
+            5273
+          ],
+          "stoppedAt": "2026-11-04T05:58:51.7600351+00:00",
+          "volumePreserved": true,
+          "containerRecreated": true
+        },
+        "before": {
+          "at": "2026-11-04T05:58:25.090Z",
+          "before": {
+            "count": 1443,
+            "first": "2026-11-03T05:38:54.139141+00:00",
+            "last": "2026-11-04T05:41:37.944226+00:00",
+            "digest": "14ebcdd3fffd6505ffed586eecfe6289"
+          },
+          "latest": {
+            "asOf": "2026-11-04T05:58:25.7494989+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "history": {
+            "asOf": "2026-11-04T05:58:25.7672+00:00",
+            "from": "2026-11-03T05:58:25.7672+00:00",
+            "to": "2026-11-04T05:58:25.7672+00:00",
+            "count": 1423
+          }
+        },
+        "after": {
+          "at": "2026-11-04T05:59:35.456Z",
+          "before": {
+            "count": 1443,
+            "first": "2026-11-03T05:38:54.139141+00:00",
+            "last": "2026-11-04T05:41:37.944226+00:00",
+            "digest": "14ebcdd3fffd6505ffed586eecfe6289"
+          },
+          "latest": {
+            "asOf": "2026-11-04T05:59:41.9281746+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "history": {
+            "asOf": "2026-11-04T05:59:42.091102+00:00",
+            "from": "2026-11-03T05:59:42.091102+00:00",
+            "to": "2026-11-04T05:59:42.091102+00:00",
+            "count": 1422
+          },
+          "persistence": "identical SQL digest/count and latest reading; server reference advanced"
+        },
+        "browserReload": {
+          "result": "pass",
+          "source": "fresh browser reload after host/database restart; real API",
+          "latest": {
+            "asOf": "2026-11-04T05:59:47.8033696+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944226+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "selectedMeasuredAt": "2026-11-04T05:41:37.944226+00:00"
+        }
+      }
+    },
+    {
+      "setup": {
+        "run": "b",
+        "started": "2026-11-04T05:34:26.8629764+00:00",
+        "cloneSource": "https://github.com/libanlsilva/solarwatch.git",
+        "shallow": true,
+        "commit": "dbae20671ac0a7831733c6f6ef6943b9938fa099",
+        "initialGitStatus": [],
+        "absentBeforeSetup": {
+          "backend/src/SolarWatch.Api/bin": true,
+          "frontend/node_modules": true,
+          "backend/src/SolarWatch.Api/obj": true,
+          ".env": true,
+          "frontend/dist": true
+        },
+        "project": "solarwatch-phase6-b-20261104",
+        "databasePort": 5545,
+        "steps": [
+          {
+            "exitCode": 0,
+            "seconds": 8.016,
+            "name": "compose-up"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 21.881,
+            "name": "restore"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 75.372,
+            "name": "build"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 9.748,
+            "name": "migrate"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 60.096,
+            "name": "npm-ci"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 2.438,
+            "name": "frontend-lint"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 7.222,
+            "name": "frontend-build"
+          },
+          {
+            "exitCode": 0,
+            "seconds": 3.285,
+            "name": "frontend-unit"
+          }
+        ],
+        "profileSecretsAbsent": true,
+        "finalGitStatus": [],
+        "ended": "2026-11-04T05:37:36.1871417+00:00"
+      },
+      "ports": {
+        "postgres": 5545,
+        "api": 5272,
+        "frontend": 5274
+      },
+      "seed": {
+        "freshOutput": "Demo reading available at 2026-11-04T05:38:45.9933360+00:00 (UTC).",
+        "controlledRepeatOutput": "Demo reading available at 2026-11-04T05:38:45.9933360+00:00 (UTC).",
+        "metrics": {
+          "solarPowerW": 1200,
+          "consumptionPowerW": 800,
+          "batteryStateOfChargePercent": 65
+        }
+      },
+      "historyLoad": {
+        "mode": "--history-24h --seed 42",
+        "referenceSource": "API Latest asOf passed to --end-at; retained CLI end is the existing microsecond-normalized reference, not the unrecorded original asOf string",
+        "normalizedReference": "2026-11-04T05:38:54.2249230+00:00",
+        "first": "2026-11-03T05:38:54.2249230+00:00",
+        "last": "2026-11-04T05:38:54.2249230+00:00",
+        "acceptedLines": 1441,
+        "cadenceSeconds": 60,
+        "inclusiveHours": 24,
+        "metricsSequenceSha256": "e7b4e240cc2ab1b2e51723ec391d1123781010f89ce4abd136dbbde45761c767",
+        "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0, elapsedSeconds=19.686. No automatic retries were made."
+      },
+      "confirmedDuplicateRerun": {
+        "at": "2026-11-04T05:44:40.611Z",
+        "before": {
+          "count": 1443,
+          "first": "2026-11-03T05:38:54.224923+00:00",
+          "last": "2026-11-04T05:41:37.944124+00:00",
+          "digest": "ea99d184f3d36a67e269360e9e767e1d"
+        },
+        "reference": "2026-11-04T05:38:54.2249230+00:00",
+        "seconds": 40.873222500000004,
+        "exitCode": 1,
+        "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=0, rejected=1441, conflicts=1441, errors=0, uncertain=0, unattempted=0, elapsedSeconds=40.527. No automatic retries were made.",
+        "after": {
+          "count": 1443,
+          "first": "2026-11-03T05:38:54.224923+00:00",
+          "last": "2026-11-04T05:41:37.944124+00:00",
+          "digest": "ea99d184f3d36a67e269360e9e767e1d"
+        }
+      },
+      "connectedBrowser": {
+        "source": "Real clean-clone production build -> Vite preview proxy -> .NET -> isolated PostgreSQL; no API mocks",
+        "browser": "156.0.8078.4",
+        "externalFonts": "Blocked; declared fallback used for captures",
+        "apiPort": "5272",
+        "webPort": "5274",
+        "errors": [],
+        "calls": {
+          "latest": 2,
+          "history": 2
+        },
+        "initial": {
+          "asOf": "2026-11-04T05:41:36.5563756+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:38:54.224923+00:00",
+            "solarPowerW": 4818,
+            "consumptionPowerW": 2607,
+            "batteryStateOfChargePercent": 53
+          }
+        },
+        "finiteSummary": "Summary: requested=1, attempted=1, accepted=1, rejected=0, errors=0, unattempted=0.",
+        "added": {
+          "asOf": "2026-11-04T05:41:38.3889954+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "beforeManualRefresh": {
+          "retainedAsOf": "2026-11-04T05:41:36.5563756+00:00",
+          "calls": {
+            "latest": 1,
+            "history": 1
+          }
+        },
+        "refreshed": {
+          "asOf": "2026-11-04T05:41:39.0245987+00:00",
+          "reading": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "history": {
+          "asOf": "2026-11-04T05:41:39.022262+00:00",
+          "from": "2026-11-03T05:41:39.022262+00:00",
+          "to": "2026-11-04T05:41:39.022262+00:00",
+          "count": 1440,
+          "first": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-03T05:41:54.224923+00:00",
+            "solarPowerW": 3807,
+            "consumptionPowerW": 780,
+            "batteryStateOfChargePercent": 25
+          },
+          "last": {
+            "installationId": "residential-demo",
+            "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+            "solarPowerW": 952,
+            "consumptionPowerW": 1359,
+            "batteryStateOfChargePercent": 83
+          }
+        },
+        "forwardedWriteStatus": 403,
+        "completed": "2026-11-04T05:41:42.087Z",
+        "result": "pass"
+      },
+      "restart": {
+        "lifecycle": {
+          "run": "b",
+          "hostStop": "Ctrl+C API shutdown message observed; npm.cmd batch confirmed Y",
+          "apiTerminalWrapperExit": 1,
+          "portsClosed": [
+            5272,
+            5274
+          ],
+          "stoppedAt": "2026-11-04T05:48:20.2543396+00:00",
+          "postgresStopped": true,
+          "postgresRestarted": true
+        },
+        "before": {
+          "at": "2026-11-04T05:47:32.024Z",
+          "before": {
+            "count": 1443,
+            "first": "2026-11-03T05:38:54.224923+00:00",
+            "last": "2026-11-04T05:41:37.944124+00:00",
+            "digest": "ea99d184f3d36a67e269360e9e767e1d"
+          },
+          "latest": {
+            "asOf": "2026-11-04T05:47:34.1530621+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "history": {
+            "asOf": "2026-11-04T05:47:34.181938+00:00",
+            "from": "2026-11-03T05:47:34.181938+00:00",
+            "to": "2026-11-04T05:47:34.181938+00:00",
+            "count": 1434
+          }
+        },
+        "after": {
+          "at": "2026-11-04T05:49:11.173Z",
+          "before": {
+            "count": 1443,
+            "first": "2026-11-03T05:38:54.224923+00:00",
+            "last": "2026-11-04T05:41:37.944124+00:00",
+            "digest": "ea99d184f3d36a67e269360e9e767e1d"
+          },
+          "latest": {
+            "asOf": "2026-11-04T05:49:22.0857917+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "history": {
+            "asOf": "2026-11-04T05:49:22.609762+00:00",
+            "from": "2026-11-03T05:49:22.609762+00:00",
+            "to": "2026-11-04T05:49:22.609762+00:00",
+            "count": 1432
+          },
+          "persistence": "identical SQL digest/count and latest reading; server reference advanced"
+        },
+        "browserReload": {
+          "result": "pass",
+          "source": "fresh browser reload after host/database restart; real API",
+          "latest": {
+            "asOf": "2026-11-04T05:51:59.5500708+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-04T05:41:37.944124+00:00",
+              "solarPowerW": 952,
+              "consumptionPowerW": 1359,
+              "batteryStateOfChargePercent": 83
+            }
+          },
+          "selectedMeasuredAt": "2026-11-04T05:41:37.944124+00:00"
+        }
+      }
+    }
+  ],
+  "reproducibility": "Both 1,441-reading seeded metric sequences have identical SHA-256; each uses its own current server reference/window.",
+  "emptyDatabase": {
+    "source": "Additional fresh solarwatch_empty database migrated inside the owned B instance; temporary Development API on port 5275; no demo rows cleared",
+    "latest": {
+      "status": 200,
+      "body": {
+        "asOf": "2026-11-04T05:54:32.4130267+00:00",
+        "reading": null
+      }
+    },
+    "history": {
+      "status": 200,
+      "body": {
+        "asOf": "2026-11-04T05:54:32.608954+00:00",
+        "from": "2026-11-03T05:54:32.608954+00:00",
+        "to": "2026-11-04T05:54:32.608954+00:00",
+        "readings": []
+      }
+    }
+  },
+  "tests": {
+    "run": "Clean clone A, explicit per-run profile/public config, isolated PostgreSQL databases",
+    "commands": [
+      "dotnet test backend/src/SolarWatch.slnx -c Release --no-build --no-restore",
+      "npm.cmd run test:unit",
+      "npm.cmd run test:e2e"
+    ],
+    "backendUnit": 116,
+    "postgresIntegration": 56,
+    "frontendUnit": 46,
+    "playwright": 34,
+    "uniquePassed": 252,
+    "failed": 0,
+    "skipped": 0,
+    "reportedLocalDurations": {
+      "backendUnit": "8 s",
+      "postgresIntegration": "2 m 59 s",
+      "playwright": "7.7 m"
+    },
+    "repeat": "B also passed restore/build/npm ci/lint/frontend build and the same 46 unit cases; not counted twice"
+  },
+  "cleanup": {
+    "checkedAt": "2026-11-04T06:02:29.1284877+00:00",
+    "existingContainers": 6,
+    "existingVolumes": 35,
+    "existingContainerIdentityAndStateUnchanged": true,
+    "existingVolumeNamesUnchanged": true,
+    "taskContainersRemoved": true,
+    "taskVolumesRetained": [
+      "solarwatch-phase6-a-20261104_postgres-data",
+      "solarwatch-phase6-b-20261104_postgres-data"
+    ],
+    "remainingTaskListeners": []
+  },
+  "limitations": [
+    "Windows reference only; new GitHub checkouts and isolated app profiles on an existing machine, not a fresh OS/VM or cache-free installation.",
+    "Private Windows PowerShell demo JSON collector stalled after CLI work; SQL/HTTP/CLI outcomes were re-collected with Node. No stalled collector is reported as a passing command.",
+    "External font requests blocked for deterministic screenshots; declared fallback used. Browser smoke uses real API/database, without API mocks.",
+    "Live API history window moves; persisted count and generated window are distinct from a later query count.",
+    "No full-stack Compose runtime or API Docker image build verified; evaluation only.",
+    "Native zoom, Narrator/NVDA and physical mobile remain unverified under the existing limited Phase 5 acceptance.",
+    "Phase 6 and MVP remain incomplete; no product, simulator, contracts, dependencies or security changes."
+  ]
+}
