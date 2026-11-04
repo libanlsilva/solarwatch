@@ -212,6 +212,44 @@ public class HistorySimulatorTests
         Assert.Contains("errors=1, uncertain=0, unattempted=1441", output.ToString());
     }
 
+    [Fact]
+    public async Task Residential_profile_routes_all_values_through_the_same_sequential_HTTP_runner()
+    {
+        using var handler = new Handler();
+        using var client = Client(handler);
+        using var output = new StringWriter();
+        Assert.Equal(0, await SimulatorRunner.RunAsync(Options() with { Profile = "residential-v1" }, client, output));
+        Assert.Equal(ResidentialHistoryGenerator.Generate(42, Now), handler.Submitted);
+        Assert.Equal(1, handler.Gets);
+        Assert.Equal(1, handler.MaxActive);
+        Assert.Contains("Profile: residential-v1", output.ToString());
+        Assert.Contains("accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0", output.ToString());
+    }
+
+    [Fact]
+    public async Task Residential_profile_reports_short_HTTP_failure_as_uncertain_without_retry()
+    {
+        using var handler = new Handler { OnPost = (row, index, _) => Task.FromResult(index == 3
+            ? new HttpResponseMessage(HttpStatusCode.ServiceUnavailable) : Ack(row)) };
+        using var client = Client(handler);
+        using var output = new StringWriter();
+        Assert.Equal(1, await SimulatorRunner.RunAsync(Options() with { Profile = "residential-v1" }, client, output));
+        Assert.Equal(ResidentialHistoryGenerator.Generate(42, Now).Take(3), handler.Submitted);
+        Assert.Contains("accepted=2, rejected=0, conflicts=0, errors=1, uncertain=1, unattempted=1438", output.ToString());
+    }
+
+    [Fact]
+    public async Task Residential_profile_controlled_stop_keeps_confirmations_but_is_incomplete()
+    {
+        using var stop = new CancellationTokenSource();
+        using var handler = new Handler();
+        using var client = Client(handler);
+        using var output = new StopAfterAccepted(stop, 2);
+        Assert.Equal(1, await SimulatorRunner.RunAsync(Options() with { Profile = "residential-v1" }, client, output, stop.Token));
+        Assert.Equal(2, handler.Submitted.Count);
+        Assert.Contains("accepted=2, rejected=0, conflicts=0, errors=1, uncertain=0, unattempted=1439", output.ToString());
+    }
+
     private static HttpClient Client(HttpMessageHandler handler) => new(handler) { BaseAddress = new Uri("http://localhost") };
     private static HttpResponseMessage Json(string json, HttpStatusCode status = HttpStatusCode.OK) =>
         new(status) { Content = new StringContent(json, Encoding.UTF8, "application/json") };
