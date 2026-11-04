@@ -1,0 +1,149 @@
+{
+  "Runtime": ".NET 10.0.13",
+  "Seed": 42,
+  "OriginalReference": "2026-11-01T23:00:30.1234567+00:00",
+  "NormalizedReference": "2026-11-01T23:00:30.123456+00:00",
+  "Canonical": "UTF-8, no BOM/header, LF including final LF; measuredAt O (7 fractional digits),solar F0,home F0,battery F2; invariant culture",
+  "LegacySha256": "0915e51aaa8c0aae1e8ed54351354a60109d98b3f16b85f86e4ba2b04b7a71ee",
+  "ResidentialSha256": "1ea48d5b3d00f9c6031846ea1f14276a38fee77c351b888cd800bc375237c182",
+  "Source": "Both generators executed from the actual .NET simulator assembly, same seed/reference. No frontend interpolation or copied Python model.",
+  "LegacyMetrics": {
+    "samples": 1441,
+    "solarZeroSamples": 0,
+    "maxAdjacentSolarW": 4914,
+    "maxAdjacentHomeW": 2845,
+    "maxAdjacentBatteryPercentagePoints": 97,
+    "solarPeakW": 4999,
+    "batteryMinPercent": 0,
+    "batteryMaxPercent": 100
+  },
+  "ResidentialMetrics": {
+    "samples": 1441,
+    "solarZeroSamples": 727,
+    "maxAdjacentSolarW": 24,
+    "maxAdjacentHomeW": 14,
+    "maxAdjacentBatteryPercentagePoints": 0.34,
+    "solarPeakW": 4169,
+    "batteryMinPercent": 0,
+    "batteryMaxPercent": 100
+  },
+  "ThreeHourlySamples": [
+    {
+      "measuredAt": "2026-10-31T23:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 3341,
+        "ConsumptionPowerW": 508,
+        "BatteryStateOfChargePercent": 12
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 840,
+        "BatteryStateOfChargePercent": 50
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T02:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 176,
+        "ConsumptionPowerW": 1380,
+        "BatteryStateOfChargePercent": 3
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 1324,
+        "BatteryStateOfChargePercent": 7.27
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T05:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 4954,
+        "ConsumptionPowerW": 2074,
+        "BatteryStateOfChargePercent": 85
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 323,
+        "BatteryStateOfChargePercent": 0
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T08:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 2444,
+        "ConsumptionPowerW": 1821,
+        "BatteryStateOfChargePercent": 61
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 292,
+        "BatteryStateOfChargePercent": 0
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T11:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 2809,
+        "ConsumptionPowerW": 444,
+        "BatteryStateOfChargePercent": 6
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 944,
+        "BatteryStateOfChargePercent": 0
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T14:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 2943,
+        "ConsumptionPowerW": 2071,
+        "BatteryStateOfChargePercent": 25
+      },
+      "residentialV1": {
+        "SolarPowerW": 1990,
+        "ConsumptionPowerW": 582,
+        "BatteryStateOfChargePercent": 7.45
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T17:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 1033,
+        "ConsumptionPowerW": 2197,
+        "BatteryStateOfChargePercent": 15
+      },
+      "residentialV1": {
+        "SolarPowerW": 4110,
+        "ConsumptionPowerW": 596,
+        "BatteryStateOfChargePercent": 66.18
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T20:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 19,
+        "ConsumptionPowerW": 2188,
+        "BatteryStateOfChargePercent": 92
+      },
+      "residentialV1": {
+        "SolarPowerW": 1972,
+        "ConsumptionPowerW": 503,
+        "BatteryStateOfChargePercent": 100
+      }
+    },
+    {
+      "measuredAt": "2026-11-01T23:00:30.123456+00:00",
+      "random": {
+        "SolarPowerW": 4818,
+        "ConsumptionPowerW": 2607,
+        "BatteryStateOfChargePercent": 53
+      },
+      "residentialV1": {
+        "SolarPowerW": 0,
+        "ConsumptionPowerW": 840,
+        "BatteryStateOfChargePercent": 93.19
+      }
+    }
+  ]
+}

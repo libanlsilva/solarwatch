@@ -1,6 +1,6 @@
 # Residential history profile v1
 
-**Issue #38: owner-approved specification, recorded before implementation.** Implementation/review remains a separate delivery from accepted ADR-001. Phase 6 and the MVP remain pending; these are synthetic demo patterns, not a physical installation model.
+**Issue #38: implementation authorized by the owner; model parameters recorded before code in commit `4b45635`.** The profile is implemented on its dedicated branch, pending personal PR review. This is a separate delivery from accepted ADR-001. Phase 6 and the MVP remain pending; these are synthetic demo patterns, not a physical installation model.
 
 ## CLI and compatibility
 
@@ -17,16 +17,16 @@ Let `h` be UTC time-of-day in fractional hours. Four `Random(seed).NextDouble()`
 | Synthetic daylight | 11:00–23:00 UTC, peak around 17:00 UTC; fixed every day |
 | Solar envelope | `4200 × sin²(π(h−11)/12)` W during daylight; exactly 0 outside |
 | Solar modulation | `0.97 + 0.02 sin(2πh/2+s1) + 0.01 sin(2πh/0.75+s2)`; factor 0.94–1.00 |
-| Solar output | Round to whole W, away from midpoint zero; 0–4,200 W |
+| Solar output | Whole W, midpoint ties away from zero; 0–4,200 W |
 | Home base | 350 W |
 | Activity bumps | Morning: 12 UTC, 900 W, width 1.25 h; midday: 18 UTC, 350 W, width 2 h; evening: 01 UTC, 1,300 W, width 1.5 h |
 | Activity shape | Each adds `amplitude × exp(−0.5(d/width)²)`, with `d` the shortest circular 24-hour distance to its center |
 | Home variation | `60 sin(2πh/3+c1) + 30 sin(2πh+c2)` W |
-| Home output | Round the total to whole W, away from midpoint zero; analytic bounds 260–2,990 W |
+| Home output | Whole W, midpoint ties away from zero; analytic bounds 260–2,990 W |
 | Initial battery | Exactly 50% at the **first** requested sample, with no hidden warm-up |
 | Assumed capacity | 10,000 Wh, internal simulation assumption only |
 | Charge/discharge limit | ±2,000 W, lossless simplified balance |
-| Charge output | Two decimal places, away from midpoint zero, bounded 0–100% |
+| Charge output | Two decimal places, midpoint ties away from zero, bounded 0–100% |
 
 The daylight/activity schedule corresponds approximately to 06–18 daylight, 07 morning, 13 midday and 20 evening at a fictional fixed UTC−05 offset. It does not follow the browser's zone or seasonal DST, identify an actual location, or calculate astronomical sunrise/weather. All power waves repeat by UTC day for the same seed; circular activity distances avoid a midnight reset.
 
@@ -40,6 +40,26 @@ For each minute **after** the first, average the previous/current rounded `solar
 - Ingestion still uses the existing sequential HTTP runner and local Development guard. Accepted/rejected/conflicting/uncertain/unattempted counts, cancellation and failure exits retain their meanings. Selecting another profile never overwrites existing rows; occupied ranges may contain mixed old/new values after conflicts. Reproducible comparisons need an explicitly isolated empty range.
 - No finite/continuous residential profile, additional CLI tuning parameters or complete physical model belongs to this delivery.
 
-## Planned verification
+## Prepare an isolated empty demonstration
 
-Unit coverage will check exact UTC/microsecond windows, determinism, seed variation, day/night/peak behavior, adjacent-sample continuity, midnight, battery rate/sign/bounds and invalid arguments. Reuse the existing HTTP runner's failure/cancellation tests and add profile routing/short failure cases. One new real PostgreSQL load will check all stored values plus an occupied timestamp; a short interrupted run will check uncertain persistence. One actual-CLI Playwright load will compare HTTP acknowledgments, persisted API results and existing chart values. Keep all 252 baseline tests; do not repeat full loads for every model case.
+Follow the [isolated clean-clone walkthrough](../development/CLEAN_CLONE.md) through migration, API/frontend startup and initial empty checks. Use a **new Compose project, new named volume and generated ignored credentials**, with unused ports. Stop before its seed/random-history steps: do not populate those first. The baseline startup procedure and Compose file are unchanged.
+
+From the clone, with the Release solution built and API listening on the chosen address (5271 in that walkthrough):
+
+```powershell
+$demoApi = 'http://127.0.0.1:5271'
+$demoLatest = Invoke-RestMethod "$demoApi/api/readings/latest"
+$demoHistory = Invoke-RestMethod "$demoApi/api/readings/history"
+if ($null -ne $demoLatest.reading -or $demoHistory.readings.Count -ne 0) {
+    throw 'Preserve these readings; choose a new isolated project/volume for a clean comparison.'
+}
+$demoReference = $demoLatest.asOf
+dotnet simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll --history-24h --profile residential-v1 --end-at $demoReference --seed 42 --api-url $demoApi
+if ($LASTEXITCODE -ne 0) { throw 'Not a complete successful load; inspect the accepted/rejected/uncertain summary.' }
+```
+
+The simulator needs only the local HTTP URL, not database credentials. Press **Refresh** in React after the load. A later live history window can exclude the earliest sample as `asOf` advances; that does not mean persistence failed. Preserve the reference string for a reproducible rerun: the same range now reports 409 conflicts/exit 1, without overwriting. Switching from random to residential in an occupied range cannot replace its values. Choose another new project for a clean alternative, never automatic clearing/deletion. Normal shutdown retains the named volume using the original walkthrough's stop/restart commands.
+
+## Verification scope
+
+Unit coverage checks exact UTC/microsecond windows, determinism, a canonical SHA-256 fixture, seed variation, day/night/peak behavior, adjacent-sample continuity, midnight, battery rate/sign/bounds and invalid arguments. Existing HTTP failure/cancellation tests remain active alongside profile routing/short failure cases. One new real PostgreSQL load checks all stored values plus an occupied timestamp; a short interrupted run checks uncertain persistence. One actual-CLI Playwright load compares HTTP acknowledgments, persisted API results and every existing chart path vertex. All 252 baseline cases are preserved; model unit cases do not repeat HTTP loads. See the [controlled comparison](../validation/RESIDENTIAL_COMPARISON.md) for generated values and limitations.
