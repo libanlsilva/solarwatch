@@ -1,6 +1,6 @@
 # Clean-clone local setup verification
 
-**Issue #34 — Phase 6, delivery A; 2026-11-04.** The owner approved implementation. This delivery verifies the existing host-run API/React + PostgreSQL Compose path; it awaits PR review and does not complete Phase 6 or the MVP. No product code, dependencies, contracts, tests, simulator patterns or ingestion guards changed.
+**Issue #34 — Phase 6, delivery A; 2026-11-04.** The owner personally approved this evidence and [PR #35](https://github.com/libanlsilva/solarwatch/pull/35). Delivery A is complete through its squash integration (`23f9638`), closing Issue #34. It verifies the existing host-run API/React + PostgreSQL Compose path and does not complete Phase 6 or the MVP. No product code, dependencies, contracts, tests, simulator patterns or ingestion guards changed.
 
 Follow the [reproducible PowerShell walkthrough](../development/CLEAN_CLONE.md). The [portable evidence](evidence/clean-clone.json) contains original clone hashes, step exits/timings, timestamps, actual HTTP/SQL outcomes, repeat/persistence comparisons and browser results. Its simulated data and non-secret metadata are deliberately retained; populated configuration, private machine paths and unrelated Docker resource names are excluded.
 
