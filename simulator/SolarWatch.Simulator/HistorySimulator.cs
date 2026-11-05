@@ -33,7 +33,14 @@ internal static class HistorySimulator
                 // Validate the original instant before truncating to PostgreSQL precision.
                 if (options.EndAt is not { } endAt || endAt > asOf)
                     throw new ArgumentException("History ending instant is missing or after server asOf.");
-                var readings = ReadingGenerator.GenerateHistory24h(options.Seed, endAt);
+                var readings = options.Profile switch
+                {
+                    null => ReadingGenerator.GenerateHistory24h(options.Seed, endAt),
+                    SimulatorOptions.ResidentialProfile => ResidentialHistoryGenerator.Generate(options.Seed, endAt),
+                    _ => throw new ArgumentException("Unknown history profile.")
+                };
+                if (options.Profile is not null)
+                    output.WriteLine($"Profile: {options.Profile}; synthetic UTC residential schedule, not measured hardware.");
                 output.WriteLine($"History mode: {readings.Count} readings, {readings[0].MeasuredAt:O} through {readings[^1].MeasuredAt:O} (UTC), oldest first. Press Ctrl+C to stop.");
                 foreach (var reading in readings)
                 {

@@ -28,6 +28,7 @@ SolarWatch makes solar generation, household energy consumption, and battery cha
 - A finite .NET HTTP simulator with reproducible seed/timestamps, server-based current time, bounded batches, and explicit acceptance/rejection/error reporting.
 - Optional continuous execution with an immediate reading, 60-second cadence, fresh server `asOf` per sample, and controlled Ctrl+C shutdown.
 - A separate bounded `--history-24h` mode submitting exactly 1,441 reproducible minute samples through the existing API, with explicit conflicts and partial/uncertain-run reporting.
+- Opt-in `residential-v1` for historical preparation: a synthetic daily solar cycle, variable home demand and gradually evolving battery charge, reproducible by seed/UTC. Legacy history, finite and continuous defaults remain unchanged.
 - Meaningful backend unit tests, real PostgreSQL integration tests, frontend unit tests, and Playwright browser tests, executed in CI.
 
 The generated weather endpoint and empty template classes/tests have been removed. Finite simulation remains the default; the separate development seed remains available.
@@ -125,7 +126,7 @@ The [approved design references](docs/design/README.md) include Overview and His
 
 ## Local setup
 
-Owner-approved [Issue #37](https://github.com/libanlsilva/solarwatch/issues/37) evaluates full-stack Compose. [ADR-001](docs/architecture/adr-001-local-startup.md) records the personally accepted **NO-GO for the current local MVP**: retain the verified host-run path. The owner also approved [residential simulator-pattern issue #38](https://github.com/libanlsilva/solarwatch/issues/38) for a separate implementation after PR #39 integration, before definitive captures/demo; it is not implemented in this decision delivery. Phase 6 and the MVP remain pending.
+Owner-approved [Issue #37](https://github.com/libanlsilva/solarwatch/issues/37) evaluates full-stack Compose. [ADR-001](docs/architecture/adr-001-local-startup.md) records the personally accepted **NO-GO for the current local MVP**: retain the verified host-run path. Owner-approved [Issue #38](https://github.com/libanlsilva/solarwatch/issues/38) delivers the implemented and personally approved opt-in historical `residential-v1` profile through [PR #40](https://github.com/libanlsilva/solarwatch/pull/40), completing this slice with squash integration. Definitive captures/demo remain a separate, unstarted delivery. See the [model and isolated preparation recipe](docs/architecture/residential-history-profile.md). Phase 6 and the MVP remain pending.
 
 For a new checkout without affecting an existing database, follow the [verified isolated clean-clone walkthrough](docs/development/CLEAN_CLONE.md). Its [two-run verification record](docs/validation/CLEAN_CLONE.md) covers explicit configuration, migrations, simulated history, connected React, manual Refresh and persistent stop/restart. The [Compose evaluation](docs/architecture/local-compose-evaluation.md) keeps full-stack containerization separate; the reference path below still runs only PostgreSQL in Compose.
 
@@ -235,6 +236,18 @@ The summary reports requested/attempted/accepted/rejected/**conflicts**/errors/*
 
 **Local writes only:** `POST /api/readings` is absent outside Development and rejects non-loopback peers/hosts, forwarded requests, and non-local browser origins. Point the CLI directly at a loopback-bound API; it accepts no public URL or database credentials. Keep Development private: do not expose it through public listeners, reverse proxies, or tunnels. This guard does not replace authentication. See the [POST contract and limitations](docs/architecture/simulated-ingestion.md).
 
+#### Optional coherent residential history
+
+Use a **new isolated Compose project/volume** following the [verified setup](docs/development/CLEAN_CLONE.md), stopping before its seed/random-history steps. The [profile recipe](docs/architecture/residential-history-profile.md#prepare-an-isolated-empty-demonstration) checks empty endpoints and preserves existing data. Example with its API port 5271, after the Release build/migration:
+
+```powershell
+$demoApi = 'http://127.0.0.1:5271'
+$demoReference = (Invoke-RestMethod "$demoApi/api/readings/latest").asOf
+dotnet simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll --history-24h --profile residential-v1 --end-at $demoReference --seed 42 --api-url $demoApi
+```
+
+Refresh React after the load. This explicit profile uses fixed synthetic UTC schedules and a toy 50%-initial/10 kWh/±2 kW battery model; no weather, energy totals or measured flows are added. Omitting `--profile` preserves random history. The profile is invalid in finite/continuous modes. Reusing an occupied range, including one prepared with another profile, yields 409 conflicts/exit 1 without replacement. See [controlled comparisons](docs/validation/RESIDENTIAL_COMPARISON.md) and [Full Stack verification](docs/validation/RESIDENTIAL_PROFILE.md); these are technical evidence, not definitive portfolio captures.
+
 ### 6. Query the persisted last 24 hours
 
 With the Development API running, query the new read-only endpoint:
@@ -251,6 +264,8 @@ The window is `[asOf - 24 hours, asOf]`, using one normalized UTC server referen
 The query has no client-selectable dates. A live query's window advances after a simulator run, so its count need not equal the generator's 1,441 samples; there is no artificial result cap. See the [history contract and reproducible examples](docs/architecture/reading-history.md). Overview now queries History independently, using manual Refresh and actual server data. A single seed appears as a historical point; prepare a full range with the simulator to see the complete recorded pattern. See the [Overview chart implementation](docs/architecture/overview-charts.md) for states and limitations.
 
 ## Validation
+
+Issue #38 local validation: **277 tests passed**, zero skipped (138 .NET unit, 58 real PostgreSQL integration, 46 frontend unit, 35 Playwright), with restore/Release build and frontend lint/build passing. All 252 baseline cases remain active. See the [profile verification](docs/validation/RESIDENTIAL_PROFILE.md) and [controlled comparison](docs/validation/RESIDENTIAL_COMPARISON.md); the owner personally approved the implementation and evidence in [PR #40](https://github.com/libanlsilva/solarwatch/pull/40). This slice completes with its squash integration; Phase 6 and the MVP remain pending.
 
 Issue #34 clean-clone verification preserved and passed all **252 existing tests**: 116 backend unit, 56 real PostgreSQL integration, 46 frontend unit and 34 Playwright. Both new setups passed restore/Release build and frontend install/lint/build; no tests, runtime code or dependencies changed. See the [actual commands, evidence and limits](docs/validation/CLEAN_CLONE.md).
 
