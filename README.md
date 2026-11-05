@@ -126,7 +126,7 @@ The [approved design references](docs/design/README.md) include Overview and His
 
 ## Local setup
 
-Owner-approved [Issue #37](https://github.com/libanlsilva/solarwatch/issues/37) evaluates full-stack Compose. [ADR-001](docs/architecture/adr-001-local-startup.md) records the personally accepted **NO-GO for the current local MVP**: retain the verified host-run path. Owner-approved [Issue #38](https://github.com/libanlsilva/solarwatch/issues/38) now implements the opt-in historical `residential-v1` profile on its dedicated branch, pending personal PR review before definitive captures/demo. See the [model and isolated preparation recipe](docs/architecture/residential-history-profile.md). Phase 6 and the MVP remain pending.
+Owner-approved [Issue #37](https://github.com/libanlsilva/solarwatch/issues/37) evaluates full-stack Compose. [ADR-001](docs/architecture/adr-001-local-startup.md) records the personally accepted **NO-GO for the current local MVP**: retain the verified host-run path. Owner-approved [Issue #38](https://github.com/libanlsilva/solarwatch/issues/38) delivers the implemented and personally approved opt-in historical `residential-v1` profile through [PR #40](https://github.com/libanlsilva/solarwatch/pull/40), completing this slice with squash integration. Definitive captures/demo remain a separate, unstarted delivery. See the [model and isolated preparation recipe](docs/architecture/residential-history-profile.md). Phase 6 and the MVP remain pending.
 
 For a new checkout without affecting an existing database, follow the [verified isolated clean-clone walkthrough](docs/development/CLEAN_CLONE.md). Its [two-run verification record](docs/validation/CLEAN_CLONE.md) covers explicit configuration, migrations, simulated history, connected React, manual Refresh and persistent stop/restart. The [Compose evaluation](docs/architecture/local-compose-evaluation.md) keeps full-stack containerization separate; the reference path below still runs only PostgreSQL in Compose.
 
@@ -265,7 +265,7 @@ The query has no client-selectable dates. A live query's window advances after a
 
 ## Validation
 
-Issue #38 local validation: **277 tests passed**, zero skipped (138 .NET unit, 58 real PostgreSQL integration, 46 frontend unit, 35 Playwright), with restore/Release build and frontend lint/build passing. All 252 baseline cases remain active. See the [profile verification](docs/validation/RESIDENTIAL_PROFILE.md) and [controlled comparison](docs/validation/RESIDENTIAL_COMPARISON.md); the delivery awaits personal PR review and does not complete Phase 6 or the MVP.
+Issue #38 local validation: **277 tests passed**, zero skipped (138 .NET unit, 58 real PostgreSQL integration, 46 frontend unit, 35 Playwright), with restore/Release build and frontend lint/build passing. All 252 baseline cases remain active. See the [profile verification](docs/validation/RESIDENTIAL_PROFILE.md) and [controlled comparison](docs/validation/RESIDENTIAL_COMPARISON.md); the owner personally approved the implementation and evidence in [PR #40](https://github.com/libanlsilva/solarwatch/pull/40). This slice completes with its squash integration; Phase 6 and the MVP remain pending.
 
 Issue #34 clean-clone verification preserved and passed all **252 existing tests**: 116 backend unit, 56 real PostgreSQL integration, 46 frontend unit and 34 Playwright. Both new setups passed restore/Release build and frontend install/lint/build; no tests, runtime code or dependencies changed. See the [actual commands, evidence and limits](docs/validation/CLEAN_CLONE.md).
 

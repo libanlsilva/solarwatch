@@ -1,6 +1,6 @@
 # Residential profile validation
 
-Issue #38, dedicated branch from `14b3504` after personally approved PR #39 integration and three passing main workflows. ADR-001 is accepted: PostgreSQL remains in Compose, .NET/React on the host. This profile delivery awaits personal PR review; Phase 6/MVP and definitive demonstration remain pending.
+Issue #38, dedicated branch from `14b3504` after personally approved PR #39 integration and three passing main workflows. ADR-001 is accepted: PostgreSQL remains in Compose, .NET/React on the host. The owner personally approved this implementation/evidence in [PR #40](https://github.com/libanlsilva/solarwatch/pull/40); the profile slice completes with squash integration. Phase 6/MVP and definitive demonstration remain pending.
 
 The [model specification](../architecture/residential-history-profile.md) was committed as `4b45635` **before implementation**. Production changes are confined to the simulator: one pure generator, explicit history-only CLI selection and routing through the existing HTTP runner. Backend/API/EF/migrations, frontend application/charts, dependencies, Compose/Dockerfile and local-ingestion security are unchanged. Original random generation and finite/continuous runners are untouched.
 

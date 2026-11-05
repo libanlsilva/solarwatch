@@ -1,6 +1,6 @@
 # Residential history profile v1
 
-**Issue #38: implementation authorized by the owner; model parameters recorded before code in commit `4b45635`.** The profile is implemented on its dedicated branch, pending personal PR review. This is a separate delivery from accepted ADR-001. Phase 6 and the MVP remain pending; these are synthetic demo patterns, not a physical installation model.
+**Issue #38: implementation authorized by the owner; model parameters recorded before code in commit `4b45635`.** The profile implementation and model assumptions are personally approved through [PR #40](https://github.com/libanlsilva/solarwatch/pull/40) review; this slice completes with its squash integration. This is a separate delivery from accepted ADR-001. Phase 6 and the MVP remain pending; these are synthetic demo patterns, not a physical installation model.
 
 ## CLI and compatibility
 
