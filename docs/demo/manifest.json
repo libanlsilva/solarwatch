@@ -1,0 +1,1325 @@
+{
+  "status": "Demonstration prepared; pending personal review in the Issue #41 PR. Phase 6/MVP incomplete; no release/production authorization.",
+  "source": {
+    "remote": "https://github.com/libanlsilva/solarwatch.git",
+    "commit": "b4a9c926648848361738f3ddeaddc104ed4aa2e5",
+    "cloneMethod": "two actual git clone --depth 1 --branch main operations, independently from GitHub",
+    "applicationCodeModified": false,
+    "helpers": "Versioned under docs/demo/tools; executed externally against the unmodified approved clones.",
+    "simulatorLibrary": "SolarWatch.Simulator/1.0.0",
+    "simulatorInformationalVersion": "1.0.0+b4a9c926648848361738f3ddeaddc104ed4aa2e5",
+    "profile": "residential-v1"
+  },
+  "configuration": {
+    "referenceEnvironment": "Windows/PowerShell; existing installed toolchains, not a fresh OS/VM",
+    "inputs": "Fresh per-run ignored .env/password, unique project/volume and loopback ports; empty app profiles and npm user/global configs; explicit public-only NuGet config.",
+    "allowedCacheReuse": [
+      "NuGet/npm packages",
+      "Playwright Chromium binaries",
+      "Docker image"
+    ],
+    "noBorrowedInputs": [
+      "existing .env",
+      "user secrets",
+      "database",
+      "bin/obj",
+      "node_modules",
+      "frontend dist"
+    ],
+    "parentBuildOverrides": "No global.json/Directory.Build.props/Directory.Build.targets/Directory.Packages.props found in the checked parent paths."
+  },
+  "versions": {
+    "sdk": "10.0.402",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "git": "git version 2.53.0.windows.3",
+    "docker": "Docker version 29.5.2, build 79eb04c",
+    "compose": "Docker Compose version v5.1.4",
+    "powershell": "5.1.26100.9818",
+    "windows": "Microsoft Windows NT 10.0.26300.0"
+  },
+  "controlledDataset": {
+    "seed": 42,
+    "originalReference": "2026-11-05T04:05:46.4498706+00:00",
+    "normalizedReference": "2026-11-05T04:05:46.449870+00:00",
+    "canonicalFormat": "UTF-8; no BOM/header; LF including final LF; measuredAt O (7 fraction digits),solar F0,home F0,battery F2; invariant culture",
+    "first": {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-04T04:05:46.449870Z",
+      "solarPowerW": 0,
+      "consumptionPowerW": 487,
+      "batteryStateOfChargePercent": 50
+    },
+    "last": {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-05T04:05:46.449870Z",
+      "solarPowerW": 0,
+      "consumptionPowerW": 487,
+      "batteryStateOfChargePercent": 31.49
+    },
+    "persistedCount": 1441,
+    "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798"
+  },
+  "crossCloneEquality": {
+    "sameCommit": true,
+    "sameReferenceStringAndNormalizedValue": true,
+    "sameSeedAndProfile": true,
+    "all1441KeysAndValuesIdentical": true,
+    "sameAcknowledgmentsAndSqlDigest": true
+  },
+  "commands": {
+    "clone": [
+      "git clone --depth 1 --branch main https://github.com/libanlsilva/solarwatch.git <clone-A>",
+      "git clone --depth 1 --branch main https://github.com/libanlsilva/solarwatch.git <clone-B>"
+    ],
+    "prepare": {
+      "A": "& ./docs/demo/tools/prepare.ps1 -Clone <clone-A> -State <state-A> -Project solarwatch-demo-f01348df-a -Commit b4a9c926648848361738f3ddeaddc104ed4aa2e5 -DatabasePort 5550 -ApiPort 5281 -WebPort 5283",
+      "B": "& ./docs/demo/tools/prepare.ps1 -Clone <clone-B> -State <state-B> -Project solarwatch-demo-f01348df-b -Commit b4a9c926648848361738f3ddeaddc104ed4aa2e5 -DatabasePort 5551 -ApiPort 5282 -WebPort 5284"
+    },
+    "setupSteps": [
+      {
+        "name": "compose-up",
+        "executable": "docker",
+        "arguments": [
+          "compose",
+          "-p",
+          "solarwatch-demo-f01348df-a",
+          "--env-file",
+          ".env",
+          "up",
+          "-d",
+          "--wait",
+          "--wait-timeout",
+          "60",
+          "postgres"
+        ]
+      },
+      {
+        "name": "restore",
+        "executable": "dotnet",
+        "arguments": [
+          "restore",
+          "backend/src/SolarWatch.slnx",
+          "--configfile",
+          "<state>/NuGet.Config"
+        ]
+      },
+      {
+        "name": "build",
+        "executable": "dotnet",
+        "arguments": [
+          "build",
+          "backend/src/SolarWatch.slnx",
+          "--configuration",
+          "Release",
+          "--no-restore"
+        ]
+      },
+      {
+        "name": "migrate",
+        "executable": "dotnet",
+        "arguments": [
+          "backend/src/SolarWatch.Api/bin/Release/net10.0/SolarWatch.Api.dll",
+          "migrate"
+        ]
+      },
+      {
+        "name": "npm-ci",
+        "executable": "npm.cmd",
+        "arguments": [
+          "ci"
+        ]
+      },
+      {
+        "name": "frontend-lint",
+        "executable": "npm.cmd",
+        "arguments": [
+          "run",
+          "lint"
+        ]
+      },
+      {
+        "name": "frontend-build",
+        "executable": "npm.cmd",
+        "arguments": [
+          "run",
+          "build"
+        ]
+      },
+      {
+        "name": "frontend-unit",
+        "executable": "npm.cmd",
+        "arguments": [
+          "run",
+          "test:unit"
+        ]
+      },
+      {
+        "name": "browser-install",
+        "executable": "npx.cmd",
+        "arguments": [
+          "playwright",
+          "install",
+          "--no-shell",
+          "chromium"
+        ]
+      }
+    ],
+    "api": [
+      "dotnet",
+      "backend/src/SolarWatch.Api/bin/Release/net10.0/SolarWatch.Api.dll"
+    ],
+    "frontend": {
+      "A": [
+        "npm.cmd",
+        "run",
+        "preview",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5283",
+        "--strictPort"
+      ],
+      "B": [
+        "npm.cmd",
+        "run",
+        "preview",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5284",
+        "--strictPort"
+      ]
+    },
+    "capture": [
+      "node docs/demo/tools/capture.mjs <clone-A> <state-A> capture",
+      "node docs/demo/tools/capture.mjs <clone-B> <state-B> repeat <state-A>/dataset.json"
+    ],
+    "sql": "docker compose -p <project> --env-file <clone>/.env -f <clone>/docker-compose.yml exec -T postgres psql -U solarwatch -d solarwatch -At -v ON_ERROR_STOP=1; exact constant SELECT/SHOW queries in tools/dataset.mjs",
+    "restart": [
+      "Ctrl+C API/frontend; confirm Y for npm.cmd on Windows",
+      "docker compose -p <same-project> --env-file .env stop postgres",
+      "docker compose -p <same-project> --env-file .env up -d --wait --wait-timeout 60 postgres",
+      "restart the same host commands/environment",
+      "node docs/demo/tools/persistence.mjs <clone> <state> after"
+    ],
+    "finalCleanup": "docker compose -p <each-owned-project> --env-file <clone>/.env -f <clone>/docker-compose.yml down (without -v)"
+  },
+  "runs": {
+    "A": {
+      "sourceCommit": "b4a9c926648848361738f3ddeaddc104ed4aa2e5",
+      "project": "solarwatch-demo-f01348df-a",
+      "ports": {
+        "databasePort": 5550,
+        "apiPort": 5281,
+        "webPort": 5283
+      },
+      "initialSource": {
+        "gitClean": true,
+        "absentFiles": [
+          "backend/src/SolarWatch.Api/bin",
+          "frontend/node_modules",
+          "backend/src/SolarWatch.Api/obj",
+          ".env",
+          "frontend/dist"
+        ],
+        "newAppProfileWithoutUserSecrets": true
+      },
+      "empty": {
+        "latest": {
+          "status": 200,
+          "body": {
+            "asOf": "2026-11-05T04:05:41.4940251+00:00",
+            "reading": null
+          }
+        },
+        "history": {
+          "status": 200,
+          "body": {
+            "asOf": "2026-11-05T04:05:41.649278+00:00",
+            "from": "2026-11-04T04:05:41.649278+00:00",
+            "to": "2026-11-05T04:05:41.649278+00:00",
+            "readings": []
+          }
+        },
+        "sqlRows": 0
+      },
+      "simulatorCommand": [
+        "dotnet",
+        "simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll",
+        "--history-24h",
+        "--profile",
+        "residential-v1",
+        "--seed",
+        "42",
+        "--end-at",
+        "2026-11-05T04:05:46.4498706+00:00",
+        "--api-url",
+        "http://127.0.0.1:5281"
+      ],
+      "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0, elapsedSeconds=15.227. No automatic retries were made.",
+      "persistedRows": 1441,
+      "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+      "acknowledgmentsSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+      "queriedLatest": {
+        "asOf": "2026-11-05T04:06:02.3033891+00:00",
+        "reading": {
+          "installationId": "residential-demo",
+          "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+          "solarPowerW": 0,
+          "consumptionPowerW": 487,
+          "batteryStateOfChargePercent": 31.49
+        }
+      },
+      "queriedHistory": {
+        "asOf": "2026-11-05T04:06:02.308843+00:00",
+        "from": "2026-11-04T04:06:02.308843+00:00",
+        "to": "2026-11-05T04:06:02.308843+00:00",
+        "count": 1440,
+        "matchesSqlSubset": true
+      },
+      "browser": {
+        "version": "156.0.8078.4",
+        "result": "pass",
+        "apiMocks": false,
+        "clockManipulation": false,
+        "physicalDevice": false,
+        "javascriptErrors": [],
+        "fontFailures": [],
+        "interactions": [
+          {
+            "device": "desktop",
+            "action": "empty -> CLI persisted -> manual Refresh",
+            "calls": {
+              "latest": 2,
+              "history": 2
+            },
+            "snapshot": {
+              "asOf": "2026-11-05T04:06:02.731437+00:00",
+              "from": "2026-11-04T04:06:02.731437+00:00",
+              "to": "2026-11-05T04:06:02.731437+00:00",
+              "readings": 1440
+            },
+            "geometry": {
+              "solar": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.000555246699093459,
+                "maximumYErrorPx": 0.0004994003358120835
+              },
+              "consumption": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.000555246699093459,
+                "maximumYErrorPx": 0.0007752808988925608
+              },
+              "battery": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.000555246699093459,
+                "maximumYErrorPx": 0.0007998152140515913
+              }
+            }
+          },
+          {
+            "device": "mobile emulation",
+            "action": "empty -> CLI persisted -> manual Refresh",
+            "calls": {
+              "latest": 2,
+              "history": 2
+            },
+            "snapshot": {
+              "asOf": "2026-11-05T04:06:03.865895+00:00",
+              "from": "2026-11-04T04:06:03.865895+00:00",
+              "to": "2026-11-05T04:06:03.865895+00:00",
+              "readings": 1440
+            },
+            "geometry": {
+              "solar": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.0009082696316866645,
+                "maximumYErrorPx": 0.0004994003358120835
+              },
+              "consumption": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.0009082696316866645,
+                "maximumYErrorPx": 0.0007752808988925608
+              },
+              "battery": {
+                "vertices": 1440,
+                "maximumXErrorPx": 0.0009082696316866645,
+                "maximumYErrorPx": 0.0007998152140515913
+              }
+            }
+          },
+          {
+            "device": "desktop",
+            "action": "navigation, exact keys, UTC-minute buttons, pointer/touch, synchronized markers, History Refresh retention",
+            "exact": {
+              "mode": "observation",
+              "measuredAt": "2026-11-05T04:04:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:04:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 496,
+                "batteryStateOfChargePercent": 31.58
+              }
+            },
+            "minute": {
+              "mode": "minute",
+              "measuredAt": "2026-11-05T04:03:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:03:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 504,
+                "batteryStateOfChargePercent": 31.66
+              }
+            },
+            "capturedSelection": {
+              "mode": "observation",
+              "measuredAt": "2026-11-04T17:17:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-04T17:17:46.449870Z",
+                "solarPowerW": 4166,
+                "consumptionPowerW": 614,
+                "batteryStateOfChargePercent": 74.53
+              }
+            },
+            "calls": {
+              "latest": 2,
+              "history": 3
+            },
+            "previousAsOf": "2026-11-05T04:06:02.731437+00:00",
+            "refreshedAsOf": "2026-11-05T04:06:08.46719+00:00"
+          },
+          {
+            "device": "mobile emulation",
+            "action": "navigation, exact keys, UTC-minute buttons, pointer/touch, synchronized markers, History Refresh retention",
+            "exact": {
+              "mode": "observation",
+              "measuredAt": "2026-11-05T04:04:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:04:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 496,
+                "batteryStateOfChargePercent": 31.58
+              }
+            },
+            "minute": {
+              "mode": "minute",
+              "measuredAt": "2026-11-05T04:03:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:03:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 504,
+                "batteryStateOfChargePercent": 31.66
+              }
+            },
+            "capturedSelection": {
+              "mode": "observation",
+              "measuredAt": "2026-11-04T17:18:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-04T17:18:46.449870Z",
+                "solarPowerW": 4162,
+                "consumptionPowerW": 618,
+                "batteryStateOfChargePercent": 74.86
+              }
+            },
+            "calls": {
+              "latest": 2,
+              "history": 3
+            },
+            "previousAsOf": "2026-11-05T04:06:03.865895+00:00",
+            "refreshedAsOf": "2026-11-05T04:06:12.654626+00:00"
+          }
+        ]
+      },
+      "persistence": {
+        "shutdownAndRestart": {
+          "hostPortsClosed": true,
+          "checkedAt": "2026-11-05T04:16:09.2095470+00:00",
+          "postgresStopRestart": true,
+          "hostShutdown": "API Ctrl+C shutdown observed; npm.cmd termination confirmed Y",
+          "volumePreserved": true,
+          "commands": [
+            "docker compose -p <same-project> --env-file .env stop postgres",
+            "docker compose -p <same-project> --env-file .env up -d --wait --wait-timeout 60 postgres"
+          ]
+        },
+        "before": {
+          "checkedAt": "2026-11-05T04:12:24.895Z",
+          "persistedCount": 1441,
+          "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+          "latest": {
+            "asOf": "2026-11-05T04:12:24.8349014+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+              "solarPowerW": 0,
+              "consumptionPowerW": 487,
+              "batteryStateOfChargePercent": 31.49
+            }
+          },
+          "history": {
+            "asOf": "2026-11-05T04:12:24.850458+00:00",
+            "from": "2026-11-04T04:12:24.850458+00:00",
+            "to": "2026-11-05T04:12:24.850458+00:00",
+            "count": 1434,
+            "matchesSqlSubset": true
+          }
+        },
+        "after": {
+          "checkedAt": "2026-11-05T04:21:29.288Z",
+          "persistedCount": 1441,
+          "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+          "latest": {
+            "asOf": "2026-11-05T04:21:28.7575523+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+              "solarPowerW": 0,
+              "consumptionPowerW": 487,
+              "batteryStateOfChargePercent": 31.49
+            }
+          },
+          "history": {
+            "asOf": "2026-11-05T04:21:28.889355+00:00",
+            "from": "2026-11-04T04:21:28.889355+00:00",
+            "to": "2026-11-05T04:21:28.889355+00:00",
+            "count": 1425,
+            "matchesSqlSubset": true
+          },
+          "browserReload": {
+            "passed": true,
+            "browser": "156.0.8078.4",
+            "measuredAt": "2026-11-05T04:05:46.44987+00:00"
+          }
+        }
+      },
+      "setupTimes": {
+        "compose-up": {
+          "exitCode": 0,
+          "seconds": 10.566
+        },
+        "restore": {
+          "exitCode": 0,
+          "seconds": 24.972
+        },
+        "build": {
+          "exitCode": 0,
+          "seconds": 182.669
+        },
+        "migrate": {
+          "exitCode": 0,
+          "seconds": 12.473
+        },
+        "npm-ci": {
+          "exitCode": 0,
+          "seconds": 86.29
+        },
+        "frontend-lint": {
+          "exitCode": 0,
+          "seconds": 3.026
+        },
+        "frontend-build": {
+          "exitCode": 0,
+          "seconds": 7.055
+        },
+        "frontend-unit": {
+          "exitCode": 0,
+          "seconds": 3.422
+        },
+        "browser-install": {
+          "exitCode": 0,
+          "seconds": 15.399
+        }
+      }
+    },
+    "B": {
+      "sourceCommit": "b4a9c926648848361738f3ddeaddc104ed4aa2e5",
+      "project": "solarwatch-demo-f01348df-b",
+      "ports": {
+        "databasePort": 5551,
+        "apiPort": 5282,
+        "webPort": 5284
+      },
+      "initialSource": {
+        "gitClean": true,
+        "absentFiles": [
+          "backend/src/SolarWatch.Api/bin",
+          "frontend/node_modules",
+          "backend/src/SolarWatch.Api/obj",
+          ".env",
+          "frontend/dist"
+        ],
+        "newAppProfileWithoutUserSecrets": true
+      },
+      "empty": {
+        "latest": {
+          "status": 200,
+          "body": {
+            "asOf": "2026-11-05T04:08:59.9751752+00:00",
+            "reading": null
+          }
+        },
+        "history": {
+          "status": 200,
+          "body": {
+            "asOf": "2026-11-05T04:09:00.101235+00:00",
+            "from": "2026-11-04T04:09:00.101235+00:00",
+            "to": "2026-11-05T04:09:00.101235+00:00",
+            "readings": []
+          }
+        },
+        "sqlRows": 0
+      },
+      "simulatorCommand": [
+        "dotnet",
+        "simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll",
+        "--history-24h",
+        "--profile",
+        "residential-v1",
+        "--seed",
+        "42",
+        "--end-at",
+        "2026-11-05T04:05:46.4498706+00:00",
+        "--api-url",
+        "http://127.0.0.1:5282"
+      ],
+      "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0, elapsedSeconds=12.946. No automatic retries were made.",
+      "persistedRows": 1441,
+      "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+      "acknowledgmentsSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+      "queriedLatest": {
+        "asOf": "2026-11-05T04:09:18.3696845+00:00",
+        "reading": {
+          "installationId": "residential-demo",
+          "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+          "solarPowerW": 0,
+          "consumptionPowerW": 487,
+          "batteryStateOfChargePercent": 31.49
+        }
+      },
+      "queriedHistory": {
+        "asOf": "2026-11-05T04:09:18.377403+00:00",
+        "from": "2026-11-04T04:09:18.377403+00:00",
+        "to": "2026-11-05T04:09:18.377403+00:00",
+        "count": 1437,
+        "matchesSqlSubset": true
+      },
+      "browser": {
+        "version": "156.0.8078.4",
+        "result": "pass",
+        "apiMocks": false,
+        "clockManipulation": false,
+        "physicalDevice": false,
+        "javascriptErrors": [],
+        "fontFailures": [],
+        "interactions": [
+          {
+            "device": "desktop",
+            "action": "empty -> CLI persisted -> manual Refresh",
+            "calls": {
+              "latest": 2,
+              "history": 2
+            },
+            "snapshot": {
+              "asOf": "2026-11-05T04:09:18.879061+00:00",
+              "from": "2026-11-04T04:09:18.879061+00:00",
+              "to": "2026-11-05T04:09:18.879061+00:00",
+              "readings": 1437
+            },
+            "geometry": {
+              "solar": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0008857938718165315,
+                "maximumYErrorPx": 0.0004994003358120835
+              },
+              "consumption": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0008857938718165315,
+                "maximumYErrorPx": 0.0007752808988925608
+              },
+              "battery": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0008857938718165315,
+                "maximumYErrorPx": 0.0007998152140515913
+              }
+            }
+          },
+          {
+            "device": "mobile emulation",
+            "action": "empty -> CLI persisted -> manual Refresh",
+            "calls": {
+              "latest": 2,
+              "history": 2
+            },
+            "snapshot": {
+              "asOf": "2026-11-05T04:09:20.00132+00:00",
+              "from": "2026-11-04T04:09:20.00132+00:00",
+              "to": "2026-11-05T04:09:20.00132+00:00",
+              "readings": 1437
+            },
+            "geometry": {
+              "solar": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0006629526463370894,
+                "maximumYErrorPx": 0.0004994003358120835
+              },
+              "consumption": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0006629526463370894,
+                "maximumYErrorPx": 0.0007752808988925608
+              },
+              "battery": {
+                "vertices": 1437,
+                "maximumXErrorPx": 0.0006629526463370894,
+                "maximumYErrorPx": 0.0007998152140515913
+              }
+            }
+          },
+          {
+            "device": "desktop",
+            "action": "navigation, exact keys, UTC-minute buttons, pointer/touch, synchronized markers, History Refresh retention",
+            "exact": {
+              "mode": "observation",
+              "measuredAt": "2026-11-05T04:04:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:04:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 496,
+                "batteryStateOfChargePercent": 31.58
+              }
+            },
+            "minute": {
+              "mode": "minute",
+              "measuredAt": "2026-11-05T04:03:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:03:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 504,
+                "batteryStateOfChargePercent": 31.66
+              }
+            },
+            "capturedSelection": {
+              "mode": "observation",
+              "measuredAt": "2026-11-04T17:21:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-04T17:21:46.449870Z",
+                "solarPowerW": 4145,
+                "consumptionPowerW": 632,
+                "batteryStateOfChargePercent": 75.86
+              }
+            },
+            "calls": {
+              "latest": 2,
+              "history": 3
+            },
+            "previousAsOf": "2026-11-05T04:09:18.879061+00:00",
+            "refreshedAsOf": "2026-11-05T04:09:23.680307+00:00"
+          },
+          {
+            "device": "mobile emulation",
+            "action": "navigation, exact keys, UTC-minute buttons, pointer/touch, synchronized markers, History Refresh retention",
+            "exact": {
+              "mode": "observation",
+              "measuredAt": "2026-11-05T04:04:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:04:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 496,
+                "batteryStateOfChargePercent": 31.58
+              }
+            },
+            "minute": {
+              "mode": "minute",
+              "measuredAt": "2026-11-05T04:03:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-05T04:03:46.449870Z",
+                "solarPowerW": 0,
+                "consumptionPowerW": 504,
+                "batteryStateOfChargePercent": 31.66
+              }
+            },
+            "capturedSelection": {
+              "mode": "observation",
+              "measuredAt": "2026-11-04T17:21:46.44987+00:00",
+              "matchesSql": true,
+              "values": {
+                "installationId": "residential-demo",
+                "measuredAt": "2026-11-04T17:21:46.449870Z",
+                "solarPowerW": 4145,
+                "consumptionPowerW": 632,
+                "batteryStateOfChargePercent": 75.86
+              }
+            },
+            "calls": {
+              "latest": 2,
+              "history": 3
+            },
+            "previousAsOf": "2026-11-05T04:09:20.00132+00:00",
+            "refreshedAsOf": "2026-11-05T04:09:26.581759+00:00"
+          }
+        ]
+      },
+      "persistence": {
+        "shutdownAndRestart": {
+          "hostPortsClosed": true,
+          "checkedAt": "2026-11-05T04:16:16.4095349+00:00",
+          "postgresStopRestart": true,
+          "hostShutdown": "API Ctrl+C shutdown observed; npm.cmd termination confirmed Y",
+          "volumePreserved": true,
+          "commands": [
+            "docker compose -p <same-project> --env-file .env stop postgres",
+            "docker compose -p <same-project> --env-file .env up -d --wait --wait-timeout 60 postgres"
+          ]
+        },
+        "before": {
+          "checkedAt": "2026-11-05T04:12:24.869Z",
+          "persistedCount": 1441,
+          "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+          "latest": {
+            "asOf": "2026-11-05T04:12:24.8136199+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+              "solarPowerW": 0,
+              "consumptionPowerW": 487,
+              "batteryStateOfChargePercent": 31.49
+            }
+          },
+          "history": {
+            "asOf": "2026-11-05T04:12:24.829833+00:00",
+            "from": "2026-11-04T04:12:24.829833+00:00",
+            "to": "2026-11-05T04:12:24.829833+00:00",
+            "count": 1434,
+            "matchesSqlSubset": true
+          }
+        },
+        "after": {
+          "checkedAt": "2026-11-05T04:21:29.284Z",
+          "persistedCount": 1441,
+          "postgresSha256": "a7d2d83a8faf196491294f509326714c4e72f26cd69d4f591571db86489e5798",
+          "latest": {
+            "asOf": "2026-11-05T04:21:28.7616522+00:00",
+            "reading": {
+              "installationId": "residential-demo",
+              "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+              "solarPowerW": 0,
+              "consumptionPowerW": 487,
+              "batteryStateOfChargePercent": 31.49
+            }
+          },
+          "history": {
+            "asOf": "2026-11-05T04:21:28.888786+00:00",
+            "from": "2026-11-04T04:21:28.888786+00:00",
+            "to": "2026-11-05T04:21:28.888786+00:00",
+            "count": 1425,
+            "matchesSqlSubset": true
+          },
+          "browserReload": {
+            "passed": true,
+            "browser": "156.0.8078.4",
+            "measuredAt": "2026-11-05T04:05:46.44987+00:00"
+          }
+        }
+      },
+      "setupTimes": {
+        "compose-up": {
+          "exitCode": 0,
+          "seconds": 7.769
+        },
+        "restore": {
+          "exitCode": 0,
+          "seconds": 29.476
+        },
+        "build": {
+          "exitCode": 0,
+          "seconds": 22.38
+        },
+        "migrate": {
+          "exitCode": 0,
+          "seconds": 7.995
+        },
+        "npm-ci": {
+          "exitCode": 0,
+          "seconds": 19.726
+        },
+        "frontend-lint": {
+          "exitCode": 0,
+          "seconds": 1.687
+        },
+        "frontend-build": {
+          "exitCode": 0,
+          "seconds": 4.426
+        },
+        "frontend-unit": {
+          "exitCode": 0,
+          "seconds": 2.737
+        },
+        "browser-install": {
+          "exitCode": 0,
+          "seconds": 8.631
+        }
+      }
+    }
+  },
+  "captures": [
+    {
+      "file": "overview-desktop.png",
+      "fullPage": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "checked-at",
+          "dateTime": "2026-11-05T04:06:02.7346246+00:00"
+        },
+        {
+          "testId": "power-history-asof",
+          "dateTime": "2026-11-05T04:06:02.731437+00:00"
+        },
+        {
+          "testId": "battery-history-asof",
+          "dateTime": "2026-11-05T04:06:02.731437+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 1440,
+        "height": 1298
+      },
+      "sha256": "68f1e4033b84d7588ef075a2a5574bbc2e1e34782361fe2fe95500fd9fb1d6ef",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:04.8437613+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 18.393891,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    },
+    {
+      "file": "overview-mobile.png",
+      "fullPage": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "checked-at",
+          "dateTime": "2026-11-05T04:06:03.8674938+00:00"
+        },
+        {
+          "testId": "power-history-asof",
+          "dateTime": "2026-11-05T04:06:03.865895+00:00"
+        },
+        {
+          "testId": "battery-history-asof",
+          "dateTime": "2026-11-05T04:06:03.865895+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "7c842e33ce6a824d3bd2ef1d0d2dab3f1e4dc84fe321afca23233e1b84720d00",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:05.3230773+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 18.873207,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    },
+    {
+      "file": "overview-mobile-full.png",
+      "fullPage": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "checked-at",
+          "dateTime": "2026-11-05T04:06:03.8674938+00:00"
+        },
+        {
+          "testId": "power-history-asof",
+          "dateTime": "2026-11-05T04:06:03.865895+00:00"
+        },
+        {
+          "testId": "battery-history-asof",
+          "dateTime": "2026-11-05T04:06:03.865895+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 390,
+        "height": 2001
+      },
+      "sha256": "336ef4e4bbc9e2ea9832005ed48b3936ff1d26009438bc33d64a0448eadff8f5",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:05.4782322+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 19.028362,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    },
+    {
+      "file": "history-desktop.png",
+      "fullPage": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1186
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "history-asof",
+          "dateTime": "2026-11-05T04:06:08.46719+00:00"
+        },
+        {
+          "testId": "history-selected-time",
+          "dateTime": "2026-11-04T17:17:46.44987+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 1440,
+        "height": 1456
+      },
+      "sha256": "4127a8549a3003f4212f969dab001c410912418ac8a7809f68d86f77031f33c3",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:13.2649666+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 26.815096,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    },
+    {
+      "file": "history-mobile.png",
+      "fullPage": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "history-asof",
+          "dateTime": "2026-11-05T04:06:12.654626+00:00"
+        },
+        {
+          "testId": "history-selected-time",
+          "dateTime": "2026-11-04T17:18:46.44987+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "00ad9029dfb6b8258ab347c41267302e9bcf294c8a944c721d11c4790f74b0f3",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:13.7754244+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 27.325554,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    },
+    {
+      "file": "history-mobile-full.png",
+      "fullPage": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 1,
+      "horizontalOverflow": false,
+      "serverReferences": [
+        {
+          "testId": "history-asof",
+          "dateTime": "2026-11-05T04:06:12.654626+00:00"
+        },
+        {
+          "testId": "history-selected-time",
+          "dateTime": "2026-11-04T17:18:46.44987+00:00"
+        }
+      ],
+      "fonts": {
+        "ready": true,
+        "bodyFamily": "Manrope, \"Segoe UI\", sans-serif",
+        "loadedFaces": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "800",
+            "status": "loaded"
+          }
+        ]
+      },
+      "png": {
+        "width": 390,
+        "height": 1758
+      },
+      "sha256": "4e794366199113fd440eafd67a605a9cef36dc0a88e38ad5dbc26b4c4e3b801a",
+      "freshnessCheck": {
+        "asOf": "2026-11-05T04:06:13.9622506+00:00",
+        "measuredAt": "2026-11-05T04:05:46.44987+00:00",
+        "ageSeconds": 27.51238,
+        "fresh": true
+      },
+      "provenance": "Actual app screenshot; no altered data/clock/HTTP responses"
+    }
+  ],
+  "tests": {
+    "source": "clone A, dedicated solarwatch_demo_tests and solarwatch_demo_e2e databases",
+    "commands": [
+      "dotnet test backend/src/SolarWatch.slnx --configuration Release --no-build --no-restore",
+      "npm.cmd run test:unit",
+      "npm.cmd run test:e2e"
+    ],
+    "backendUnit": 138,
+    "postgresIntegration": 58,
+    "frontendUnit": 46,
+    "playwright": 35,
+    "uniquePassed": 277,
+    "failed": 0,
+    "skipped": 0,
+    "localPlaywrightDuration": "5.5m",
+    "newRegressionTests": 0,
+    "distinction": "Existing regression cases include controlled clock/error fixtures; the separate captured demonstration uses no API mocks or clock overrides."
+  },
+  "visualReview": {
+    "method": "Agent inspected the six actual PNGs and the four approved prototype exports; not a native-device/reader audit.",
+    "references": [
+      "Overview Desktop v2",
+      "Overview Mobile v1",
+      "History Desktop v1",
+      "History Mobile v1"
+    ],
+    "preserved": [
+      "photograph",
+      "dark palette/yellow-lime-teal series",
+      "compact navigation",
+      "asymmetric Overview cards",
+      "dedicated History layout",
+      "readable mobile graphs"
+    ],
+    "relevantDifferences": [
+      "Real night-time latest solar is 0 W; other values/times and smooth residential curves replace prototype fixtures.",
+      "Real asOf, UTC offsets/microsecond identity, partial-edge coverage and exact/minute wording replace prototype review labels/controls.",
+      "Existing implemented Overview uses color accents in place of prototype metric mini-sparklines; no UI change in this delivery.",
+      "Real metadata/status details and current accessible controls produce different full-page heights; approved sources are unchanged."
+    ]
+  },
+  "cleanup": {
+    "existingVolumeNamesUnchanged": true,
+    "taskVolumesRetained": [
+      "solarwatch-demo-f01348df-a_postgres-data",
+      "solarwatch-demo-f01348df-b_postgres-data"
+    ],
+    "existingVolumeCount": 38,
+    "remainingTaskListeners": [],
+    "existingContainerCount": 6,
+    "checkedAt": "2026-11-05T04:26:28.3332619+00:00",
+    "existingContainerIdentitiesAndStatesUnchanged": true,
+    "taskContainersRemoved": true
+  },
+  "limitations": {
+    "nativeBrowserZoom": "unverified",
+    "NarratorNVDA": "unverified",
+    "physicalMobile": "unverified",
+    "riskAcceptance": "Existing limited local-portfolio Phase 5 acceptance; not accessibility certification or production deployment authorization.",
+    "timePolicy": "Same T/seed/profile reproduces the dataset, not later API asOf/window/freshness. Fresh future demos capture a new server T; changing T changes the fixture.",
+    "model": "Fixed fictional UTC schedule; 50% initial battery per window, 10 kWh/2 kW assumed lossless balance. No measured flows, energy totals, real weather or forecasts.",
+    "screenshots": "Raw application captures, fresh at their recorded server checks; not yet personally approved."
+  },
+  "helpers": {
+    "tools/capture.mjs": "38ea02e91c3cba9e7848e8d2244f9cf1fcdcb6b89d5a4f464bd02f772d23fa41",
+    "tools/dataset.mjs": "50fb28eb1393904b56660350a25003fead07eb5a1209027c65409e90b3003dc6",
+    "tools/environment.ps1": "31bdc7b2fdfcabf896338ef5206f2ffd4564c38f64cb2c8b8b7e6ce28ed2cf0a",
+    "tools/persistence.mjs": "73f4461888f66a046b9d96ad247873c01b10c28165f8377bf4f0a6171e1ba7e9",
+    "tools/prepare.ps1": "a39d11ca5e230889a21886909949372f09ab56f7617f297d33b1e1ae41ad7c57"
+  },
+  "photo": {
+    "sha256": "b02b77574af92fcfe16b60fbacb3c1b50273c6b54eb5d3d48ee3e04ae1e1969c",
+    "rights": "Existing owner permission recorded in docs/design/ASSETS.md; no third-party reference image or font binary added."
+  },
+  "helperHashFormat": "SHA-256 of UTF-8 helper content with LF line endings (the executed files used LF); normalize CRLF to LF after a Windows checkout."
+}
