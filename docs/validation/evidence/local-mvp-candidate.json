@@ -1,0 +1,518 @@
+{
+  "status": "GO for personal review within the local portfolio scope; Phase 6/MVP pending. No merge/tag/Release authorization.",
+  "source": {
+    "remote": "https://github.com/libanlsilva/solarwatch.git",
+    "candidateCommit": "a469498a237eeb06fbf546357b2c1d7d676d308a",
+    "cloneMethod": "Actual independent git clone --depth 1 --branch main, while main was this candidate",
+    "applicationModified": false,
+    "initialAndFinalCloneGitStatusClean": true
+  },
+  "environment": {
+    "versions": {
+      "sdk": "10.0.402",
+      "node": "v24.15.0",
+      "npm": "11.12.1",
+      "git": "git version 2.53.0.windows.3",
+      "docker": "Docker version 29.5.2, build 79eb04c",
+      "compose": "Docker Compose version v5.1.4",
+      "powershell": "5.1.26100.9818",
+      "windows": "Microsoft Windows NT 10.0.26300.0",
+      "parentBuildOverrideNames": []
+    },
+    "configuration": "Fresh ignored random credentials, new isolated Compose volume/project, empty per-run app/npm settings, explicit public NuGet source; no copied .env/user secrets/build outputs. Normal installed tools and package/image/browser caches reused; not a fresh OS/VM.",
+    "project": "solarwatch-demo-final-78d6680f",
+    "ports": {
+      "databasePort": 5560,
+      "apiPort": 5291,
+      "webPort": 5293
+    },
+    "absentBeforeSetup": {
+      "backend/src/SolarWatch.Api/bin": true,
+      "frontend/node_modules": true,
+      "backend/src/SolarWatch.Api/obj": true,
+      ".env": true,
+      "frontend/dist": true
+    },
+    "profileSecretsAbsent": true
+  },
+  "commands": {
+    "prepare": "powershell -NoProfile -File <clone>/docs/demo/tools/prepare.ps1 -Clone <clone> -State <state> -Project solarwatch-demo-final-78d6680f -Commit a469498a237eeb06fbf546357b2c1d7d676d308a -DatabasePort 5560 -ApiPort 5291 -WebPort 5293",
+    "setupSteps": [
+      {
+        "exitCode": 0,
+        "arguments": [
+          "compose",
+          "-p",
+          "solarwatch-demo-final-78d6680f",
+          "--env-file",
+          ".env",
+          "up",
+          "-d",
+          "--wait",
+          "--wait-timeout",
+          "60",
+          "postgres"
+        ],
+        "name": "compose-up",
+        "seconds": 7.196,
+        "executable": "docker"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "restore",
+          "backend/src/SolarWatch.slnx",
+          "--configfile",
+          "<state>/NuGet.Config"
+        ],
+        "name": "restore",
+        "seconds": 12.875,
+        "executable": "dotnet"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "build",
+          "backend/src/SolarWatch.slnx",
+          "--configuration",
+          "Release",
+          "--no-restore"
+        ],
+        "name": "build",
+        "seconds": 46.543,
+        "executable": "dotnet"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "backend/src/SolarWatch.Api/bin/Release/net10.0/SolarWatch.Api.dll",
+          "migrate"
+        ],
+        "name": "migrate",
+        "seconds": 6.832,
+        "executable": "dotnet"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "ci"
+        ],
+        "name": "npm-ci",
+        "seconds": 37.175,
+        "executable": "npm.cmd"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "run",
+          "lint"
+        ],
+        "name": "frontend-lint",
+        "seconds": 1.112,
+        "executable": "npm.cmd"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "run",
+          "build"
+        ],
+        "name": "frontend-build",
+        "seconds": 4.252,
+        "executable": "npm.cmd"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "name": "frontend-unit",
+        "seconds": 2.013,
+        "executable": "npm.cmd"
+      },
+      {
+        "exitCode": 0,
+        "arguments": [
+          "playwright",
+          "install",
+          "--no-shell",
+          "chromium"
+        ],
+        "name": "browser-install",
+        "seconds": 4.527,
+        "executable": "npx.cmd"
+      }
+    ],
+    "api": {
+      "environmentHelper": "<clone>/docs/demo/tools/environment.ps1 -Clone <clone> -State <state> -Mode Api; fresh terminal, source once",
+      "workingDirectory": "<clone>",
+      "command": "dotnet backend/src/SolarWatch.Api/bin/Release/net10.0/SolarWatch.Api.dll"
+    },
+    "frontend": {
+      "environmentHelper": "same helper with Mode Frontend; separate fresh terminal",
+      "workingDirectory": "<clone>/frontend",
+      "command": "npm.cmd run preview -- --host 127.0.0.1 --port 5293 --strictPort"
+    },
+    "tests": [
+      {
+        "exitCode": 0,
+        "command": "dotnet test backend/src/SolarWatch.slnx --configuration Release --no-build --no-restore",
+        "seconds": 257.30843039999996
+      },
+      {
+        "exitCode": 0,
+        "command": "npm.cmd run test:e2e",
+        "seconds": 493.03744389999997
+      }
+    ],
+    "testEnvironment": "same helper with Mode Tests; dedicated solarwatch_demo_tests / solarwatch_demo_e2e, no demo connection",
+    "smoke": "node docs/validation/tools/local-mvp-smoke.mjs <clone> <state>",
+    "simulator": [
+      "dotnet",
+      "simulator/SolarWatch.Simulator/bin/Release/net10.0/SolarWatch.Simulator.dll",
+      "--history-24h",
+      "--profile",
+      "residential-v1",
+      "--seed",
+      "42",
+      "--end-at",
+      "2026-11-05T06:23:51.3125391+00:00",
+      "--api-url",
+      "http://127.0.0.1:5291"
+    ],
+    "persistence": [
+      "node <clone>/docs/demo/tools/persistence.mjs <clone> <state> before",
+      "Ctrl+C both host apps; confirm Y for npm.cmd",
+      "docker compose -p <same-project> --env-file <clone>/.env -f <clone>/docker-compose.yml stop postgres",
+      "docker compose -p <same-project> --env-file <clone>/.env -f <clone>/docker-compose.yml up -d --wait --wait-timeout 60 postgres",
+      "restart same host commands/configuration",
+      "node <clone>/docs/demo/tools/persistence.mjs <clone> <state> after"
+    ],
+    "cleanup": "docker compose -p <owned-project> --env-file <clone>/.env -f <clone>/docker-compose.yml down (no -v)"
+  },
+  "emptyState": {
+    "latest": {
+      "status": 200,
+      "body": {
+        "asOf": "2026-11-05T06:23:47.4288616+00:00",
+        "reading": null
+      }
+    },
+    "history": {
+      "status": 200,
+      "body": {
+        "asOf": "2026-11-05T06:23:47.453576+00:00",
+        "from": "2026-11-04T06:23:47.453576+00:00",
+        "to": "2026-11-05T06:23:47.453576+00:00",
+        "readings": []
+      }
+    },
+    "sqlRows": 0
+  },
+  "dataset": {
+    "sourceCommit": "a469498a237eeb06fbf546357b2c1d7d676d308a",
+    "profile": "residential-v1",
+    "seed": 42,
+    "originalReference": "2026-11-05T06:23:51.3125391+00:00",
+    "normalizedReference": "2026-11-05T06:23:51.312539+00:00",
+    "simulatorLibrary": "SolarWatch.Simulator/1.0.0",
+    "simulatorInformationalVersion": "1.0.0+a469498a237eeb06fbf546357b2c1d7d676d308a",
+    "postgresVersion": "17.11",
+    "persistedCount": 1441,
+    "first": {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-04T06:23:51.312539Z",
+      "solarPowerW": 0,
+      "consumptionPowerW": 398,
+      "batteryStateOfChargePercent": 50
+    },
+    "last": {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-05T06:23:51.312539Z",
+      "solarPowerW": 0,
+      "consumptionPowerW": 398,
+      "batteryStateOfChargePercent": 22.84
+    },
+    "canonicalFormat": "UTF-8; no BOM/header; LF including final LF; measuredAt O (7 fraction digits),solar F0,home F0,battery F2; invariant culture",
+    "acknowledgmentsSha256": "37d7fb75c30294ce15fc3f8cc485888e9a0df7dab0a0daf1cc83c4527432c5e4",
+    "postgresSha256": "37d7fb75c30294ce15fc3f8cc485888e9a0df7dab0a0daf1cc83c4527432c5e4",
+    "latest": {
+      "asOf": "2026-11-05T06:24:12.0832428+00:00",
+      "reading": {
+        "installationId": "residential-demo",
+        "measuredAt": "2026-11-05T06:23:51.312539+00:00",
+        "solarPowerW": 0,
+        "consumptionPowerW": 398,
+        "batteryStateOfChargePercent": 22.84
+      }
+    },
+    "history": {
+      "asOf": "2026-11-05T06:24:12.096681+00:00",
+      "from": "2026-11-04T06:24:12.096681+00:00",
+      "to": "2026-11-05T06:24:12.096681+00:00",
+      "count": 1440,
+      "matchesSqlSubset": true
+    },
+    "summary": "Summary (history-24h): requested=1441, attempted=1441, accepted=1441, rejected=0, conflicts=0, errors=0, uncertain=0, unattempted=0, elapsedSeconds=19.760. No automatic retries were made."
+  },
+  "browser": {
+    "sourceCommit": "a469498a237eeb06fbf546357b2c1d7d676d308a",
+    "browser": "156.0.8078.4",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "locale": "en-US",
+    "timezone": "America/Havana",
+    "apiMocks": false,
+    "clockOverrides": false,
+    "newScreenshots": 0,
+    "result": "pass",
+    "latestMeasuredAt": "2026-11-05T06:23:51.312539+00:00",
+    "overviewAsOf": "2026-11-05T06:24:12.7952003+00:00",
+    "freshAtCheck": true,
+    "history": {
+      "asOf": "2026-11-05T06:24:12.789222+00:00",
+      "from": "2026-11-04T06:24:12.789222+00:00",
+      "to": "2026-11-05T06:24:12.789222+00:00",
+      "rows": 1440,
+      "matchesSqlSubset": true
+    },
+    "selectedReading": {
+      "installationId": "residential-demo",
+      "measuredAt": "2026-11-05T06:22:51.312539Z",
+      "solarPowerW": 0,
+      "consumptionPowerW": 395,
+      "batteryStateOfChargePercent": 22.91
+    },
+    "synchronizedMarkers": 3,
+    "noPollingOrSelectionFetches": true,
+    "historyOnlyRefreshRetainsSelection": true,
+    "navigation": [
+      "Overview",
+      "History",
+      "Installation",
+      "Overview"
+    ],
+    "javascriptErrors": []
+  },
+  "persistence": {
+    "before": {
+      "checkedAt": "2026-11-05T06:25:00.089Z",
+      "persistedCount": 1441,
+      "postgresSha256": "37d7fb75c30294ce15fc3f8cc485888e9a0df7dab0a0daf1cc83c4527432c5e4",
+      "latest": {
+        "asOf": "2026-11-05T06:24:59.9929357+00:00",
+        "reading": {
+          "installationId": "residential-demo",
+          "measuredAt": "2026-11-05T06:23:51.312539+00:00",
+          "solarPowerW": 0,
+          "consumptionPowerW": 398,
+          "batteryStateOfChargePercent": 22.84
+        }
+      },
+      "history": {
+        "asOf": "2026-11-05T06:25:00.018146+00:00",
+        "from": "2026-11-04T06:25:00.018146+00:00",
+        "to": "2026-11-05T06:25:00.018146+00:00",
+        "count": 1439,
+        "matchesSqlSubset": true
+      }
+    },
+    "after": {
+      "checkedAt": "2026-11-05T06:26:27.649Z",
+      "persistedCount": 1441,
+      "postgresSha256": "37d7fb75c30294ce15fc3f8cc485888e9a0df7dab0a0daf1cc83c4527432c5e4",
+      "latest": {
+        "asOf": "2026-11-05T06:26:26.9078061+00:00",
+        "reading": {
+          "installationId": "residential-demo",
+          "measuredAt": "2026-11-05T06:23:51.312539+00:00",
+          "solarPowerW": 0,
+          "consumptionPowerW": 398,
+          "batteryStateOfChargePercent": 22.84
+        }
+      },
+      "history": {
+        "asOf": "2026-11-05T06:26:27.063459+00:00",
+        "from": "2026-11-04T06:26:27.063459+00:00",
+        "to": "2026-11-05T06:26:27.063459+00:00",
+        "count": 1438,
+        "matchesSqlSubset": true
+      },
+      "browserReload": {
+        "passed": true,
+        "browser": "156.0.8078.4",
+        "measuredAt": "2026-11-05T06:23:51.312539+00:00"
+      }
+    },
+    "lifecycle": {
+      "sameProjectAndConfiguration": true,
+      "postgresStopStart": true,
+      "volumeRetained": true,
+      "hostShutdown": [
+        {
+          "url": "http://127.0.0.1:5291/api/readings/latest",
+          "stopped": true
+        },
+        {
+          "url": "http://127.0.0.1:5293/",
+          "stopped": true
+        }
+      ],
+      "checkedAt": "2026-11-05T06:25:42.2075223+00:00",
+      "commands": [
+        "Ctrl+C API; Ctrl+C frontend and confirm Y",
+        "docker compose -p <same-project> --env-file <clone>/.env -f <clone>/docker-compose.yml stop postgres",
+        "docker compose -p <same-project> --env-file <clone>/.env -f <clone>/docker-compose.yml up -d --wait --wait-timeout 60 postgres"
+      ]
+    }
+  },
+  "tests": {
+    "backendUnit": 138,
+    "realPostgresIntegration": 58,
+    "frontendUnit": 46,
+    "playwright": 35,
+    "uniquePassed": 277,
+    "failed": 0,
+    "skipped": 0,
+    "newRegressionTests": 0,
+    "localPlaywrightSummary": "35 passed (8.2m)",
+    "distinction": "Existing clock/error/latency/font-bounding fixtures remain identified in test sources. The new candidate smoke uses real PostgreSQL/API, no HTTP/font routing, no clock overrides, no screenshots."
+  },
+  "ci": {
+    "candidateMain": [
+      {
+        "name": "persisted-reading",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/libanlsilva/solarwatch/actions/runs/41966082400/job/127043291161",
+        "headSha": "a469498a237eeb06fbf546357b2c1d7d676d308a"
+      },
+      {
+        "name": "build-and-test",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/libanlsilva/solarwatch/actions/runs/41966082372/job/127043291124",
+        "headSha": "a469498a237eeb06fbf546357b2c1d7d676d308a"
+      },
+      {
+        "name": "lint-and-build",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/libanlsilva/solarwatch/actions/runs/41966082428/job/127043290909",
+        "headSha": "a469498a237eeb06fbf546357b2c1d7d676d308a"
+      }
+    ],
+    "deliveryHead": "Exact final PR-head check results are recorded in the linked PR; no self-referential commit hash is asserted here.",
+    "postIntegrationMain": "Not executed for this delivery: merge is not authorized; verify only after owner-authorized integration."
+  },
+  "security": {
+    "candidateCommit": "a469498a237eeb06fbf546357b2c1d7d676d308a",
+    "trackedFilesReviewedForKnownSecretAndPatterns": 267,
+    "binaryFiles": 83,
+    "highConfidenceCredentialPatternMatches": 0,
+    "knownFreshPasswordAbsent": true,
+    "unintendedTrackedArtifacts": 0,
+    "ignoredGeneratedConfiguration": [
+      ".env",
+      "frontend/node_modules",
+      "frontend/dist",
+      "backend/src/SolarWatch.Api/bin",
+      "backend/src/SolarWatch.Api/obj"
+    ],
+    "reviewedSourceSha256": {
+      "backend/src/SolarWatch.Api/LocalIngestion.cs": "4f0629c14f827400149680eb2ba28d751483720ada1ede759879242af5564d55",
+      "docker-compose.yml": "82d0af5f170b93a78c4a93e8d9a521de732d87e8771be3b213b13eee5869b98f",
+      "frontend/vite.config.ts": "f24a4e3fcbfb9f9b4398ddfc8b9a92f37a7b3881e4e5c85c017e9ca36130f31c",
+      "backend/src/SolarWatch.Api/Properties/launchSettings.json": "a3e77fde1f69d786d4806dee8af975fab6009ee64a3da091291c3a7df23e92ff",
+      "backend/src/SolarWatch.Api/appsettings.json": "2d8bb40059df22089b94c025be8baad5a869b72d4d755d199c872f03bfe6f225",
+      ".env.example": "0c9626a1e63095c52940a3f6f258073144891d01c37858f5ded86fb01b000e5c",
+      ".gitignore": "9520018dbdf402c8854b4b5ca4c1140ef493e1c45e64a7999cc28b497622d88c",
+      "LICENSE": "0ddc863f9ccd17260b63b121c42c0973496547dda59190fc04ee59f6ae9b7cdf",
+      "docs/design/ASSETS.md": "1e112fb27cb54d12baca632fcbcb29d122de405d24bd252b75d010633c463555"
+    },
+    "boundary": "Focused tracked-file/configuration review plus existing integration tests; not a penetration test, dependency vulnerability assessment, production-hardening review or full Git-history secret audit.",
+    "assetDisposition": "MIT repository code; supplied photograph has existing owner publication permission in docs/design/ASSETS.md; no independent standalone-photo MIT license claim; no font binary added.",
+    "frontendBuildFilesCheckedForFreshPassword": 5,
+    "freshPasswordAbsentFromFrontendBuild": true
+  },
+  "bindings": {
+    "hostStartupArguments": [
+      "ASPNETCORE_URLS=http://127.0.0.1:5291",
+      "npm.cmd run preview -- --host 127.0.0.1 --port 5293 --strictPort"
+    ],
+    "observedLocalEndpoints": [
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 5293
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 5291
+      }
+    ],
+    "http": [
+      {
+        "url": "http://127.0.0.1:5291/api/readings/latest",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5293/",
+        "status": 200
+      }
+    ],
+    "postgresPublishedBinding": "127.0.0.1:5560",
+    "nativeQueryLimitation": "The State=Listen CIM filter returned no entries while HTTP was responding; unfiltered endpoint addresses, configured startup bindings and actual loopback HTTP were checked instead. No claim that the filtered listener query passed.",
+    "checkedAt": "2026-11-05T06:16:47.5518436+00:00"
+  },
+  "cleanup": {
+    "allExistingVolumesPreserved": true,
+    "existingContainerIdentitiesAndStatesUnchanged": true,
+    "existingContainerCount": 6,
+    "command": "docker compose -p <owned-project> --env-file <clone>/.env -f <clone>/docker-compose.yml down (no -v)",
+    "taskVolumeRetained": "solarwatch-demo-final-78d6680f_postgres-data",
+    "existingVolumeCount": 40,
+    "hostHttpChecksAfterStop": [
+      {
+        "responding": false,
+        "url": "http://127.0.0.1:5291/api/readings/latest"
+      },
+      {
+        "responding": false,
+        "url": "http://127.0.0.1:5293/"
+      }
+    ],
+    "checkedAt": "2026-11-05T06:27:41.7848314+00:00",
+    "taskContainersRemoved": true
+  },
+  "preservedEvidence": {
+    "originalDemoDesignRuntimeAndWorkflowDiffEmpty": true,
+    "approvedCaptureSha256": {
+      "overview-desktop.png": "68f1e4033b84d7588ef075a2a5574bbc2e1e34782361fe2fe95500fd9fb1d6ef",
+      "overview-mobile.png": "7c842e33ce6a824d3bd2ef1d0d2dab3f1e4dc84fe321afca23233e1b84720d00",
+      "overview-mobile-full.png": "336ef4e4bbc9e2ea9832005ed48b3936ff1d26009438bc33d64a0448eadff8f5",
+      "history-desktop.png": "4127a8549a3003f4212f969dab001c410912418ac8a7809f68d86f77031f33c3",
+      "history-mobile.png": "00ad9029dfb6b8258ab347c41267302e9bcf294c8a944c721d11c4790f74b0f3",
+      "history-mobile-full.png": "4e794366199113fd440eafd67a605a9cef36dc0a88e38ad5dbc26b4c4e3b801a"
+    },
+    "originalDemoManifestSha256": "a216cf7d13bca878540bb99ed995141ebcdc5583653d08d31fe5ef3e12c1dcff",
+    "originalArchiveStatus": "Historical pre-review wording retained; definitive owner approval recorded in README/roadmap."
+  },
+  "newHelper": {
+    "path": "docs/validation/tools/local-mvp-smoke.mjs",
+    "sha256": "be833619e26275a47cb17cc956392e39c64ca2c63e823264098b94a33534155a",
+    "encoding": "UTF-8 / LF"
+  },
+  "limitations": {
+    "nativeBrowserZoom": "unverified",
+    "NarratorNVDA": "unverified",
+    "physicalMobile": "unverified",
+    "nativeAutomation": "No further inaccessible-channel attempts made; existing four attempts and Windows procedure retained.",
+    "riskDisposition": "Existing Phase 5 limited local acceptance preserved. Owner must decide final release risk disposition expressly; no certification or production-deployment claim.",
+    "movingTime": "New current server reference differs from archived demo; exact dataset and later live API windows/freshness are different guarantees.",
+    "model": "Original residential-v1 fictional UTC schedule and simplified battery assumptions unchanged.",
+    "publication": "Markdown-only v0.1.0 proposal; no Git tag or GitHub Release object created."
+  }
+}
