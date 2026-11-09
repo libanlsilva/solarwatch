@@ -28,7 +28,9 @@ public sealed class ResidentialLiveGenerator(int seed, double initialChargePerce
         previousAt = at;
         previousSolar = solar;
         previousHome = home;
-        return new(InstallationReading.DemoInstallationId, at, solar, home,
-            (double)decimal.Round(charge, 2, MidpointRounding.AwayFromZero));
+        var soc = (double)decimal.Round(charge, 2, MidpointRounding.AwayFromZero);
+        return new(InstallationReading.DemoInstallationId, at, solar, home, soc,
+            model.GridVoltageV(hour), model.GridFrequencyHz(hour), ResidentialModel.InverterTemperatureC(solar, home),
+            ResidentialModel.BatteryVoltageV(soc, solar - home));
     }
 }

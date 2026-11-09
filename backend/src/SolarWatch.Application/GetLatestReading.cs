@@ -3,11 +3,14 @@ using SolarWatch.Domain;
 namespace SolarWatch.Application;
 
 public sealed record ReadingSnapshot(string InstallationId, DateTimeOffset MeasuredAt,
-    double SolarPowerW, double ConsumptionPowerW, double BatteryStateOfChargePercent)
+    double SolarPowerW, double ConsumptionPowerW, double BatteryStateOfChargePercent,
+    double? GridVoltageV = null, double? GridFrequencyHz = null,
+    double? InverterTemperatureC = null, double? BatteryVoltageV = null)
 {
     public static ReadingSnapshot From(InstallationReading reading) => new(
         reading.InstallationId, reading.MeasuredAt, reading.SolarPowerW,
-        reading.ConsumptionPowerW, reading.BatteryStateOfChargePercent);
+        reading.ConsumptionPowerW, reading.BatteryStateOfChargePercent,
+        reading.GridVoltageV, reading.GridFrequencyHz, reading.InverterTemperatureC, reading.BatteryVoltageV);
 }
 public sealed record LatestReadingResponse(DateTimeOffset AsOf, ReadingSnapshot? Reading);
 

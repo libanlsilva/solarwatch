@@ -42,3 +42,13 @@ Backend unit tests exercise actual reading rules and application mapping/referen
 Frontend unit tests use Node's built-in test runner for freshness boundaries and response validation. Playwright runs a real Release API, production frontend preview, and dedicated `_e2e` PostgreSQL database. Tests cover persisted fixture values, browser clock skew, local zone display, mobile overflow, loading/empty/error/retry states, failed-refresh retention, stale values, and manual discovery of a fresh seed. External API responses are not mocked for the successful database journey.
 
 See the [README](../../README.md) for exact setup and validation commands. Test databases are deliberately separate from the development demo; test initialization clears only their demo readings.
+
+## Optional electrical parameters (v0.2)
+
+Latest, History and ingestion accept four optional fields: `gridVoltageV` (0–1000 V),
+`gridFrequencyHz` (40–70 Hz), `inverterTemperatureC` (−40–150 °C) and `batteryVoltageV` (0–1000 V).
+They are `null`/omitted for readings written before v0.2 (nullable columns, migration
+`AddElectricalParameters`) and for the reproducible 24-hour profile, which is unchanged. Out-of-range
+or non-finite values return a 400 validation problem and persist nothing. Live continuous mode with
+`--profile residential-v1` emits them: ~230 V grid, ~50 Hz, inverter temperature rising with solar
+output and a 48 V battery bank whose voltage follows charge and load. All values are synthetic.

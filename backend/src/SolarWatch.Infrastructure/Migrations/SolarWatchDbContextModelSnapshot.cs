@@ -34,7 +34,19 @@ namespace SolarWatch.Infrastructure.Migrations
                     b.Property<double>("BatteryStateOfChargePercent")
                         .HasColumnType("double precision");
 
+                    b.Property<double?>("BatteryVoltageV")
+                        .HasColumnType("double precision");
+
                     b.Property<double>("ConsumptionPowerW")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("GridFrequencyHz")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("GridVoltageV")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("InverterTemperatureC")
                         .HasColumnType("double precision");
 
                     b.Property<double>("SolarPowerW")
@@ -46,9 +58,17 @@ namespace SolarWatch.Infrastructure.Migrations
                         {
                             t.HasCheckConstraint("ck_readings_battery", "\"BatteryStateOfChargePercent\" >= 0 AND \"BatteryStateOfChargePercent\" <= 100");
 
+                            t.HasCheckConstraint("ck_readings_battery_voltage", "\"BatteryVoltageV\" IS NULL OR (\"BatteryVoltageV\" >= 0 AND \"BatteryVoltageV\" <= 1000)");
+
                             t.HasCheckConstraint("ck_readings_consumption", "\"ConsumptionPowerW\" >= 0 AND \"ConsumptionPowerW\" < 'Infinity'::double precision");
 
+                            t.HasCheckConstraint("ck_readings_grid_frequency", "\"GridFrequencyHz\" IS NULL OR (\"GridFrequencyHz\" >= 40 AND \"GridFrequencyHz\" <= 70)");
+
+                            t.HasCheckConstraint("ck_readings_grid_voltage", "\"GridVoltageV\" IS NULL OR (\"GridVoltageV\" >= 0 AND \"GridVoltageV\" <= 1000)");
+
                             t.HasCheckConstraint("ck_readings_installation", "\"InstallationId\" = 'residential-demo'");
+
+                            t.HasCheckConstraint("ck_readings_inverter_temperature", "\"InverterTemperatureC\" IS NULL OR (\"InverterTemperatureC\" >= -40 AND \"InverterTemperatureC\" <= 150)");
 
                             t.HasCheckConstraint("ck_readings_solar", "\"SolarPowerW\" >= 0 AND \"SolarPowerW\" < 'Infinity'::double precision");
                         });

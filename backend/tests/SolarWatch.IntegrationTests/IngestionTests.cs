@@ -162,3 +162,43 @@ public partial class LatestReadingTests
         Assert.Empty(await db.Readings.ToListAsync());
     }
 }
+
+public partial class LatestReadingTests
+{
+    [Fact]
+    public async Task Electrical_parameters_round_trip_through_ingestion_latest_and_history_and_remain_optional()
+    {
+        using var client = factory.CreateClient();
+        var electrical = Valid("2026-10-01T11:58:00Z") with
+        {
+            GridVoltageV = 231.4, GridFrequencyHz = 50.02, InverterTemperatureC = 38.5, BatteryVoltageV = 51.2
+        };
+        using var created = await client.PostAsJsonAsync("/api/readings", electrical);
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/readings", Valid("2026-10-01T11:57:00Z"))).StatusCode);
+        var latest = await client.GetFromJsonAsync<LatestReadingResponse>("/api/readings/latest");
+        Assert.Equal((231.4, 50.02, 38.5, 51.2), (latest!.Reading!.GridVoltageV!.Value, latest.Reading.GridFrequencyHz!.Value,
+            latest.Reading.InverterTemperatureC!.Value, latest.Reading.BatteryVoltageV!.Value));
+        var history = await client.GetFromJsonAsync<ReadingHistoryResponse>("/api/readings/history");
+        Assert.Null(history!.Readings[0].GridVoltageV);
+        Assert.Equal(231.4, history.Readings[1].GridVoltageV);
+    }
+
+    [Theory]
+    [InlineData("gridVoltageV", -1.0)]
+    [InlineData("gridVoltageV", 5000.0)]
+    [InlineData("gridFrequencyHz", 10.0)]
+    [InlineData("inverterTemperatureC", 500.0)]
+    [InlineData("batteryVoltageV", -5.0)]
+    public async Task Out_of_range_electrical_parameters_are_rejected_without_persisting(string field, double value)
+    {
+        using var client = factory.CreateClient();
+        var body = new Dictionary<string, object> { ["installationId"] = "residential-demo",
+            ["measuredAt"] = "2026-10-01T11:58:00Z", ["solarPowerW"] = 1, ["consumptionPowerW"] = 1,
+            ["batteryStateOfChargePercent"] = 1, [field] = value };
+        using var response = await client.PostAsJsonAsync("/api/readings", body);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await using var db = OpenDb();
+        Assert.Equal(0, await db.Readings.CountAsync());
+    }
+}
