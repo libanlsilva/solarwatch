@@ -10,7 +10,7 @@ public sealed record SubmitReadingRequest(string? InstallationId, string? Measur
 public sealed record SubmitReadingResult(LatestReadingResponse? Accepted,
     Dictionary<string, string[]> Errors, bool IsDuplicate = false);
 
-public sealed class SubmitReading(IReadingStore store, TimeProvider clock)
+public sealed class SubmitReading(IReadingStore store, TimeProvider clock, IReadingPublisher? publisher = null)
 {
     public async Task<SubmitReadingResult> ExecuteAsync(SubmitReadingRequest request, CancellationToken cancellationToken)
     {
@@ -42,6 +42,24 @@ public sealed class SubmitReading(IReadingStore store, TimeProvider clock)
             request.ConsumptionPowerW!.Value, request.BatteryStateOfChargePercent!.Value, now,
             request.GridVoltageV, request.GridFrequencyHz, request.InverterTemperatureC, request.BatteryVoltageV);
         if (!await store.TryAddAsync(reading, cancellationToken)) return new(null, errors, IsDuplicate: true);
-        return new(new LatestReadingResponse(clock.GetUtcNow(), ReadingSnapshot.From(reading)), errors);
+        var accepted = new LatestReadingResponse(clock.GetUtcNow(), ReadingSnapshot.From(reading));
+        await PublishBestEffortAsync(accepted);
+        return new(accepted, errors);
+    }
+
+    // A live-push failure must never fail or undo an already committed ingestion, and a slow
+    // subscriber must not delay the acknowledgment: the push gets its own short deadline.
+    private async Task PublishBestEffortAsync(LatestReadingResponse accepted)
+    {
+        if (publisher is null) return;
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+            await publisher.PublishAsync(accepted, timeout.Token);
+        }
+        catch (Exception)
+        {
+            // Subscribers resynchronize through /api/readings/latest after reconnecting.
+        }
     }
 }
