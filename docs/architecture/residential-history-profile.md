@@ -63,3 +63,13 @@ The simulator needs only the local HTTP URL, not database credentials. Press **R
 ## Verification scope
 
 Unit coverage checks exact UTC/microsecond windows, determinism, a canonical SHA-256 fixture, seed variation, day/night/peak behavior, adjacent-sample continuity, midnight, battery rate/sign/bounds and invalid arguments. Existing HTTP failure/cancellation tests remain active alongside profile routing/short failure cases. One new real PostgreSQL load checks all stored values plus an occupied timestamp; a short interrupted run checks uncertain persistence. One actual-CLI Playwright load compares HTTP acknowledgments, persisted API results and every existing chart path vertex. All 252 baseline cases are preserved; model unit cases do not repeat HTTP loads. See the [controlled comparison](../validation/RESIDENTIAL_COMPARISON.md) for generated values and limitations.
+
+## Live continuous mode (v0.2)
+
+`--continuous --profile residential-v1 [--interval-seconds 1..60]` samples the same instantaneous
+solar/home formulas (`ResidentialModel`, shared with the 24-hour profile) at the server `asOf` of
+each iteration. Battery charge starts from the latest stored reading (50% when the database is
+empty) and integrates the power balance over the real elapsed time (trapezoid, ±2,000 W limit,
+10,000 Wh), so live data continues a previously prepared history. Without `--profile` the legacy
+random generator and 60-second default are unchanged. `--interval-seconds` is continuous-only.
+At whole minutes the live sampler reproduces the 24-hour profile's power values for equal seeds.

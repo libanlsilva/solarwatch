@@ -9,15 +9,16 @@ namespace SolarWatch.Simulator;
 
 internal static class ContinuousSimulator
 {
-    private static readonly TimeSpan Cadence = TimeSpan.FromSeconds(60);
 
     public static async Task<int> RunAsync(SimulatorOptions options, HttpClient client, TextWriter output,
         TimeProvider clock, CancellationToken cancellationToken)
     {
         long attempted = 0, accepted = 0, rejected = 0, errors = 0, uncertain = 0;
         var pendingWrite = false;
+        var cadence = TimeSpan.FromSeconds(options.IntervalSeconds);
         var random = new Random(options.Seed);
-        output.WriteLine("Continuous mode: immediate sample, then 60-second cadence. Press Ctrl+C to stop.");
+        ResidentialLiveGenerator? live = null;
+        output.WriteLine($"Continuous mode: immediate sample, then {options.IntervalSeconds}-second cadence{(options.Profile is null ? "" : " (residential-v1)")}. Press Ctrl+C to stop.");
         try
         {
             while (true)
@@ -34,7 +35,8 @@ internal static class ContinuousSimulator
                 var reference = await referenceResponse.Content.ReadFromJsonAsync<ServerReference>(cancellationToken)
                     ?? throw new JsonException();
                 if (!ReadingTimestamp.TryParse(reference.AsOf, out var asOf) || asOf == default) throw new JsonException();
-                var reading = ReadingGenerator.Next(random, asOf);
+                var reading = options.Profile is null ? ReadingGenerator.Next(random, asOf)
+                    : (live ??= new ResidentialLiveGenerator(options.Seed, reference.Reading?.BatteryStateOfChargePercent ?? 50)).Next(asOf);
                 cancellationToken.ThrowIfCancellationRequested();
                 attempted++;
                 pendingWrite = true;
@@ -66,7 +68,7 @@ internal static class ContinuousSimulator
                 // Skip elapsed minute slots relative to this iteration's start. A late wake starts
                 // a new cadence, so it cannot be followed by another request a few milliseconds later.
                 var elapsed = clock.GetElapsedTime(started);
-                var delay = Cadence - TimeSpan.FromTicks(elapsed.Ticks % Cadence.Ticks);
+                var delay = cadence - TimeSpan.FromTicks(elapsed.Ticks % cadence.Ticks);
                 await Task.Delay(delay, clock, cancellationToken);
             }
         }
@@ -93,5 +95,5 @@ internal static class ContinuousSimulator
         return errors == 0 && rejected == 0 ? 0 : 1;
     }
 
-    private sealed record ServerReference(string? AsOf);
+    private sealed record ServerReference(string? AsOf, ReadingSnapshot? Reading = null);
 }
