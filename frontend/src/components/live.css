@@ -1,0 +1,57 @@
+.live-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(10,18,12,.55); color: inherit; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.live-toggle:focus-visible, .live-chart svg:focus-visible { outline: 2px solid var(--lime, #b8f35c); outline-offset: 2px; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #8a948c; flex: none; }
+.live-live .live-dot { background: #5de08a; animation: live-beat 1.6s ease-in-out infinite; }
+.live-connecting .live-dot, .live-reconnecting .live-dot { background: #f2c94c; animation: live-beat 1s ease-in-out infinite; }
+.live-offline .live-dot { background: #ef6b5b; }
+@keyframes live-beat { 0%, 100% { box-shadow: 0 0 0 0 rgba(93,224,138,.55); } 50% { box-shadow: 0 0 0 6px rgba(93,224,138,0); } }
+
+.live-chart .card-top { align-items: center; }
+.live-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.16); }
+.live-window { margin-left: auto; opacity: .7; }
+.live-plot { position: relative; }
+.live-plot svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
+.live-grid { stroke: rgba(255,255,255,.09); stroke-width: 1; }
+.live-axis { fill: rgba(255,255,255,.6); font-size: 10px; }
+.live-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.solar-line { stroke: var(--yellow, #f4c542); }
+.home-line { stroke: var(--teal, #4fd1c5); }
+.head-solar { fill: var(--yellow, #f4c542); }
+.head-home { fill: var(--teal, #4fd1c5); }
+.live-head circle { animation: head-pulse 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes head-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.45); } }
+.live-cross { stroke: rgba(255,255,255,.5); stroke-dasharray: 3 3; }
+.sel-solar { fill: var(--yellow, #f4c542); stroke: #fff; stroke-width: 1.5; }
+.sel-home { fill: var(--teal, #4fd1c5); stroke: #fff; stroke-width: 1.5; }
+.live-tooltip { position: absolute; top: 4px; transform: translateX(-50%); display: grid; gap: 2px; padding: 8px 10px; border-radius: 10px; background: rgba(8,14,10,.92); border: 1px solid rgba(255,255,255,.18); font-size: 12px; pointer-events: none; white-space: nowrap; }
+.battery-key { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lime, #b8f35c); margin-right: 6px; }
+
+.metric.pulse, .gauge.pulse { animation: card-pulse .7s ease-out; }
+@keyframes card-pulse { 0% { box-shadow: 0 0 0 0 rgba(184,243,92,.35); } 100% { box-shadow: 0 0 0 14px rgba(184,243,92,0); } }
+.gauge-arc { transition: stroke-dasharray .6s ease; }
+
+.topology.flow { position: relative; }
+.flow-edge { position: absolute; z-index: -1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.12); pointer-events: none; opacity: .5; }
+.edge-solar { top: 42px; left: 16.666%; width: 33.334%; }
+.edge-home { top: 42px; left: 50%; width: 33.333%; }
+.edge-battery { left: calc(50% - 1px); top: 43px; bottom: 38px; width: 3px; height: auto; }
+.edge-battery.active { background-image: linear-gradient(180deg, var(--lime, #b8f35c) 50%, transparent 50%); background-size: 3px 16px; }
+@media (max-width: 640px) { .edge-solar, .edge-home { top: 38px; } .edge-battery { top: 39px; bottom: 35px; } }
+.flow-edge.active { opacity: 1; background-image: linear-gradient(90deg, var(--lime, #b8f35c) 50%, transparent 50%); background-size: 16px 3px; }
+.flow-edge.animated.active { animation: flow-dash 1.6s linear infinite; }
+.flow-edge.reverse.animated.active { animation-direction: reverse; }
+@keyframes flow-dash { from { background-position: 0 0; } to { background-position: 16px 0; } }
+.edge-battery.animated.active { animation-name: flow-dash-v; }
+@keyframes flow-dash-v { from { background-position: 0 0; } to { background-position: 0 16px; } }
+.node b { display: block; font-size: 13px; font-weight: 600; }
+
+.electrical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 8px 0 0; }
+.electrical-grid dt { font-size: 12px; opacity: .7; }
+.electrical-grid dd { margin: 2px 0 0; font-size: 20px; font-variant-numeric: tabular-nums; }
+.electrical-grid small { font-size: 12px; opacity: .7; }
+
+@media (max-width: 640px) { .live-toggle { padding: 0 9px; font-size: 12px; } .live-tooltip { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) {
+  .live-dot, .live-head circle, .metric.pulse, .gauge.pulse, .flow-edge.animated.active { animation: none !important; }
+  .gauge-arc { transition: none; }
+}

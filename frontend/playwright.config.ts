@@ -17,6 +17,9 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4181',
     trace: 'retain-on-failure',
     timezoneId: 'America/Havana',
+    reducedMotion: 'reduce',
+    // Existing specs assume manual-refresh semantics; live-readings.spec.ts opts back in.
+    storageState: { cookies: [], origins: [{ origin: 'http://127.0.0.1:4181', localStorage: [{ name: 'solarwatch.live', value: 'off' }] }] },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], channel: 'chromium' } }],
   webServer: [
