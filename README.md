@@ -2,7 +2,7 @@
 
 An open-source residential solar energy monitoring and analytics platform built with ASP.NET Core and React.
 
-**Status: Local portfolio MVP complete. Phase 6 is complete and personally approved. [v0.1.0 is published](https://github.com/libanlsilva/solarwatch/releases/tag/v0.1.0) at `12e0d0850d759fdc482f3bcc791d3f5d53a026ab`.** The owner expressly accepted the remaining native browser zoom, Narrator/NVDA and physical-device verification gaps **for this local portfolio release only**. These checks remain unverified, not passed. See the [release/acceptance record](docs/releases/v0.1.0.md), original [Phase 5 acceptance](docs/validation/PHASE5_ACCEPTANCE.md) and [Windows manual checklist](docs/validation/WINDOWS_MANUAL_CHECKS.md). This acceptance is not accessibility certification or authorization for public production deployment.
+**Status: v0.2.0 adds live telemetry (continuous simulator, SignalR, electrical parameters, animated UI; see the [v0.2.0 record](docs/releases/v0.2.0.md)). The local portfolio MVP is complete. Phase 6 is complete and personally approved. [v0.1.0 is published](https://github.com/libanlsilva/solarwatch/releases/tag/v0.1.0) at `12e0d0850d759fdc482f3bcc791d3f5d53a026ab`.** The owner expressly accepted the remaining native browser zoom, Narrator/NVDA and physical-device verification gaps **for this local portfolio release only**. These checks remain unverified, not passed. See the [release/acceptance record](docs/releases/v0.1.0.md), original [Phase 5 acceptance](docs/validation/PHASE5_ACCEPTANCE.md) and [Windows manual checklist](docs/validation/WINDOWS_MANUAL_CHECKS.md). This acceptance is not accessibility certification or authorization for public production deployment.
 
 The owner personally approved the [reproducible demonstration and all six captures](docs/demo/GALLERY.md) on 2026-11-05. This delivery completes with squash integration of [PR #42](https://github.com/libanlsilva/solarwatch/pull/42) / [Issue #41](https://github.com/libanlsilva/solarwatch/issues/41). The [original evidence](docs/demo/manifest.json), scripts and captures remain unchanged, including their historical pre-review wording. Final validation is approved through [PR #44](https://github.com/libanlsilva/solarwatch/pull/44), and the owner subsequently approved MVP completion and v0.1.0 publication. The tagged source retains historical pre-publication wording; this current status and the release record govern final acceptance.
 
@@ -28,7 +28,7 @@ SolarWatch makes solar generation, household energy consumption, and battery cha
 - Development-only migration, current-time or controlled-time seed, and explicitly confirmed demo-clear commands.
 - A local Development-only ingestion endpoint with field validation and PostgreSQL-enforced duplicate conflicts, including concurrent requests.
 - A finite .NET HTTP simulator with reproducible seed/timestamps, server-based current time, bounded batches, and explicit acceptance/rejection/error reporting.
-- Optional continuous execution with an immediate reading, 60-second cadence, fresh server `asOf` per sample, and controlled Ctrl+C shutdown.
+- Optional continuous execution (also `--profile residential-v1 --interval-seconds 1..60` since v0.2.0) with an immediate reading, 60-second default cadence, fresh server `asOf` per sample, and controlled Ctrl+C shutdown.
 - A separate bounded `--history-24h` mode submitting exactly 1,441 reproducible minute samples through the existing API, with explicit conflicts and partial/uncertain-run reporting.
 - Opt-in `residential-v1` for historical preparation: a synthetic daily solar cycle, variable home demand and gradually evolving battery charge, reproducible by seed/UTC. Legacy history, finite and continuous defaults remain unchanged.
 - Meaningful backend unit tests, real PostgreSQL integration tests, frontend unit tests, and Playwright browser tests, executed in CI.
@@ -69,7 +69,7 @@ Instantaneous power is measured in **W**. Accumulated energy is measured in **Wh
 | UI/charts | Plain CSS, inline SVG and Recharts 3.10.1 with matching react-is peer | Shared real charts; no UI framework/router added; History has shared exact-record / UTC-minute selection |
 | Testing | xUnit, Node.js test runner, Playwright | Unit, PostgreSQL integration, and Chromium E2E tests |
 | Infrastructure | Docker Compose, GitHub Actions | PostgreSQL service; backend, frontend, and Full Stack E2E workflows |
-| Real-time updates | SignalR | Later enhancement; current refresh is manual |
+| Real-time updates | SignalR | Implemented in v0.2.0 (`/hubs/readings`); manual Refresh still resynchronizes |
 
 ## Architecture and structure
 
@@ -186,7 +186,7 @@ npm run dev
 
 Open the address printed by Vite, normally `http://localhost:5173`. Its `/api` proxy defaults to `http://127.0.0.1:5171`. Set `SOLARWATCH_API_URL` before starting Vite if the API uses another address. The same proxy works with `npm run preview` after a production build.
 
-Readings refresh on load and on request. The freshness badge reports the state at the last successful server check, not a continuously updated or browser-clock-based status. Display times use the browser's identified local zone.
+Readings refresh on load, on request, and (v0.2.0) live through SignalR. The freshness badge reports the state at the last successful server check, not a continuously updated or browser-clock-based status. Display times use the browser's identified local zone.
 
 Open **History** in the navigation or enter `http://localhost:5173/#history` directly. It shows the server's 24-hour window, real power/battery plots, missing intervals and Selected reading, initially the latest persisted observation **inside that history response**. Its Refresh/Retry updates only History; returning to Overview reuses the current data. A direct History entry does not request Latest Reading. Click/tap an identifiable plotted point or focus either plot and use Left/Right (recorded observations), Home/End (first/last). The −1/+1 buttons and mobile slider inspect UTC minutes, including missing ones; multiple readings resolve to the latest measured time unless an exact observation was explicitly selected. Inspection makes no API requests. Refresh reconciles the current selection; failures retain the original data/window/reference. See the [delivery B selection record](docs/architecture/history-selection.md) for ambiguity, boundaries, DST and reconciliation rules.
 
@@ -216,7 +216,7 @@ For opt-in continuous execution, run this command instead of a finite batch:
 dotnet run --project simulator/SolarWatch.Simulator --configuration Release --no-build -- --continuous --api-url http://127.0.0.1:5171 --seed 42
 ```
 
-The first reading is submitted immediately after querying server `asOf`. Subsequent iterations target a 60-second cadence, with one active GET/POST sequence at a time. Slow work skips elapsed minute slots; late timer wake-ups start a new cadence rather than producing closely spaced catch-up requests. Every reading gets a new server reference; the local clock only controls elapsed waiting. React continues updating only when you press **Refresh**.
+The first reading is submitted immediately after querying server `asOf`. Subsequent iterations target a 60-second cadence, with one active GET/POST sequence at a time. Slow work skips elapsed minute slots; late timer wake-ups start a new cadence rather than producing closely spaced catch-up requests. Every reading gets a new server reference; the local clock only controls elapsed waiting. Without the SignalR hub React updates only on **Refresh**; with v0.2.0 the live stream also updates it (see `--profile residential-v1 --interval-seconds`).
 
 Stop with **Ctrl+C**. A normal stop while waiting or fetching the reference exits 0 with no pending write. Cancellation during an unacknowledged POST reports uncertainty and exits 1; the row may already exist. Continuous mode stops on any 400/409 rejection, unexpected HTTP status, malformed reference/acknowledgment, timeout, or network error. Its summary reports attempted/accepted/rejected/error/uncertain counts. There are no automatic retries or catch-up batches. A seed reproduces the value sequence for equivalent iterations; live timestamps come from the API and are not a deterministic historical batch. `--count` and `--end-at` cannot be combined with `--continuous`; invalid combinations fail before contacting the API.
 
