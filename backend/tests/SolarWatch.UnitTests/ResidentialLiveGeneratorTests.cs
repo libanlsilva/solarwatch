@@ -65,3 +65,33 @@ public class ResidentialLiveGeneratorTests
         for (var i = 0; i < 30; i++) Assert.Equal(a.Next(at.AddSeconds(i)), b.Next(at.AddSeconds(i)));
     }
 }
+
+public class ElectricalParametersTests
+{
+    private static readonly DateTimeOffset Now = DateTimeOffset.Parse("2026-10-01T12:00:00Z");
+
+    [Fact]
+    public void Live_samples_carry_plausible_bounded_electrical_values()
+    {
+        var live = new SolarWatch.Simulator.ResidentialLiveGenerator(42, 60);
+        for (var i = 0; i < 600; i++)
+        {
+            var s = live.Next(Now.AddSeconds(i * 30));
+            Assert.InRange(s.GridVoltageV!.Value, 225, 235);
+            Assert.InRange(s.GridFrequencyHz!.Value, 49.9, 50.1);
+            Assert.InRange(s.InverterTemperatureC!.Value, 24, 52);
+            Assert.InRange(s.BatteryVoltageV!.Value, 43, 58);
+        }
+    }
+
+    [Fact]
+    public void Domain_accepts_omitted_values_and_rejects_out_of_range_or_non_finite_ones()
+    {
+        Assert.Null(SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now).GridVoltageV);
+        Assert.Equal(230.1, SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now, gridVoltageV: 230.1).GridVoltageV);
+        Assert.Throws<ArgumentOutOfRangeException>(() => SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now, gridVoltageV: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now, gridFrequencyHz: 10));
+        Assert.Throws<ArgumentOutOfRangeException>(() => SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now, inverterTemperatureC: double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => SolarWatch.Domain.InstallationReading.Create(Now, 1, 1, 1, Now, batteryVoltageV: 5000));
+    }
+}

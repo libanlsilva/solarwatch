@@ -15,6 +15,21 @@ public sealed class ResidentialModel
         homePhase2 = random.NextDouble() * 2 * Math.PI;
     }
 
+    // Electrical parameters (live mode only; the 24-hour profile stays unchanged). Smooth, bounded,
+    // deterministic functions of time: 230 V grid, 50 Hz, inverter heating with solar output,
+    // and a 48 V battery bank whose voltage follows charge and sags under load.
+    public double GridVoltageV(double hour) => Math.Round(230 + 2.5 * Math.Sin(2 * Math.PI * hour * 6 + solarPhase1)
+        + 0.8 * Math.Sin(2 * Math.PI * hour * 40 + homePhase1), 1);
+
+    public double GridFrequencyHz(double hour) => Math.Round(50 + 0.04 * Math.Sin(2 * Math.PI * hour * 20 + homePhase2)
+        + 0.015 * Math.Sin(2 * Math.PI * hour * 90 + solarPhase2), 2);
+
+    public static double InverterTemperatureC(double solarW, double homeW) =>
+        Math.Round(24 + 22 * solarW / 4200 + 4 * homeW / 3000, 1);
+
+    public static double BatteryVoltageV(double chargePercent, double netW) =>
+        Math.Round(44 + 0.12 * chargePercent + Math.Clamp(netW, -2000, 2000) / 2000 * 0.8, 2);
+
     public static double Hour(DateTimeOffset at) => at.UtcDateTime.TimeOfDay.TotalHours;
 
     public double SolarW(double hour)

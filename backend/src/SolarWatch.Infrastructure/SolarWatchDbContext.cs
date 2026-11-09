@@ -16,6 +16,10 @@ public sealed class SolarWatchDbContext(DbContextOptions<SolarWatchDbContext> op
             table.HasCheckConstraint("ck_readings_solar", "\"SolarPowerW\" >= 0 AND \"SolarPowerW\" < 'Infinity'::double precision");
             table.HasCheckConstraint("ck_readings_consumption", "\"ConsumptionPowerW\" >= 0 AND \"ConsumptionPowerW\" < 'Infinity'::double precision");
             table.HasCheckConstraint("ck_readings_battery", "\"BatteryStateOfChargePercent\" >= 0 AND \"BatteryStateOfChargePercent\" <= 100");
+            table.HasCheckConstraint("ck_readings_grid_voltage", "\"GridVoltageV\" IS NULL OR (\"GridVoltageV\" >= 0 AND \"GridVoltageV\" <= 1000)");
+            table.HasCheckConstraint("ck_readings_grid_frequency", "\"GridFrequencyHz\" IS NULL OR (\"GridFrequencyHz\" >= 40 AND \"GridFrequencyHz\" <= 70)");
+            table.HasCheckConstraint("ck_readings_inverter_temperature", "\"InverterTemperatureC\" IS NULL OR (\"InverterTemperatureC\" >= -40 AND \"InverterTemperatureC\" <= 150)");
+            table.HasCheckConstraint("ck_readings_battery_voltage", "\"BatteryVoltageV\" IS NULL OR (\"BatteryVoltageV\" >= 0 AND \"BatteryVoltageV\" <= 1000)");
         });
         reading.HasKey(x => new { x.InstallationId, x.MeasuredAt });
         reading.Property(x => x.InstallationId).HasMaxLength(64);
