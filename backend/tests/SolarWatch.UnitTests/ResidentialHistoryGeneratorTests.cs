@@ -114,14 +114,13 @@ public class ResidentialHistoryGeneratorTests
 
     [Theory]
     [InlineData("--profile residential-v1")]
-    [InlineData("--continuous --profile residential-v1")]
     [InlineData("--count 1 --profile residential-v1")]
     [InlineData("--history-24h --end-at 2026-10-01T12:00:00Z --profile unknown")]
     [InlineData("--history-24h --end-at 2026-10-01T12:00:00Z --profile residential-v2")]
     [InlineData("--history-24h --end-at 2026-10-01T12:00:00Z --profile")]
     [InlineData("--history-24h --end-at 2026-10-01T12:00:00Z --profile residential-v1 --profile residential-v1")]
     [InlineData("--history-24h --count 1 --end-at 2026-10-01T12:00:00Z --profile residential-v1")]
-    public void Profile_is_explicit_history_only_and_rejects_invalid_combinations(string arguments) =>
+    public void Profile_is_explicit_and_rejects_invalid_combinations(string arguments) =>
         Assert.Throws<ArgumentException>(() => SimulatorOptions.Parse(arguments.Split(' ')));
 
     [Fact]
