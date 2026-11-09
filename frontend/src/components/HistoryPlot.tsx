@@ -6,6 +6,7 @@ import type { Reading } from '../readings.ts'
 import { measurementDate, utcOffsetAt } from '../measurementDisplay.ts'
 import type { HistoryInspection } from '../historySelection.ts'
 import { stepObservation } from '../historySelection.ts'
+import { useXAxisScale, useYAxisScale } from 'recharts'
 import { HistorySelectionLayer } from './HistorySelectionLayer.tsx'
 
 const axisTime = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
@@ -31,14 +32,24 @@ function HistoryTooltip({ active, payload, kind, readingOverride, onRead }: {
   </div>
 }
 
-function HistoryDot({ cx, cy, payload, series, showAll, lastTimestamp }: {
-  cx?: number; cy?: number; payload?: HistoryPoint; series: keyof typeof colors; showAll: boolean; lastTimestamp: string
-}) {
-  const endpoint = payload?.reading?.measuredAt === lastTimestamp
-  if (!payload?.reading || (!showAll && !payload.isolated && !endpoint)) return null
-  return <circle className="history-point" cx={cx} cy={cy} r={payload.isolated || endpoint ? 3 : 1.5}
-    fill={colors[series]} data-series={series} data-measured-at={payload.reading.measuredAt}
-    data-value={payload[series]} />
+// Dots are drawn once here instead of through a per-point render callback on every series: with
+// thousands of live readings, that callback made every click re-create thousands of elements.
+function HistoryDots({ plot, kind, showAll, lastTimestamp }: { plot: HistoryPlot; kind: 'power' | 'battery'; showAll: boolean; lastTimestamp: string }) {
+  const xScale = useXAxisScale()
+  const yScale = useYAxisScale()
+  if (!xScale || !yScale) return null
+  const series: (keyof typeof colors)[] = kind === 'power' ? ['solar', 'consumption'] : ['battery']
+  return <g className="history-dots">{series.flatMap(name => plot.points.map((payload, index) => {
+    if (!payload.reading) return null
+    const endpoint = payload.reading.measuredAt === lastTimestamp
+    if (!showAll && !payload.isolated && !endpoint) return null
+    const value = payload[name]
+    const cx = xScale(payload.x)
+    const cy = value === null || value === undefined ? undefined : yScale(value)
+    if (cx === undefined || cy === undefined || !Number.isFinite(cx) || !Number.isFinite(cy)) return null
+    return <circle key={`${name}-${index}`} className="history-point" cx={cx} cy={cy} r={payload.isolated || endpoint ? 3 : 1.5}
+      fill={colors[name]} data-series={name} data-measured-at={payload.reading.measuredAt} data-value={value} />
+  }))}</g>
 }
 
 export default function HistoryPlotView({ kind, snapshot, plot, detail = false, inspection }: { kind: 'power' | 'battery'; snapshot: HistoryResponse; plot: HistoryPlot; detail?: boolean; inspection?: HistoryInspection }) {
@@ -108,12 +119,11 @@ export default function HistoryPlotView({ kind, snapshot, plot, detail = false, 
         <Area className={`history-series ${battery ? 'battery-series' : 'solar-series'}`} dataKey={battery ? 'battery' : 'solar'}
           name={battery ? 'Battery charge' : 'Solar generation'} unit={battery ? '%' : ' W'} type="linear" connectNulls={false}
           stroke={battery ? colors.battery : colors.solar} strokeWidth={2.2} fill={`url(#fill-${id})`}
-          isAnimationActive={false} activeDot={false}
-          dot={props => <HistoryDot {...props} series={battery ? 'battery' : 'solar'} showAll={showAll} lastTimestamp={lastTimestamp} />} />
+          isAnimationActive={false} activeDot={false} dot={false} />
         {!battery && <Line className="history-series consumption-series" dataKey="consumption" name="Home consumption" unit=" W"
           type="linear" connectNulls={false} stroke={colors.consumption} strokeWidth={2} strokeDasharray="5 5"
-          isAnimationActive={false} activeDot={false}
-          dot={props => <HistoryDot {...props} series="consumption" showAll={showAll} lastTimestamp={lastTimestamp} />} />}
+          isAnimationActive={false} activeDot={false} dot={false} />}
+        <HistoryDots plot={plot} kind={kind} showAll={showAll} lastTimestamp={lastTimestamp} />
         {inspection && <HistorySelectionLayer kind={kind} snapshot={snapshot} plot={plot} inspection={inspection} />}
       </ComposedChart>
     </ResponsiveContainer>

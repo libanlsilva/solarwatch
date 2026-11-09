@@ -5,8 +5,19 @@ const day = 86_400_000_000n
 const maxGap = 300_000_000n
 
 // Keep the API's original strings. Date alone truncates distinct sub-millisecond instants.
+// Timestamps are re-parsed for every row on each render and click; cache the pure result.
+const parsed = new Map<string, bigint>()
 export function utcMicroseconds(value: unknown): bigint {
   if (typeof value !== 'string') throw new Error('Invalid UTC timestamp')
+  const cached = parsed.get(value)
+  if (cached !== undefined) return cached
+  const result = parseUtcMicroseconds(value)
+  if (parsed.size > 50_000) parsed.clear()
+  parsed.set(value, result)
+  return result
+}
+
+function parseUtcMicroseconds(value: string): bigint {
   const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,6}))?(?:Z|\+00:00)$/.exec(value)
   if (!match) throw new Error('Invalid UTC timestamp')
   const milliseconds = Date.parse(`${match[1]}Z`)

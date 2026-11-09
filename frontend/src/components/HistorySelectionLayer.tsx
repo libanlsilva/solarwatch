@@ -48,9 +48,12 @@ export function HistorySelectionLayer({ kind, snapshot, plot, inspection }: {
         const duration = Number(utcMicroseconds(snapshot.to) - from) / 1000
         // Same relative coordinates and scales as the existing plot, with no
         // inferred points in gaps. Millisecond coordinates never identify rows.
+        const reach = (pointerType.current === 'touch' ? 22 : 6) + 2
         for (const row of snapshot.readings) {
           const relative = Number(utcMicroseconds(row.measuredAt) - from) / 1000
           const rowX = xScale(relative)
+          // Only marks within the hit radius (plus the 1 px overlap margin) can matter.
+          if (rowX === undefined || Math.abs(rowX - position.x) > reach) continue
           for (const value of kind === 'power' ? [row.solarPowerW, row.consumptionPowerW] : [row.batteryStateOfChargePercent]) {
             const rowY = yScale(value)
             if (rowX !== undefined && rowY !== undefined && Number.isFinite(rowX) && Number.isFinite(rowY)) marks.push({ reading: row, x: rowX, y: rowY })
