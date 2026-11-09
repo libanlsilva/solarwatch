@@ -15,6 +15,8 @@ builder.Services.AddDbContext<SolarWatchDbContext>(options => options.UseNpgsql(
 builder.Services.AddScoped<IReadingStore, PostgresReadingStore>();
 builder.Services.AddScoped<GetLatestReading>();
 builder.Services.AddScoped<GetReadingHistory>();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IReadingPublisher, SignalRReadingPublisher>();
 builder.Services.AddScoped<SubmitReading>();
 
 var app = builder.Build();
@@ -39,6 +41,7 @@ app.MapGet("/api/readings/latest", async (GetLatestReading query, HttpContext co
 }).WithName("GetLatestReading")
     .Produces<LatestReadingResponse>()
     .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
+app.MapHub<ReadingsHub>(ReadingsHub.Path);
 app.MapLocalIngestion();
 app.MapReadingHistory();
 app.Run();
