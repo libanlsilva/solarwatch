@@ -32,11 +32,11 @@
 
 .topology.flow { position: relative; }
 .flow-edge { position: absolute; z-index: -1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.12); pointer-events: none; opacity: .5; }
-.edge-solar { top: 42px; left: 16.666%; width: 33.334%; }
-.edge-home { top: 42px; left: 50%; width: 33.333%; }
-.edge-battery { left: calc(50% - 1px); top: 43px; bottom: 38px; width: 3px; height: auto; }
+.edge-solar { top: 50px; left: 16.666%; width: 33.334%; }
+.edge-home { top: 50px; left: 50%; width: 33.333%; }
+.edge-battery { left: calc(50% - 1px); top: 52px; bottom: 46px; width: 3px; height: auto; }
 .edge-battery.active { background-image: linear-gradient(180deg, var(--lime, #b8f35c) 50%, transparent 50%); background-size: 3px 16px; }
-@media (max-width: 640px) { .edge-solar, .edge-home { top: 38px; } .edge-battery { top: 39px; bottom: 35px; } }
+@media (max-width: 640px) { .topology.flow { grid-template-rows: 96px 84px; } .topology.flow::before { top: 48px; } .topology.flow::after { top: 48px; bottom: 42px; } .edge-solar, .edge-home { top: 46px; } .edge-battery { top: 48px; bottom: 42px; } }
 .flow-edge.active { opacity: 1; background-image: linear-gradient(90deg, var(--lime, #b8f35c) 50%, transparent 50%); background-size: 16px 3px; }
 .flow-edge.animated.active { animation: flow-dash 1.6s linear infinite; }
 .flow-edge.reverse.animated.active { animation-direction: reverse; }
@@ -55,3 +55,14 @@
   .live-dot, .live-head circle, .metric.pulse, .gauge.pulse, .flow-edge.animated.active { animation: none !important; }
   .gauge-arc { transition: none; }
 }
+
+.electrical, .live-chart { margin: 14px 5px 0; padding: 18px 22px; }
+@media (max-width: 640px) { .electrical, .live-chart { margin: 14px 16px 0; padding: 16px; } }
+
+.installation { flex: 0 0 auto; justify-content: flex-start; }
+.topology.flow { grid-template-rows: 104px 92px; }
+.topology.flow::before { top: 52px; }
+.topology.flow::after { top: 52px; bottom: 46px; }
+.node svg { flex: none; }
+.node b { text-align: center; line-height: 1.2; }
+@media (max-width: 640px) { .topology.flow { grid-template-rows: 96px 84px; } .topology.flow::before { top: 48px; } .topology.flow::after { top: 48px; bottom: 42px; } }
