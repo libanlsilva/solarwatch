@@ -4,9 +4,16 @@ export type Reading = {
   solarPowerW: number
   consumptionPowerW: number
   batteryStateOfChargePercent: number
+  // Optional (v0.2): absent or null for older readings and the reproducible 24-hour profile.
+  gridVoltageV?: number | null
+  gridFrequencyHz?: number | null
+  inverterTemperatureC?: number | null
+  batteryVoltageV?: number | null
 }
 
 export type LatestReadingResponse = { asOf: string; reading: Reading | null }
+
+const electricalFields = ['gridVoltageV', 'gridFrequencyHz', 'inverterTemperatureC', 'batteryVoltageV'] as const
 
 function isUtcTimestamp(value: unknown): value is string {
   return (
@@ -41,7 +48,8 @@ export function parseLatestReading(value: unknown): LatestReadingResponse {
       (metric) =>
         typeof metric === 'number' && Number.isFinite(metric) && metric >= 0,
     ) ||
-    reading.batteryStateOfChargePercent! > 100
+    reading.batteryStateOfChargePercent! > 100 ||
+    !electricalFields.every((field) => reading[field] == null || (typeof reading[field] === 'number' && Number.isFinite(reading[field])))
   ) {
     throw new Error('Invalid reading response')
   }

@@ -2,6 +2,11 @@ import type { LatestReadingState } from '../latestReadingQuery.ts'
 import type { Section } from '../navigation.ts'
 import { useLayoutEffect, useRef } from 'react'
 import { isStale } from '../readings.ts'
+import type { Reading } from '../readings.ts'
+import { derivePowerFlow, liveStatusLabel } from '../liveStore.ts'
+import type { LiveStatus } from '../liveStore.ts'
+import { AnimatedNumber, usePulse } from './AnimatedNumber.tsx'
+import './live.css'
 import { ageAtServerCheck, localTimeZone, measurementDate, measurementNumber, measurementTime, utcOffsetAt } from '../measurementDisplay.ts'
 
 type IconName = 'sun' | 'house' | 'battery' | 'panel' | 'inverter' | 'refresh'
@@ -18,9 +23,9 @@ function Icon({ name, className = '' }: { name: IconName; className?: string }) 
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>
 }
 
-export function DashboardHeader({ pending, disabled, error, refresh, section }: {
+export function DashboardHeader({ pending, disabled, error, refresh, section, liveStatus, liveEnabled, toggleLive }: {
   pending: boolean; disabled: boolean; error: boolean; refresh: () => void
-  section: Section
+  section: Section; liveStatus: LiveStatus; liveEnabled: boolean; toggleLive: () => void
 }) {
   const header = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
@@ -45,6 +50,7 @@ export function DashboardHeader({ pending, disabled, error, refresh, section }: 
           {pending ? <span className="spinner" aria-hidden="true" /> : <Icon name="refresh" />}
           {disabled ? 'Refreshing…' : error ? 'Retry' : 'Refresh'}
         </button>
+        <button className={`live-toggle live-${liveStatus}`} type="button" aria-pressed={liveEnabled} onClick={toggleLive} data-testid="live-toggle"><span className="live-dot" aria-hidden="true" />{liveEnabled ? liveStatusLabel(liveStatus) : 'Live paused'}<span className="sr-only">. {liveEnabled ? 'Pause live updates' : 'Resume live updates'}</span></button>
         {pending && !disabled && <span hidden id="refresh-available">A request is in progress. Refresh updates only resources without a pending request.</span>}
       </div>
     </header>
@@ -69,11 +75,12 @@ export function MetricCard({ kind, value, skeleton }: { kind: 'solar' | 'home'; 
   const solar = kind === 'solar'
   const label = solar ? 'Solar generation' : 'Home consumption'
   const formatted = value === undefined ? null : measurementNumber.format(value)
+  const pulse = usePulse(value)
   return (
-    <section className={`card metric ${kind}`} aria-labelledby={`${kind}-title`}>
+    <section className={`card metric ${kind} ${pulse ? 'pulse' : ''}`} aria-labelledby={`${kind}-title`}>
       <div className="card-top"><h2 id={`${kind}-title`}>{label}</h2><span className="icon-bubble"><Icon name={solar ? 'sun' : 'house'} /></span></div>
       {skeleton ? <div className="metric-value"><Skeleton /></div> : <div className={`metric-value ${formatted && formatted.length > 7 ? 'compact-value' : ''}`} data-testid={formatted !== null ? (solar ? 'solar-power' : 'consumption-power') : undefined}>
-        {formatted ?? <><span className="unavailable" aria-hidden="true">—</span><span className="sr-only">Not available</span></>}<span className="metric-unit"> W</span>
+        {value !== undefined ? <AnimatedNumber value={value} format={measurementNumber.format} /> : <><span className="unavailable" aria-hidden="true">—</span><span className="sr-only">Not available</span></>}<span className="metric-unit"> W</span>
       </div>}
       <p className="support">Instantaneous power</p>
       <div className="metric-accent" aria-hidden="true" />
@@ -83,12 +90,13 @@ export function MetricCard({ kind, value, skeleton }: { kind: 'solar' | 'home'; 
 
 function BatteryGauge({ value, skeleton }: { value?: number; skeleton: boolean }) {
   const circumference = 2 * Math.PI * 60
-  return <div className="gauge" role={value === undefined ? 'img' : 'meter'} aria-label={value === undefined ? 'Battery charge unavailable' : 'Battery state of charge'} aria-valuemin={value === undefined ? undefined : 0} aria-valuemax={value === undefined ? undefined : 100} aria-valuenow={value}>
+  const pulse = usePulse(value)
+  return <div className={`gauge ${pulse ? 'pulse' : ''}`} role={value === undefined ? 'img' : 'meter'} aria-label={value === undefined ? 'Battery charge unavailable' : 'Battery state of charge'} aria-valuemin={value === undefined ? undefined : 0} aria-valuemax={value === undefined ? undefined : 100} aria-valuenow={value}>
     <svg viewBox="0 0 146 146" aria-hidden="true">
       <circle cx="73" cy="73" r="60" fill="none" stroke="#233126" strokeWidth="7" strokeDasharray="2 5" />
-      {value !== undefined && value > 0 && <circle cx="73" cy="73" r="60" fill="none" stroke="var(--lime)" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${circumference * value / 100} ${circumference}`} />}
+      {value !== undefined && value > 0 && <circle cx="73" cy="73" r="60" fill="none" stroke="var(--lime)" strokeWidth="8" strokeLinecap="round" className="gauge-arc" strokeDasharray={`${circumference * value / 100} ${circumference}`} />}
     </svg>
-    <div className="gauge-value"><strong data-testid={value === undefined ? undefined : 'battery-charge'}>{skeleton ? <Skeleton /> : value === undefined ? <><span aria-hidden="true">—</span><span className="sr-only">Not available</span></> : measurementNumber.format(value)}{!skeleton && <small>%</small>}</strong><span className="support">State of charge</span></div>
+    <div className="gauge-value"><strong data-testid={value === undefined ? undefined : 'battery-charge'}>{skeleton ? <Skeleton /> : value === undefined ? <><span aria-hidden="true">—</span><span className="sr-only">Not available</span></> : <AnimatedNumber value={value} format={measurementNumber.format} />}{!skeleton && <small>%</small>}</strong><span className="support">State of charge</span></div>
   </div>
 }
 
@@ -123,15 +131,47 @@ export function MeasurementCard({ snapshot, pending, error }: LatestReadingState
   </section>
 }
 
-export function InstallationDiagram() {
+const watts = (value: number) => `${measurementNumber.format(Math.round(value))} W`
+
+// Flow lines animate faster with magnitude; the W labels carry the same information without motion.
+function flowSpeed(value: number): string {
+  return `${Math.max(0.6, 3.2 - value / 1500).toFixed(2)}s`
+}
+
+export function InstallationDiagram({ reading, live }: { reading?: Reading | null; live: boolean }) {
+  const flow = reading ? derivePowerFlow(reading) : null
+  const batteryLabel = !flow ? 'No data' : flow.battery === 'idle' ? 'Idle' : `${flow.battery === 'charging' ? 'Charging' : 'Discharging'} · ${watts(flow.batteryW)}`
+  const edge = (name: string, value: number | undefined, reverse = false) => {
+    const active = value !== undefined && value > 0
+    return <span className={`flow-edge edge-${name} ${active ? 'active' : ''} ${reverse ? 'reverse' : ''} ${live ? 'animated' : ''}`} style={active && value ? { animationDuration: flowSpeed(value) } : undefined} aria-hidden="true" />
+  }
   return <section className="card installation" id="installation" tabIndex={-1} aria-labelledby="installation-title">
-    <div className="card-top"><h2 id="installation-title">Your installation</h2><span className="support">Conceptual layout</span></div>
-    <div className="topology" role="group" aria-label="Conceptual layout: solar panels, home and battery connect to the central inverter. No measured energy flows or directions.">
-      <div className="node solar-node"><Icon name="panel" /><span>Solar panels</span></div>
+    <div className="card-top"><h2 id="installation-title">Your installation</h2><span className="support">{flow ? 'Live power flow' : 'Conceptual layout'}</span></div>
+    <div className="topology flow" data-testid="power-flow" role="group" aria-label={flow ? `Power flow: solar ${watts(flow.solarW)}, home ${watts(flow.homeW)}, battery ${batteryLabel}. Battery power is derived from solar minus home.` : 'Conceptual layout: solar panels, home and battery connect to the central inverter.'}>
+      <div className="node solar-node"><Icon name="panel" /><span>Solar panels</span>{flow && <b>{watts(flow.solarW)}</b>}</div>
       <div className="node"><Icon name="inverter" /><span>Inverter</span></div>
-      <div className="node home-node"><Icon name="house" /><span>Home</span></div>
-      <div className="node node-battery"><Icon name="battery" /><span>Battery</span></div>
+      <div className="node home-node"><Icon name="house" /><span>Home</span>{flow && <b>{watts(flow.homeW)}</b>}</div>
+      <div className="node node-battery"><Icon name="battery" /><span>Battery</span>{flow && <b>{batteryLabel}</b>}</div>
+      {edge('solar', flow?.solarW)}
+      {edge('home', flow?.homeW)}
+      {edge('battery', flow?.batteryW, flow?.battery === 'discharging')}
     </div>
-    <p className="support installation-note">Connections are illustrative. Energy flows are not measured.</p>
+    <p className="support installation-note">{flow ? 'Battery power is derived (solar minus home), not measured.' : 'Connections are illustrative. Energy flows are not measured.'}</p>
+  </section>
+}
+
+export function ElectricalPanel({ reading }: { reading?: Reading | null }) {
+  const items: { label: string; value: number | null | undefined; unit: string }[] = [
+    { label: 'Grid voltage', value: reading?.gridVoltageV, unit: 'V' },
+    { label: 'Grid frequency', value: reading?.gridFrequencyHz, unit: 'Hz' },
+    { label: 'Inverter temperature', value: reading?.inverterTemperatureC, unit: '°C' },
+    { label: 'Battery voltage', value: reading?.batteryVoltageV, unit: 'V' },
+  ]
+  if (!reading || items.every((item) => item.value == null)) return null
+  return <section className="card electrical" aria-labelledby="electrical-title" data-testid="electrical-panel">
+    <div className="card-top"><h2 id="electrical-title">Electrical parameters</h2><span className="support">Simulated</span></div>
+    <dl className="electrical-grid">
+      {items.map((item) => <div key={item.label}><dt>{item.label}</dt><dd>{item.value == null ? <><span aria-hidden="true">—</span><span className="sr-only">Not available</span></> : <><AnimatedNumber value={item.value} format={measurementNumber.format} /> <small>{item.unit}</small></>}</dd></div>)}
+    </dl>
   </section>
 }

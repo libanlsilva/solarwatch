@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createLatestReadingQuery, initialLatestReadingState } from './latestReadingQuery.ts'
+import type { LatestReadingResponse } from './readings.ts'
+import { mergeLatest } from './liveStore.ts'
 
 export function useLatestReading(enabled = true) {
   const [state, setState] = useState(initialLatestReadingState)
@@ -7,7 +9,8 @@ export function useLatestReading(enabled = true) {
   const started = useRef(false)
 
   useEffect(() => {
-    const current = createLatestReadingQuery(setState)
+    // Responses and live events share one state: an older result never replaces a newer reading.
+    const current = createLatestReadingQuery((next) => setState((previous) => mergeLatest(previous, next)))
     query.current = current
     started.current = false
     return () => {
@@ -26,5 +29,10 @@ export function useLatestReading(enabled = true) {
   }, [enabled])
 
   const refresh = useCallback(() => { void query.current?.refresh() }, [])
-  return { ...state, refresh }
+  // A pushed reading is a successful server response: it clears an earlier error but leaves an
+  // in-flight request's pending flag alone.
+  const applyLive = useCallback((snapshot: LatestReadingResponse) => {
+    setState((previous) => mergeLatest(previous, { snapshot, pending: previous.pending, error: false }))
+  }, [])
+  return { ...state, refresh, applyLive }
 }
